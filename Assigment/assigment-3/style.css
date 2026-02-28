@@ -1,0 +1,106 @@
+/* Basic Reset */
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+}
+
+body {
+    width: 100vw;
+    height: 100vh;
+    overflow: hidden; /* Prevents scrolling */
+    background-color: #ffffff;
+}
+
+/* Navbar Styling */
+.navbar {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 1rem 5%;
+    height: 80px; /* Fixed height for navbar */
+}
+
+.logo {
+    font-size: 24px;
+    font-weight: bold;
+    color: #334155;
+}
+
+.nav-links {
+    display: flex;
+    list-style: none;
+    gap: 30px;
+}
+
+.nav-links a {
+    text-decoration: none;
+    color: #64748b;
+    font-weight: 500;
+}
+
+.user-profile {
+    background-color: #e0f2fe;
+    color: #0ea5e9;
+    padding: 10px 20px;
+    border-radius: 12px;
+    font-weight: 600;
+}
+
+/* Hero Section Styling */
+.hero {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 0 10%;
+    height: calc(100vh - 80px); /* Fill remaining viewport height */
+}
+
+.hero-left {
+    flex: 1;
+    max-width: 550px;
+}
+
+.hero-left h1 {
+    font-size: 3.5rem;
+    color: #334155;
+    line-height: 1.2;
+    margin-bottom: 20px;
+}
+
+.hero-left h1 span {
+    color: #0ea5e9;
+}
+
+.hero-left p {
+    color: #94a3b8;
+    font-size: 1.1rem;
+    line-height: 1.6;
+    margin-bottom: 30px;
+}
+
+.cta-btn {
+    background-color: #38bdf8;
+    color: white;
+    border: none;
+    padding: 15px 35px;
+    font-size: 1rem;
+    font-weight: 600;
+    border-radius: 15px;
+    cursor: pointer;
+    box-shadow: 0 4px 15px rgba(56, 189, 248, 0.3);
+}
+
+.hero-right {
+    flex: 1;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.hero-right img {
+    max-width: 90%;
+    height: auto;
+    object-fit: contain;
+}
