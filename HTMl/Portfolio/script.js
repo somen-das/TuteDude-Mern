@@ -8,3 +8,5 @@ document.addEventListener("DOMContentLoaded", () => {
 
 // The smooth scrolling logic is already handled by 'scroll-behavior: smooth;' in the CSS,
 // eliminating the need for complex JavaScript event listeners.
+
+

@@ -114,8 +114,9 @@ nav {
 }
 
 .btn:hover {
-    background-color: transparent;
     color: var(--accent);
+    background: transparent;
+    border: 2px solid var(--accent);
 }
 
 .btn-outline {
@@ -126,6 +127,7 @@ nav {
 .btn-outline:hover {
     background-color: var(--accent);
     color: var(--bg-main);
+
 }
 
 /* --- Common Layout Classes --- */
@@ -288,27 +290,40 @@ footer p {
     color: var(--text-primary); /* Keeps the text matching your theme */
     display: inline-block;      /* Ensures the hover area is correct */
 }
-
+/* --- Attractive Gradient Project Titles --- */
 .project-link h3 {
     display: flex;
     align-items: center;
     gap: 0.4rem;
-    transition: color 0.3s ease;
-}
-
-/* The subtle arrow icon next to the title */
-.project-link h3::after {
-    content: '↗';
-    font-size: 1.2rem;
-    color: var(--accent);
-    opacity: 0; /* Hidden by default */
-    transform: translate(-5px, 5px);
     transition: all 0.3s ease;
+    font-size: 1.6rem;
+    font-weight: 700;
+
+    /* The Gradient Magic */
+    background: linear-gradient(to right, #38bdf8, #818cf8); /* Blue to Indigo */
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+    color: transparent; /* Fallback for older browsers */
 }
 
 /* What happens when the user hovers over the link */
 .project-link:hover h3 {
-    color: var(--accent);
+    /* Brightens the gradient on hover */
+    background: linear-gradient(to right, #7dd3fc, #c084fc); 
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    transform: translateX(5px); /* Slides the text slightly to the right */
+}
+
+/* Fix the arrow icon so it stays a solid color and doesn't disappear */
+.project-link h3::after {
+    content: '↗';
+    font-size: 1.2rem;
+    -webkit-text-fill-color: var(--accent); /* Overrides the gradient for the arrow */
+    opacity: 0; 
+    transform: translate(-10px, 5px);
+    transition: all 0.3s ease;
 }
 
 .project-link:hover h3::after {
@@ -363,4 +378,172 @@ footer p {
 .skill-tag:hover {
     background-color: var(--accent);
     color: var(--bg-main);
+}
+
+
+
+/* --- 1. Realistic Background Lighting --- */
+body {
+    /* Replaces your flat background with a top-down light source */
+    background: radial-gradient(circle at 50% -20%, #1e293b 0%, #0f172a 80%);
+    color: var(--text-primary);
+    font-family: 'Inter', sans-serif;
+    line-height: 1.6;
+    min-height: 100vh;
+}
+
+/* --- 2. 3D Tactile Buttons --- */
+.btn {
+    padding: 0.8rem 2rem;
+    color: var(--bg-main);
+    text-decoration: none;
+    font-weight: 700;
+    border-radius: 8px;
+    border: none;
+    /* 3D Button Styling */
+    background: linear-gradient(145deg, #3fd0ff, #2fa0d4);
+    box-shadow: 5px 5px 10px rgba(0, 0, 0, 0.4), 
+               -2px -2px 8px rgba(255, 255, 255, 0.05),
+               inset 1px 1px 2px rgba(255, 255, 255, 0.4);
+    transition: all 0.2s ease;
+}
+
+/* Physical push-down effect when clicked */
+.btn:active {
+    transform: translateY(3px);
+    box-shadow: inset 4px 4px 10px rgba(0, 0, 0, 0.3), 
+                inset -2px -2px 8px rgba(255, 255, 255, 0.1);
+}
+
+.btn-outline {
+    background: transparent;
+    color: var(--accent);
+    border: 2px solid var(--accent);
+    box-shadow: 5px 5px 15px rgba(0, 0, 0, 0.3);
+}
+
+/* --- 3. The 3D Cards (Projects, Skills, Education, Experience) --- */
+/* Grouping them together so you don't have to write it 4 times */
+.project-card, .skill-category, .education-card, .experience-card {
+    border-radius: 16px;
+    padding: 2rem;
+    border-left: none; /* Removing the flat border from earlier */
+    
+    /* Simulating a physical surface */
+    background: linear-gradient(145deg, #1a2436, #141c2b);
+    border: 1px solid rgba(255, 255, 255, 0.03);
+    
+    /* 3D Shadows: Dark shadow on bottom right, light reflection on top left */
+    box-shadow: 
+        10px 10px 20px rgba(0, 0, 0, 0.6), 
+        -5px -5px 15px rgba(255, 255, 255, 0.02),
+        inset 1px 1px 2px rgba(255, 255, 255, 0.05);
+        
+    /* Smooth transition for the hover lift */
+    transition: transform 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275), box-shadow 0.4s ease;
+    
+    /* Needed for the JS 3D tilt effect */
+    transform-style: preserve-3d; 
+    will-change: transform;
+}
+
+/* 3D Pop-out effect on hover */
+.project-card:hover, .skill-category:hover, .education-card:hover {
+    transform: translateY(-10px) scale(1.02);
+    box-shadow: 
+        15px 15px 30px rgba(0, 0, 0, 0.8), 
+        -8px -8px 20px rgba(255, 255, 255, 0.03),
+        inset 1px 1px 3px rgba(255, 255, 255, 0.1);
+    border-color: rgba(56, 189, 248, 0.3); /* Subtle accent glow */
+}
+
+/* Make text inside the cards pop out in 3D */
+.project-card h3, .skill-category h3, .education-card h3 {
+    transform: translateZ(30px); /* Pushes text closer to the screen */
+}
+
+
+
+
+
+/* =========================================
+   --- Responsive Design (Media Queries) ---
+   ========================================= */
+
+/* --- Tablet / Small Laptops (Max Width: 1024px) --- */
+@media (max-width: 1024px) {
+    /* Reduce the heavy 10% side padding to give elements more room */
+    nav, .hero, .container, footer {
+        padding-left: 5%;
+        padding-right: 5%;
+    }
+    
+    .hero h1 {
+        font-size: 3.2rem;
+    }
+}
+
+/* --- Mobile Phones (Max Width: 768px) --- */
+@media (max-width: 768px) {
+    /* Center the Hero section on mobile */
+    .hero {
+        align-items: center;
+        text-align: center;
+        height: auto;
+        padding-top: 6rem;
+        padding-bottom: 4rem;
+    }
+
+    .hero h1 { font-size: 2.5rem; }
+    .hero h2 { font-size: 1.5rem; }
+    .hero p { font-size: 1rem; }
+
+    /* Hide nav links on mobile (keeps header clean) */
+    .nav-links { display: none; }
+
+    /* Stack buttons and make them tap-friendly */
+    .hero-buttons { 
+        flex-direction: column; 
+        width: 100%; 
+        max-width: 300px;
+        gap: 1rem;
+    }
+    
+    .btn { 
+        text-align: center; 
+        width: 100%;
+    }
+
+    /* Reduce vertical spacing between sections so users don't have to scroll forever */
+    .container {
+        padding-top: 4rem;
+        padding-bottom: 2rem;
+    }
+
+    .section-title {
+        font-size: 2rem;
+        margin-bottom: 2rem;
+    }
+
+    /* Reduce internal card padding to save screen space */
+    .project-card, .skill-category, .education-card, .experience-card {
+        padding: 1.5rem;
+    }
+}
+
+/* --- Small Mobile Phones (Max Width: 480px) --- */
+@media (max-width: 480px) {
+    .hero h1 { font-size: 2.2rem; }
+    .hero h2 { font-size: 1.2rem; }
+
+    /* Override the minmax grids to force a single column on very thin screens */
+    .project-grid, .skills-grid, .education-grid {
+        grid-template-columns: 1fr;
+    }
+    
+    /* Make the skill tags slightly smaller to fit better */
+    .skill-tag {
+        padding: 0.4rem 0.8rem;
+        font-size: 0.75rem;
+    }
 }
