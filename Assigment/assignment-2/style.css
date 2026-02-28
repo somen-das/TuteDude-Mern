@@ -5,12 +5,16 @@
     font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
     
 }
-
+body{
+    width: 100vw;
+    height: 100vh;
+    overflow: hidden;
+}
 
 .main-header{
     position: sticky;
     top: 0;
-    z-index: 1000;
+    z-index: 999;
 }
 
 .nav-bar{
@@ -19,6 +23,7 @@
     align-items: center;
     padding: 1rem 2rem;
     height: 80px;
+    background-color: #fff;
 }
 
 .logo{
