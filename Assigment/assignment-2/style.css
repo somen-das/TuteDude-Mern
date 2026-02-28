@@ -6,42 +6,107 @@
     
 }
 
+
+.main-header{
+    position: sticky;
+    top: 0;
+    z-index: 1000;
+}
+
 .nav-bar{
     display: flex;
     justify-content: space-between;
     align-items: center;
-    padding: 1rem;
-    /* background-color: rgb(237, 237, 229); */
+    padding: 1rem 2rem;
+    height: 80px;
 }
 
 .logo{
     font-size: 1.5rem;
-    color: #000000;
-    padding: .7rem 1rem;
-    border-radius: 10px;
+    color: #373839;
     text-decoration: none;
     font-weight: 700;
 
 }
 
-.nav-li-class{
-    display: inline-block;
-    margin: 0 1rem;
-    align-items: center;
-    color: #5f5f5d;
-    font-size: 14px;
-    font-weight: 500;
-
+.nav-ul-class{
+    display:flex;
+    list-style: none;
+    gap: 20px;
 }
 
-.nav-btn{
-    padding: 0.5rem 1rem;
-    background-color: rgb(237, 237, 229);
-    cursor: pointer;
-    color: #78cbff;
-    background-color: #e6f6ff;
-    border-radius: 10px;
-    padding: .7rem 1rem;
+.nav-ul-class a{
     text-decoration: none;
-    font-size: 16px;
+    color:#64748b;
+    font-weight: 500;
+}
+
+
+.nav-user-btn{
+    background-color: #e0f2fe;
+    color:#0ea5e9;
+    padding: 1rem 1.5rem;
+    border-radius: 10px;
+    font-weight: 600;
+    text-decoration: none;
+}
+
+
+/* my body section */
+
+.section-container{
+    display:flex;
+    justify-content: space-between;
+    align-items:center;
+}
+
+.leftcontainer{
+    flex: 1;
+    padding: 4rem;
+
+    h2{
+        color:#4b5b67;
+        font-size: 2.5rem;
+    }
+    h3{
+        color:#06a8ff;
+        font-size: 2.5rem;
+        line-height: 1.2;
+        padding: 1rem 0;
+    }
+
+    p{
+        color:#bebabb;
+        font-size: 1rem;
+        line-height: 1.3;
+        margin-bottom: 30px;
+        font-weight: 200;
+    }
+}
+
+.cta-btn{
+    background-color:#31b4ff ;
+    color:#fff;
+    padding:1rem 2rem;
+    border-radius: 15px;
+    text-decoration: none;
+    font-weight: 600;
+    border: none;
+    cursor: pointer;
+}
+
+
+
+
+
+/* right side */
+
+.rightcontainer{
+    flex: 1;
+    padding: 4rem;
+
+    img{
+        width: 80%;
+        height: auto;
+    }
 }
