@@ -1,0 +1,51 @@
+*{
+    /* border: 1px solid green; */
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+p{
+    width:60%;
+    display: block;
+}
+
+span{
+    /* display:block */
+}
+/* a{
+    width: 60%;
+    display: block;
+} */
+
+img{
+    display: block;
+    width: 30%;
+    height: 40%;
+    padding-bottom: 5px;
+}
+
+ul{
+    list-style:none;
+    background-color: black;
+    /* color:red; */
+    text-align: center;
+    padding: 15px;
+
+}
+
+ li{
+    display: inline;
+    /* background-color: black; */
+    /* color:red; */
+    padding: 5px;
+}
+
+ul > li > a {
+    text-decoration: none;
+    color:red;
+}
+
+a:hover{
+    color:blueviolet
+}

@@ -1,0 +1,25 @@
+main{
+    border: 2px solid rgb(160, 16, 16);
+     /* width: 100%;  */
+     /*  width is %, vw(view width), vh(view height), px(pixcels) em, rem */
+     width: 50%; 
+
+}
+
+
+section{
+    border: 4px solid rgb(16, 160, 16);
+    width: 70vw;
+}
+
+body{
+    font-size: 2em;
+    
+}
+
+header{
+    font-size: 2em;
+}
+h2{
+    font-size: 4rem;
+}

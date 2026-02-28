@@ -1,0 +1,19 @@
+h1{
+    color: red;
+    font-size: 32px;
+    background-color: black;
+    text-align: justify;
+    text-decoration: underline;
+    text-decoration-style: wavy;
+    text-decoration-color: aquamarine;
+    padding-bottom: 5px;
+}
+
+p{
+    text-align: justify;
+    text-indent: 40px; 
+    letter-spacing: 1px;
+    word-spacing: 2px;
+    font-family: "Google Sans", sans-serif;
+}
+

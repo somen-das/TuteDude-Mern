@@ -1,0 +1,56 @@
+
+
+
+
+/* element selector */
+ h2{
+     background-color: black;
+    color:red;
+}
+h3{
+    color:rgb(255, 0, 153);
+}  
+/* p{
+    color:gray;
+} */
+
+/* class selector and id selector */
+.pclass{
+    color:blue;
+}
+
+#h3id{
+    color:purple;
+}
+
+/* nested selector */
+.nesclss, #nesId, p{
+    color:rgb(183, 0, 79);
+}  
+
+/* univercel selector */
+/* *{
+    color:red;
+    background-color:black;
+} */
+
+/* Descendant selector */
+
+#descSel p{
+    color:skyblue;
+}
+
+
+
+
+
+/* Direct Child selector */
+
+#dirChildSel > p{
+    color:rgb(171, 224, 66);
+}
+
+#dirChildSel > div > p{
+    color:rgb(126, 0, 90);
+}
+

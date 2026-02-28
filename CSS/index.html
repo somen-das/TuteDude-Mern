@@ -1,0 +1,109 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <link rel="stylesheet" href="./style.css">
+
+    <style>
+       section > h3{
+            color:green
+        }
+        .test{
+            color:orange;
+        }
+        #testId{
+            color:purple;
+        }
+    </style>
+</head>
+<body>
+    <!-- Inline css  || it is not recommended to use inline css =>  -->
+    <h1 style="color:blue">Inline Css</h1>
+        <hr/>
+        <hr/>
+        <hr/>
+    <!-- internal css  || it is not recommended to use internal css => You should all of in this html page add a style tag and insite all css this is called internal css -->
+    <section>
+        <h3>Internal css</h3> 
+        <p class="test">Lorem ipsum dolor sit amet consectetur adipisicing elit. Voluptas, voluptate.</p>
+        <p id="testId">Lorem ipsum dolor sit amet consectetur adipisicing elit. Voluptas, voluptate.</p>
+    </section>
+
+        <hr/>
+        <hr/>
+        <hr/>
+    <!-- External Css demo  // it is recommended to use external css => Add a css file and import it where you use, add on link tag -->
+    <h2 >External css</h2>
+        <!-- There many type of selector  
+             1. Element selector 
+             2. Class selector 
+             3. Id selector 
+             4. Nested selector 
+             5. Universal selector 
+             6. Direct Child selector 
+             7. Descendant selector      -->
+
+
+        <!-- 1. Element selector  -->
+
+        <div id="eleSel">
+            <h3>Element selector</h3>
+            <p>Lorem ipsum dolor sit amet consectetur adipisicing elit. Voluptas, voluptate.</p>
+        </div>
+
+        <hr/>
+
+        <!-- 2. Class selector and Id selector  -->
+        <div id="clssSel">
+            <h3 id="h3id">Class selector & Id selector</h3>
+            <p class="pclass">Lorem ipsum dolor sit amet consectetur adipisicing elit. Voluptas, voluptate.</p>
+        </div>
+        <hr/>
+
+        <!-- 3. Nested selector  -->
+        <div id="nesSel">
+            <h3 class="nesclss">Nested selector</h3>
+            <p id="nesId">Lorem ipsum dolor sit amet consectetur adipisicing elit. Voluptas, voluptate.</p>    
+            <p >Lorem ipsum dolor sit amet consectetur adipisicing elit. Harum, doloribus?</p>
+        </div>
+        <hr/>
+
+        <!-- 4. Universal selector  -->
+        <div id="uniSel">
+            <h3>Universal selector</h3>
+            <p>Lorem ipsum dolor sit amet consectetur adipisicing elit. Voluptas, voluptate.</p>
+        </div>
+        <hr/>
+
+        <!-- 6. Descendant selector  -->
+        <div id="descSel">
+            <h3>Descendant selector</h3>
+            <div>
+                <p>Lorem ipsum dolor sit amet consectetur adipisicing elit. Voluptas, voluptate.</p>
+                <p>Lorem ipsum dolor sit amet consectetur adipisicing elit. Voluptas, voluptate.</p>
+                <p>Lorem ipsum dolor sit amet consectetur adipisicing elit. Voluptas, voluptate.</p>
+            </div>
+            <p>Lorem ipsum dolor sit amet consectetur adipisicing elit. Voluptas, voluptate.</p>
+        </div>
+
+        <!-- 5. Direct Child selector  -->
+        <div id="dirChildSel">
+            <h3>Direct Child selector</h3>
+            <p>Lorem ipsum dolor sit amet consectetur adipisicing elit. Voluptas, voluptate.</p>
+            <div>
+                <p>Lorem ipsum dolor sit amet consectetur adipisicing elit. Voluptas, voluptate.</p>
+                <p>Lorem ipsum dolor sit amet consectetur adipisicing elit. Voluptas, voluptate.</p>
+                <p>Lorem ipsum dolor sit amet consectetur adipisicing elit. Voluptas, voluptate.</p>
+            </div>
+            <p>Lorem ipsum dolor sit amet consectetur adipisicing elit. Voluptas, voluptate.</p>
+            <p>Lorem ipsum dolor sit amet consectetur adipisicing elit. Voluptas, voluptate.</p>
+
+        </div>
+        <hr/>
+
+
+
+</body>
+</html>

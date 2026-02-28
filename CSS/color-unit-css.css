@@ -1,0 +1,15 @@
+body{
+    font-family: 'Times New Roman', Times, serif;
+    font-size: 20px;
+    color: #940000;
+    background-color: #000000;
+}
+
+article{
+    background-color: #590460;
+    color: #FFFFFF;
+    padding: 45px;
+    margin: 45px;
+    font-size: 16px;
+    border-radius: 25px;
+}
