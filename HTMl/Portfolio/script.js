@@ -1,12 +1,52 @@
-// Automatically update the copyright year in the footer
-document.addEventListener("DOMContentLoaded", () => {
-    const yearSpan = document.getElementById("year");
-    if (yearSpan) {
-        yearSpan.textContent = new Date().getFullYear();
-    }
+
+
+document.addEventListener("DOMContentLoaded",()=>{
+
+const yearSpan=document.getElementById("year");
+
+if(yearSpan){
+
+yearSpan.textContent=new Date().getFullYear();
+
+}
+
+
+
+const hamburger=document.getElementById("hamburger");
+
+const navLinks=document.getElementById("nav-links");
+
+const navItems=document.querySelectorAll("#nav-links a");
+
+if(hamburger && navLinks){
+
+hamburger.addEventListener("click",()=>{
+
+hamburger.classList.toggle("active");
+
+navLinks.classList.toggle("active");
+
+document.body.classList.toggle("menu-open");
+
 });
 
-// The smooth scrolling logic is already handled by 'scroll-behavior: smooth;' in the CSS,
-// eliminating the need for complex JavaScript event listeners.
+}
 
 
+
+navItems.forEach(item=>{
+
+item.addEventListener("click",()=>{
+
+hamburger.classList.remove("active");
+
+navLinks.classList.remove("active");
+
+document.body.classList.remove("menu-open");
+
+});
+
+});
+
+
+});

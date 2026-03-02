@@ -1,10 +1,15 @@
 /* --- Global Variables --- */
 :root {
-    --bg-main: #0f172a;      /* Deep Slate */
-    --bg-card: #1e293b;      /* Lighter Slate for cards */
-    --text-primary: #f8fafc; /* White/Gray */
-    --text-muted: #94a3b8;   /* Dimmed text */
-    --accent: #38bdf8;       /* Electric Blue (React/Next vibe) */
+    --bg-main: #0f172a;
+    /* Deep Slate */
+    --bg-card: #1e293b;
+    /* Lighter Slate for cards */
+    --text-primary: #f8fafc;
+    /* White/Gray */
+    --text-muted: #94a3b8;
+    /* Dimmed text */
+    --accent: #38bdf8;
+    /* Electric Blue (React/Next vibe) */
 }
 
 /* --- Base Reset --- */
@@ -15,12 +20,6 @@
     scroll-behavior: smooth;
 }
 
-body {
-    background-color: var(--bg-main);
-    color: var(--text-primary);
-    font-family: 'Inter', sans-serif;
-    line-height: 1.6;
-}
 
 /* --- Navigation --- */
 nav {
@@ -39,6 +38,10 @@ nav {
     font-size: 1.5rem;
     font-weight: 700;
     font-family: 'JetBrains Mono', monospace;
+}
+.logo a {
+    color: var(--text-primary);
+    text-decoration: none;
 }
 
 .logo span {
@@ -243,13 +246,52 @@ footer p {
     padding-top: 2rem;
 }
 
-/* --- Mobile Responsiveness --- */
-@media (max-width: 768px) {
-    .hero h1 { font-size: 2.5rem; }
-    .hero h2 { font-size: 1.5rem; }
-    .nav-links { display: none; /* Can add a hamburger menu later */ }
-    .hero-buttons { flex-direction: column; width: 100%; }
-    .btn { text-align: center; }
+/* --- Mobile Side Menu --- */
+
+@media screen and (max-width:768px){
+
+.hamburger{
+ display:flex;
+}
+
+/* Side menu hidden by default */
+.nav-links{
+
+ position:fixed;
+ top:0;
+ right:-100%;
+
+ flex-direction:column;
+
+ background-color: var(--bg-main);
+
+ width:260px;
+ height:100vh;
+
+ padding-top:90px;
+ padding-left:30px;
+
+ transition:right .35s ease;
+
+ z-index:999;
+
+ display:flex; /* IMPORTANT */
+}
+
+/* Slide inside */
+.nav-links.active{
+ right:0;
+}
+
+.nav-links li{
+ /* margin:20px 0; */
+}
+
+.nav-links a{
+ color:var(--text-primary);
+ font-size:18px;
+}
+
 }
 
 /* --- Education Section --- */
@@ -286,10 +328,14 @@ footer p {
 
 /* --- Project Links --- */
 .project-link {
-    text-decoration: none;      /* Removes the default underline */
-    color: var(--text-primary); /* Keeps the text matching your theme */
-    display: inline-block;      /* Ensures the hover area is correct */
+    text-decoration: none;
+    /* Removes the default underline */
+    color: var(--text-primary);
+    /* Keeps the text matching your theme */
+    display: inline-block;
+    /* Ensures the hover area is correct */
 }
+
 /* --- Attractive Gradient Project Titles --- */
 .project-link h3 {
     display: flex;
@@ -300,35 +346,41 @@ footer p {
     font-weight: 700;
 
     /* The Gradient Magic */
-    background: linear-gradient(to right, #38bdf8, #818cf8); /* Blue to Indigo */
+    background: linear-gradient(to right, #38bdf8, #818cf8);
+    /* Blue to Indigo */
     -webkit-background-clip: text;
     -webkit-text-fill-color: transparent;
     background-clip: text;
-    color: transparent; /* Fallback for older browsers */
+    color: transparent;
+    /* Fallback for older browsers */
 }
 
 /* What happens when the user hovers over the link */
 .project-link:hover h3 {
     /* Brightens the gradient on hover */
-    background: linear-gradient(to right, #7dd3fc, #c084fc); 
+    background: linear-gradient(to right, #7dd3fc, #c084fc);
     -webkit-background-clip: text;
     -webkit-text-fill-color: transparent;
-    transform: translateX(5px); /* Slides the text slightly to the right */
+    transform: translateX(5px);
+    /* Slides the text slightly to the right */
 }
 
 /* Fix the arrow icon so it stays a solid color and doesn't disappear */
 .project-link h3::after {
     content: '↗';
     font-size: 1.2rem;
-    -webkit-text-fill-color: var(--accent); /* Overrides the gradient for the arrow */
-    opacity: 0; 
+    -webkit-text-fill-color: var(--accent);
+    /* Overrides the gradient for the arrow */
+    opacity: 0;
     transform: translate(-10px, 5px);
     transition: all 0.3s ease;
 }
 
 .project-link:hover h3::after {
-    opacity: 1; /* Arrow appears */
-    transform: translate(0, 0); /* Arrow slides into place */
+    opacity: 1;
+    /* Arrow appears */
+    transform: translate(0, 0);
+    /* Arrow slides into place */
 }
 
 /* --- Skills Section --- */
@@ -364,7 +416,8 @@ footer p {
 
 /* The modern "pill" design for individual skills */
 .skill-tag {
-    background-color: rgba(56, 189, 248, 0.1); /* Transparent accent color */
+    background-color: rgba(56, 189, 248, 0.1);
+    /* Transparent accent color */
     color: var(--accent);
     padding: 0.5rem 1rem;
     border-radius: 50px;
@@ -402,17 +455,17 @@ body {
     border: none;
     /* 3D Button Styling */
     background: linear-gradient(145deg, #3fd0ff, #2fa0d4);
-    box-shadow: 5px 5px 10px rgba(0, 0, 0, 0.4), 
-               -2px -2px 8px rgba(255, 255, 255, 0.05),
-               inset 1px 1px 2px rgba(255, 255, 255, 0.4);
+    box-shadow: 5px 5px 10px rgba(0, 0, 0, 0.4),
+        -2px -2px 8px rgba(255, 255, 255, 0.05),
+        inset 1px 1px 2px rgba(255, 255, 255, 0.4);
     transition: all 0.2s ease;
 }
 
 /* Physical push-down effect when clicked */
 .btn:active {
     transform: translateY(3px);
-    box-shadow: inset 4px 4px 10px rgba(0, 0, 0, 0.3), 
-                inset -2px -2px 8px rgba(255, 255, 255, 0.1);
+    box-shadow: inset 4px 4px 10px rgba(0, 0, 0, 0.3),
+        inset -2px -2px 8px rgba(255, 255, 255, 0.1);
 }
 
 .btn-outline {
@@ -424,42 +477,52 @@ body {
 
 /* --- 3. The 3D Cards (Projects, Skills, Education, Experience) --- */
 /* Grouping them together so you don't have to write it 4 times */
-.project-card, .skill-category, .education-card, .experience-card {
+.project-card,
+.skill-category,
+.education-card,
+.experience-card {
     border-radius: 16px;
     padding: 2rem;
-    border-left: none; /* Removing the flat border from earlier */
-    
+    border-left: none;
+    /* Removing the flat border from earlier */
+
     /* Simulating a physical surface */
     background: linear-gradient(145deg, #1a2436, #141c2b);
     border: 1px solid rgba(255, 255, 255, 0.03);
-    
+
     /* 3D Shadows: Dark shadow on bottom right, light reflection on top left */
-    box-shadow: 
-        10px 10px 20px rgba(0, 0, 0, 0.6), 
+    box-shadow:
+        10px 10px 20px rgba(0, 0, 0, 0.6),
         -5px -5px 15px rgba(255, 255, 255, 0.02),
         inset 1px 1px 2px rgba(255, 255, 255, 0.05);
-        
+
     /* Smooth transition for the hover lift */
     transition: transform 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275), box-shadow 0.4s ease;
-    
+
     /* Needed for the JS 3D tilt effect */
-    transform-style: preserve-3d; 
+    transform-style: preserve-3d;
     will-change: transform;
 }
 
 /* 3D Pop-out effect on hover */
-.project-card:hover, .skill-category:hover, .education-card:hover {
+.project-card:hover,
+.skill-category:hover,
+.education-card:hover {
     transform: translateY(-10px) scale(1.02);
-    box-shadow: 
-        15px 15px 30px rgba(0, 0, 0, 0.8), 
+    box-shadow:
+        15px 15px 30px rgba(0, 0, 0, 0.8),
         -8px -8px 20px rgba(255, 255, 255, 0.03),
         inset 1px 1px 3px rgba(255, 255, 255, 0.1);
-    border-color: rgba(56, 189, 248, 0.3); /* Subtle accent glow */
+    border-color: rgba(56, 189, 248, 0.3);
+    /* Subtle accent glow */
 }
 
 /* Make text inside the cards pop out in 3D */
-.project-card h3, .skill-category h3, .education-card h3 {
-    transform: translateZ(30px); /* Pushes text closer to the screen */
+.project-card h3,
+.skill-category h3,
+.education-card h3 {
+    transform: translateZ(30px);
+    /* Pushes text closer to the screen */
 }
 
 
@@ -472,12 +535,16 @@ body {
 
 /* --- Tablet / Small Laptops (Max Width: 1024px) --- */
 @media (max-width: 1024px) {
+
     /* Reduce the heavy 10% side padding to give elements more room */
-    nav, .hero, .container, footer {
+    nav,
+    .hero,
+    .container,
+    footer {
         padding-left: 5%;
         padding-right: 5%;
     }
-    
+
     .hero h1 {
         font-size: 3.2rem;
     }
@@ -485,6 +552,7 @@ body {
 
 /* --- Mobile Phones (Max Width: 768px) --- */
 @media (max-width: 768px) {
+
     /* Center the Hero section on mobile */
     .hero {
         align-items: center;
@@ -494,23 +562,31 @@ body {
         padding-bottom: 4rem;
     }
 
-    .hero h1 { font-size: 2.5rem; }
-    .hero h2 { font-size: 1.5rem; }
-    .hero p { font-size: 1rem; }
+    .hero h1 {
+        font-size: 2.5rem;
+    }
+
+    .hero h2 {
+        font-size: 1.5rem;
+    }
+
+    .hero p {
+        font-size: 1rem;
+    }
 
     /* Hide nav links on mobile (keeps header clean) */
-    .nav-links { display: none; }
+    
 
     /* Stack buttons and make them tap-friendly */
-    .hero-buttons { 
-        flex-direction: column; 
-        width: 100%; 
+    .hero-buttons {
+        flex-direction: column;
+        width: 100%;
         max-width: 300px;
         gap: 1rem;
     }
-    
-    .btn { 
-        text-align: center; 
+
+    .btn {
+        text-align: center;
         width: 100%;
     }
 
@@ -526,24 +602,140 @@ body {
     }
 
     /* Reduce internal card padding to save screen space */
-    .project-card, .skill-category, .education-card, .experience-card {
+    .project-card,
+    .skill-category,
+    .education-card,
+    .experience-card {
         padding: 1.5rem;
     }
 }
 
 /* --- Small Mobile Phones (Max Width: 480px) --- */
 @media (max-width: 480px) {
-    .hero h1 { font-size: 2.2rem; }
-    .hero h2 { font-size: 1.2rem; }
+    .hero h1 {
+        font-size: 2.2rem;
+    }
+
+    .hero h2 {
+        font-size: 1.2rem;
+    }
 
     /* Override the minmax grids to force a single column on very thin screens */
-    .project-grid, .skills-grid, .education-grid {
+    .project-grid,
+    .skills-grid,
+    .education-grid {
         grid-template-columns: 1fr;
     }
-    
+
     /* Make the skill tags slightly smaller to fit better */
     .skill-tag {
         padding: 0.4rem 0.8rem;
         font-size: 0.75rem;
     }
+}
+
+/* ================================
+   MOBILE SIDE HAMBURGER MENU
+================================ */
+
+.hamburger{
+ display:none;
+ cursor:pointer;
+ flex-direction:column;
+ gap:5px;
+ z-index:1001;
+}
+
+.hamburger .bar{
+ width:25px;
+ height:3px;
+ background-color:var(--text-primary);
+ transition:.3s;
+}
+
+
+/* MOBILE */
+@media screen and (max-width:768px){
+
+.hamburger{
+ display:flex;
+}
+
+/* SIDE PANEL */
+.nav-links{
+
+ position:fixed;
+
+ top:0;
+ right:-100%;
+
+ flex-direction:column;
+
+ background-color:var(--bg-main);
+
+ width:260px;
+ height:100vh;
+
+ padding-top:90px;
+ padding-left:30px;
+
+ transition:right .35s ease;
+
+ z-index:999;
+
+ display:flex;
+}
+
+/* SHOW MENU */
+
+.nav-links.active{
+
+ right:0;
+
+}
+
+.nav-links li{
+
+ /* margin:22px 0; */
+ list-style:none;
+
+}
+
+.nav-links a{
+
+ color:var(--text-primary);
+ font-size:18px;
+
+}
+
+
+/* HAMBURGER TO X */
+
+.hamburger.active .bar:nth-child(1){
+
+ transform:translateY(8px) rotate(45deg);
+
+}
+
+.hamburger.active .bar:nth-child(2){
+
+ opacity:0;
+
+}
+
+.hamburger.active .bar:nth-child(3){
+
+ transform:translateY(-8px) rotate(-45deg);
+
+}
+
+}
+
+
+/* STOP BODY SCROLL */
+
+body.menu-open{
+
+ overflow:hidden;
+
 }

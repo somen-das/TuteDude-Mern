@@ -1,14 +1,35 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Somen Das | Frontend Developer</title> <link rel="stylesheet" href="style.css">
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700&family=JetBrains+Mono&display=swap" rel="stylesheet">
+    <title>Somen Das | Frontend Developer</title>
+    <meta name="description"
+    content="Frontend Developer with 3+ years experience in React.js and Next.js specializing in SEO-friendly and scalable web applications.">
+    <meta name="keywords"
+    content="Frontend Developer, React Developer India, Next.js Developer, Web Developer Portfolio">
+    <meta name="author" content="Somen Das">
+    <link rel="stylesheet" href="style.css">
+    <!-- <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700&family=JetBrains+Mono&display=swap"rel="stylesheet"> -->
+     <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 </head>
+
 <body>
-    <nav>
-        <div class="logo">Somen<span>Das</span></div> <ul class="nav-links">
+
+    <nav aria-label="Main Navigation">
+        <div class="logo" id="#">
+            <a href="#">Somen<span>Das</span></a>
+        </div>
+
+        <div class="hamburger" id="hamburger" aria-label="Menu" role="button">
+            <span class="bar"></span>
+            <span class="bar"></span>
+            <span class="bar"></span>
+        </div>
+
+        <ul class="nav-links" id="nav-links">
             <li><a href="#about">About</a></li>
             <li><a href="#skills">Skills</a></li>
             <li><a href="#experience">Experience</a></li>
@@ -18,16 +39,30 @@
         </ul>
     </nav>
 
-    <header class="hero" id="about">
-        <h1>Hi, I'm <span class="highlight">Somen Das</span></h1> <h2>Web Developer (React JS, Next JS)</h2> <p>Frontend Web Developer with over 3 years 3 months of experience at Digital Aptech Pvt. Ltd., specializing in React.js and Next.js. Proficient in Redux, API integration, performance optimization, and creating SEO-friendly websites. Skilled in Git version control and currently expanding knowledge in TypeScript and Node.js. Committed to delivering clean, scalable, and maintainable code while contributing to efficient and high-performance web applications. </p> <div class="hero-buttons">
+
+    <header class="hero" id="about" role="banner">
+        <h1>Hi, I'm <span class="highlight">Somen Das</span></h1>
+        <h2>Web Developer (React JS, Next JS)</h2>
+        <p>Frontend Web Developer with over 3 years 3 months of experience at Digital Aptech Pvt. Ltd., specializing in
+            React.js and Next.js. Proficient in Redux, API integration, performance optimization, and creating
+            SEO-friendly websites. Skilled in Git version control and currently expanding knowledge in TypeScript and
+            Node.js. Committed to delivering clean, scalable, and maintainable code while contributing to efficient and
+            high-performance web applications. </p>
+        <div class="hero-buttons">
             <a href="#projects" class="btn">View My Work</a>
-            <a href="mailto:indsomen@gmail.com" class="btn btn-outline">Contact Me</a> </div>
+            <a href="mailto:indsomen@gmail.com" class="btn btn-outline">Contact Me</a>
+            <a href="/resume.pdf"
+                download
+                class="btn btn-outline">
+                Download Resume
+                </a>
+        </div>
     </header>
 
     <section id="skills" class="container">
         <h2 class="section-title">Technical Skills</h2>
         <div class="skills-grid">
-            
+
             <div class="skill-category">
                 <h3>Frontend & State</h3>
                 <div class="skill-tags">
@@ -76,7 +111,9 @@
     <section id="experience" class="container">
         <h2 class="section-title">Experience & Achievements</h2>
         <div class="experience-card">
-            <h3>Frontend Web Developer</h3> <p class="company">Digital Aptech Pvt. Ltd. | West Bengal, India</p> <ul class="experience-list">
+            <h3>Frontend Web Developer</h3>
+            <p class="company">Digital Aptech Pvt. Ltd. | West Bengal, India</p>
+            <ul class="experience-list">
                 <li>Over 3 years and 3 months of experience building high-performance web applications. </li>
                 <li><strong>Award:</strong> "Employee of the Month" recipient (August 2023). </li>
                 <li>Proficient in Redux, API integration, and performance optimization. </li>
@@ -87,7 +124,7 @@
     <section id="education" class="container">
         <h2 class="section-title">Education</h2>
         <div class="education-grid">
-            
+
             <div class="education-card">
                 <h3>Bachelor of Technology </h3>
                 <p class="duration">2021 - 2024 </p>
@@ -116,78 +153,88 @@
     </section>
 
     <section id="projects" class="container">
-    <h2 class="section-title">Featured Projects</h2>
-    <div class="project-grid">
-        
-        <div class="project-card">
-            <div class="project-content">
-                <a href="https://legismusic.com" target="_blank" class="project-link">
-                    <h3>Legismusic</h3>
-                </a>  
-                <p class="tech-stack">React.js, Redux, REST API, i18next</p> 
-                <p>A multilingual music streaming and blogging platform offering content in English, French, and Spanish.</p> 
+        <h2 class="section-title">Featured Projects</h2>
+        <div class="project-grid">
+
+            <div class="project-card">
+                <div class="project-content">
+                    <a href="https://legismusic.com" target="_blank" rel="noopener noreferrer" class="project-link">
+                        <h3>Legismusic</h3>
+                    </a>
+                    <p class="tech-stack">React.js, Redux, REST API, i18next</p>
+                    <p>A multilingual music streaming and blogging platform offering content in English, French, and
+                        Spanish.</p>
+                </div>
             </div>
-        </div>
 
-        <div class="project-card">
-            <div class="project-content">
-                <a href="https://legismusic.com/music" target="_blank" class="project-link">
-                    <h3>Tunecutter</h3>
-                </a>
-                <p class="tech-stack">Next.js, Redux, Stripe, REST API</p> 
-                <p>A music streaming platform supporting playback, blog content, and subscription-based access.</p> 
+            <div class="project-card">
+                <div class="project-content">
+                    <a href="https://legismusic.com/music" target="_blank" rel="noopener noreferrer" class="project-link">
+                        <h3>Tunecutter</h3>
+                    </a>
+                    <p class="tech-stack">Next.js, Redux, Stripe, REST API</p>
+                    <p>A music streaming platform supporting playback, blog content, and subscription-based access.</p>
+                </div>
             </div>
-        </div>
 
-        <div class="project-card">
-            <div class="project-content">
-                <a href="https://bcuz.us/" target="_blank" class="project-link">
-                    <h3>Bcuz</h3>
-                </a>
-                <p class="tech-stack">Next.js, Redux Toolkit, Google Maps API</p> 
-                <p>A charity-based platform connecting users, restaurants, and event organizers for food donations.</p> 
+            <div class="project-card">
+                <div class="project-content">
+                    <a href="https://bcuz.us/" target="_blank" rel="noopener noreferrer" class="project-link">
+                        <h3>Bcuz</h3>
+                    </a>
+                    <p class="tech-stack">Next.js, Redux Toolkit, Google Maps API</p>
+                    <p>A charity-based platform connecting users, restaurants, and event organizers for food donations.
+                    </p>
+                </div>
             </div>
-        </div>
 
-        <div class="project-card">
-            <div class="project-content">
-                <a href="https://www.isuzu.co.za/" target="_blank" class="project-link">
-                    <h3>Isuzu</h3>
-                </a>
-                <p class="tech-stack">Next.js, Redux Toolkit, REST API</p> 
-                <p>A car showcase platform for Isuzu South Africa displaying detailed models, comparisons, and dealerships.</p> 
+            <div class="project-card">
+                <div class="project-content">
+                    <a href="https://www.isuzu.co.za/" target="_blank" rel="noopener noreferrer" class="project-link">
+                        <h3>Isuzu</h3>
+                    </a>
+                    <p class="tech-stack">Next.js, Redux Toolkit, REST API</p>
+                    <p>A car showcase platform for Isuzu South Africa displaying detailed models, comparisons, and
+                        dealerships.</p>
+                </div>
             </div>
-        </div>
 
-        <div class="project-card">
-            <div class="project-content">
-                <a href="https://pricemal.com/" target="_blank" class="project-link">
-                    <h3>Pricemal</h3>
-                </a>
-                <p class="tech-stack">Next.js</p> 
-                <p>A price comparison platform for products across multiple retailers.</p> 
+            <div class="project-card">
+                <div class="project-content">
+                    <a href="https://pricemal.com/" target="_blank" rel="noopener noreferrer" class="project-link">
+                        <h3>Pricemal</h3>
+                    </a>
+                    <p class="tech-stack">Next.js</p>
+                    <p>A price comparison platform for products across multiple retailers.</p>
+                </div>
             </div>
-        </div>
 
-        <div class="project-card">
-            <div class="project-content">
-                <a href="https://taxsimba.com/" target="_blank" class="project-link">
-                    <h3>Taxsimba</h3>
-                </a>
-                <p class="tech-stack">Next.js, Redux, Stripe, Google Translator</p> 
-                <p>A tax simulation platform for calculating and comparing tax liabilities across different jurisdictions.</p> 
+            <div class="project-card">
+                <div class="project-content">
+                    <a href="https://taxsimba.com/" target="_blank" rel="noopener noreferrer" class="project-link">
+                        <h3>Taxsimba</h3>
+                    </a>
+                    <p class="tech-stack">Next.js, Redux, Stripe, Google Translator</p>
+                    <p>A tax simulation platform for calculating and comparing tax liabilities across different
+                        jurisdictions.</p>
+                </div>
             </div>
+
         </div>
+    </section>
 
-    </div>
-</section>
-
-    <footer id="contact">
+    <footer id="contact" role="contentinfo">
         <h2>Let's Connect</h2>
-        <p>Currently expanding my knowledge in TypeScript and Node.js. Let's build something great together.</p> <div class="social-links">
-            <a href="https://www.linkedin.com/in/somen-das-7b5734215" target="_blank">LinkedIn</a> <a href="mailto:indsomen@gmail.com">indsomen@gmail.com</a> <p>+91 7029664271</p> </div>
-        <p class="copyright">© <span id="year"></span> Somen Das. All rights reserved.</p> </footer>
+        <p>Currently expanding my knowledge in TypeScript and Node.js. Let's build something great together.</p>
+        <div class="social-links">
+            <a href="https://www.linkedin.com/in/somen-das-7b5734215" target="_blank" rel="noopener noreferrer">LinkedIn</a> <a
+                href="mailto:indsomen@gmail.com">indsomen@gmail.com</a>
+            <p>+91 7029664271</p>
+        </div>
+        <p class="copyright">© <span id="year"></span> Somen Das. All rights reserved.</p>
+    </footer>
 
     <script src="script.js"></script>
 </body>
+
 </html>
