@@ -1,46 +1,92 @@
-// console.log('one');
-// console.log('Two');
-// console.log('Three');
-// console.log('Four');
+// // console.log('one');
+// // console.log('Two');
+// // console.log('Three');
+// // console.log('Four');
 
-// setTimeout(function(){
-//     console.log('This is afer 3 second ')
-// }, 3000);
-
-
+// // setTimeout(function(){
+// //     console.log('This is afer 3 second ')
+// // }, 3000);
 
 
-// function getCandied(callback1){
-//     setTimeout(()=>{
-//         const candies = "🍭";
-//         callback1(candies)
-//         console.log('Here is your cnadie==>', candies);
-//     }, 2000  );
 
+
+// // function getCandied(callback1){
+// //     setTimeout(()=>{
+// //         const candies = "🍭";
+// //         callback1(candies)
+// //         console.log('Here is your cnadie==>', candies);
+// //     }, 2000  );
+
+// // }
+
+// // function handOverCandies(candies, callback2){
+// //     setTimeout(()=>{
+// //         const keys = candies + '🔑'
+// //         console.log('this is our keys', keys)
+// //         callback2(keys);
+// //     }, 3000)
+// // }
+
+// // function onbording(keys, callBack3){
+// //     setTimeout(()=>{
+// //         const onborded = keys + "🏨"
+// //         console.log('this onborded methos', onborded)
+// //         callBack3(onborded)
+// //     }, 6000)
+// // }
+
+// // getCandied((candies)=>{
+// //     handOverCandies(candies,(keys)=>{
+// //         onbording(keys, (onborded)=>{
+// //             console.log('welcome to our resturant', onborded);
+// //         })
+// //     })
+// // })
+
+
+
+// // closer example
+// function fun(){
+//     let a = 10;
+    
+
+//     function fun2(){
+//         let b = 20;
+
+//         function fun3(){
+//             let c = 30;;
+//             console.log(a,b,c)
+//         }
+//         // fun3()
+//     }
+//     // fun2()
+// }
+// // fun()
+
+// console.log(a); 
+// var a = 5;
+
+
+
+
+
+
+
+// function fun(){
+//     let a = 10;
+//     console.log(a,b)
+//     function fun2(){
+//         let b = 20;
+//     console.log(a,b)
+//     }
+//     fun2()
 // }
 
-// function handOverCandies(candies, callback2){
-//     setTimeout(()=>{
-//         const keys = candies + '🔑'
-//         console.log('this is our keys', keys)
-//         callback2(keys);
-//     }, 3000)
-// }
+// fun();
 
-// function onbording(keys, callBack3){
-//     setTimeout(()=>{
-//         const onborded = keys + "🏨"
-//         console.log('this onborded methos', onborded)
-//         callBack3(onborded)
-//     }, 6000)
-// }
 
-// getCandied((candies)=>{
-//     handOverCandies(candies,(keys)=>{
-//         onbording(keys, (onborded)=>{
-//             console.log('welcome to our resturant', onborded);
-//         })
-//     })
-// })
+
+
+
 
 

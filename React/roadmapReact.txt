@@ -1,0 +1,15 @@
+1. React is a libarry
+2. Core Concepts of React ?
+3. Additions Addons to Reactor ?
+4. classbased component, functional baed components.
+5. After React
+6. Js vs JSX
+7. React vs React-Vite
+8. Single page applicatin mean
+9. React Strick mode
+10.React Fragments 
+11.What is Hooks and Props | also Hooks Props different
+12.
+13.
+14.
+15.

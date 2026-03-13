@@ -1,0 +1,429 @@
+/* General Reset & Styles */
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    font-family: 'Inter', sans-serif;
+    scroll-behavior: smooth; /* Enables smooth scrolling for anchor links */
+}
+
+body {
+    background-color: #ffffff;
+    color: #333;
+}
+
+/* Navbar */
+.navbar {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 20px 5%;
+    background-color: #fff;
+    box-shadow: 0 2px 5px rgba(0,0,0,0.05);
+}
+
+.logo {
+    font-size: 24px;
+    font-weight: 700;
+    color: #333;
+}
+
+.nav-links {
+    list-style: none;
+    display: flex;
+    gap: 30px;
+}
+
+.nav-links a {
+    text-decoration: none;
+    color: #666;
+    font-weight: 600;
+    transition: color 0.3s;
+}
+
+.nav-links a:hover {
+    color: #72a1e5;
+}
+
+.user-btn {
+    padding: 10px 20px;
+    background-color: #f0f5ff;
+    color: #72a1e5;
+    border: none;
+    border-radius: 8px;
+    font-weight: 600;
+    cursor: pointer;
+}
+
+/* Hero Section */
+.hero {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 80px 10%;
+    min-height: 70vh;
+}
+
+.hero-content {
+    max-width: 50%;
+}
+
+.hero-content h1 {
+    font-size: 3rem;
+    line-height: 1.2;
+    color: #444;
+    margin-bottom: 20px;
+}
+
+.highlight {
+    color: #72a1e5;
+}
+
+.hero-content p {
+    font-size: 1.1rem;
+    color: #777;
+    margin-bottom: 30px;
+    line-height: 1.6;
+}
+
+.btn-primary {
+    display: inline-block;
+    padding: 15px 30px;
+    background-color: #72a1e5;
+    color: white;
+    text-decoration: none;
+    font-weight: 600;
+    border-radius: 10px;
+    box-shadow: 0 4px 10px rgba(114, 161, 229, 0.4);
+    transition: transform 0.2s;
+}
+
+.btn-primary:hover {
+    transform: translateY(-2px);
+}
+
+.hero-image img {
+    max-width: 100%;
+    height: auto;
+}
+
+/* Achievements Section */
+.achievements {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    background-color: #72a1e5;
+    padding: 40px 10%;
+    color: #333;
+}
+
+.achievement-title h2 {
+    font-size: 2rem;
+    color: #1a1a1a;
+}
+
+.stats {
+    display: flex;
+    gap: 60px;
+}
+
+.stat-item {
+    text-align: center;
+}
+
+.stat-item h3 {
+    font-size: 1.8rem;
+    color: #1a1a1a;
+    margin-bottom: 5px;
+}
+
+.stat-item p {
+    font-size: 0.9rem;
+    color: #333;
+    font-weight: 600;
+}
+
+
+/* Booking Container */
+.booking-container {
+    display: flex;
+    gap: 30px;
+    padding: 60px 10%;
+    background-color: #f8f9fa;
+}
+
+/* Panels */
+.services-panel, .cart-panel, .form-panel {
+    background: #ffffff;
+    border-radius: 15px;
+    padding: 30px;
+    box-shadow: 0 4px 15px rgba(0,0,0,0.03);
+}
+
+.services-panel {
+    flex: 1.5;
+}
+
+.right-panel {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+}
+
+h2, h3 { color: #333; margin-bottom: 10px; }
+.subtitle { color: #777; font-size: 0.9rem; margin-bottom: 25px; }
+
+/* Service Items */
+.service-item {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 15px 0;
+    border-bottom: 1px solid #eee;
+}
+
+.service-info {
+    font-weight: 600;
+    color: #444;
+}
+
+.service-price { color: #72a1e5; margin-left: 10px; }
+
+/* Buttons */
+.btn-add, .btn-remove {
+    padding: 8px 15px;
+    border-radius: 8px;
+    border: 1px solid #eee;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.2s;
+}
+
+.btn-add { background: #f8f9fa; color: #555; }
+.btn-remove { background: #fff0f0; color: #d9534f; border-color: #fadada; }
+
+/* Cart Table */
+.cart-table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-bottom: 20px;
+    font-size: 0.9rem;
+}
+
+.cart-table th {
+    text-align: left;
+    color: #777;
+    padding-bottom: 15px;
+    border-bottom: 1px solid #eee;
+}
+
+.cart-table td {
+    padding: 15px 0;
+    border-bottom: 1px solid #f9f9f9;
+    color: #555;
+}
+
+.cart-total {
+    display: flex;
+    justify-content: space-between;
+    font-weight: 700;
+    font-size: 1.1rem;
+    color: #333;
+}
+
+/* Form */
+.input-group {
+    display: flex;
+    flex-direction: column;
+    margin-bottom: 15px;
+}
+
+.input-row {
+    display: flex;
+    gap: 15px;
+}
+
+label { font-size: 0.85rem; color: #555; margin-bottom: 5px; font-weight: 600;}
+input { padding: 12px; border: 1px solid #eee; border-radius: 8px; font-size: 0.9rem;}
+input:focus { outline: none; border-color: #72a1e5; }
+
+.btn-book {
+    width: 100%;
+    padding: 15px;
+    background: #6c5ce7; /* Purple from mockup */
+    color: white;
+    border: none;
+    border-radius: 8px;
+    font-weight: 700;
+    font-size: 1rem;
+    cursor: pointer;
+    margin-top: 10px;
+}
+
+.info-footer {
+    margin-top: 20px;
+    color: #72a1e5;
+    font-size: 0.9rem;
+}
+
+
+/* --- Features Section --- */
+.features-section {
+    display: flex;
+    justify-content: space-between;
+    gap: 30px;
+    padding: 60px 10%;
+    background-color: #ffffff;
+    text-align: center;
+}
+
+.feature-box {
+    flex: 1;
+}
+
+.feature-icon {
+    font-size: 2.5rem;
+    margin-bottom: 15px;
+    color: #333;
+}
+
+.feature-box h4 {
+    font-size: 1.1rem;
+    color: #1e293b;
+    margin-bottom: 10px;
+}
+
+.feature-box p {
+    font-size: 0.85rem;
+    color: #94a3b8;
+    line-height: 1.5;
+}
+
+/* --- Newsletter Section --- */
+.newsletter-section {
+    background-color: #72a1e5; /* The exact blue from your mockup */
+    padding: 60px 10%;
+    display: flex;
+    justify-content: center;
+}
+
+.newsletter-container {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    width: 100%;
+    max-width: 1000px;
+}
+
+.newsletter-text h2 {
+    color: #ffffff;
+    font-size: 2.2rem;
+    line-height: 1.2;
+    font-weight: 700;
+}
+
+.newsletter-form {
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+    width: 50%;
+}
+
+.newsletter-inputs {
+    display: flex;
+    gap: 15px;
+}
+
+.newsletter-inputs input {
+    flex: 1;
+    padding: 12px 15px;
+    background-color: rgba(255, 255, 255, 0.2); /* Semi-transparent white */
+    border: 1px solid rgba(255, 255, 255, 0.3);
+    border-radius: 4px;
+    color: #ffffff;
+    font-size: 0.9rem;
+}
+
+.newsletter-inputs input::placeholder {
+    color: rgba(255, 255, 255, 0.8);
+}
+
+.newsletter-inputs input:focus {
+    outline: none;
+    background-color: rgba(255, 255, 255, 0.3);
+}
+
+.btn-subscribe {
+    padding: 12px;
+    background-color: #ffffff;
+    color: #72a1e5;
+    border: none;
+    border-radius: 4px;
+    font-weight: 700;
+    cursor: pointer;
+    font-size: 1rem;
+    width: 50%;
+}
+
+/* --- Footer Section --- */
+.footer-section {
+    display: flex;
+    justify-content: space-between;
+    padding: 60px 10%;
+    background-color: #f8f9fc;
+    color: #64748b;
+    font-size: 0.9rem;
+}
+
+.footer-col {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+}
+
+.footer-logo {
+    font-size: 1.8rem;
+    color: #1e293b;
+    font-weight: 700;
+    margin-bottom: 5px;
+}
+
+.footer-heading {
+    font-size: 1.1rem;
+    color: #1e293b;
+    margin-bottom: 5px;
+}
+
+.footer-subheading {
+    font-size: 0.95rem;
+    color: #1e293b;
+    margin-top: 10px;
+}
+
+.footer-links {
+    list-style: none;
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+}
+
+.footer-links a {
+    text-decoration: none;
+    color: #94a3b8;
+    transition: color 0.3s;
+}
+
+.footer-links a:hover {
+    color: #72a1e5;
+}
+
+.social-icons {
+    display: flex;
+    gap: 15px;
+    font-size: 1.2rem;
+    color: #1e293b;
+    cursor: pointer;
+}
+
