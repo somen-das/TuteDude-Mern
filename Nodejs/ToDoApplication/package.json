@@ -1,0 +1,16 @@
+{
+  "name": "to-do-list-server",
+  "version": "1.0.0",
+  "description": "todo list apply on node mon server",
+  "license": "ISC",
+  "author": "Somen",
+  "type": "commonjs",
+  "main": "index.js",
+  "scripts": {
+    "start": "node index.js",
+    "dev": "nodemon index.js"
+    },
+  "dependencies": {
+    "nodemon": "^3.1.14"
+  }
+}

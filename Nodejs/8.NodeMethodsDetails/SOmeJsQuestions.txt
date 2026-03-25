@@ -1,0 +1,35 @@
+Examples:
+Input: nums = [3, 3, 6, 1]
+
+Output: 6
+
+Explanation: The largest element in array is 6
+
+
+Input: nums = [3, 3, 0, 99, -40]
+
+Output: 99
+
+Explanation: The largest element in array is 99
+
+Input: nums = [-4, -3, 0, 1, -8]
+
+Output:
+1
+Constraints:
+1 <= nums.length <= 105
+-104 <= nums[i] <= 104
+nums may contain duplicate elements.
+
+
+
+
+Palindrome,amstrong nymber kr
+
+
+
+ Factorial of a number
+ Reverse string
+ Check array is sorted or not
+
+

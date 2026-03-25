@@ -1,0 +1,20 @@
+{
+  "name": "10.mongodbconnect",
+  "version": "1.0.0",
+  "description": "",
+  "license": "ISC",
+  "author": "somen-dev",
+  "type": "commonjs",
+  "main": "server.js",
+  "scripts": {
+    "dev": "nodemon server.js",
+    "start": "nodemon --env-file=.env server.js"
+  },
+  "dependencies": {
+    "cors": "^2.8.6",
+    "dotenv": "^17.3.1",
+    "express": "^5.2.1",
+    "mongoose": "^9.3.1",
+    "nodemon": "^3.1.14"
+  }
+}
