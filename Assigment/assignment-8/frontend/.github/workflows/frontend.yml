@@ -1,0 +1,32 @@
+name: Frontend CI Pipeline
+
+on:
+  push:
+    branches: [ "main" ]
+
+jobs:
+  build-and-test:
+    runs-on: ubuntu-latest
+
+    steps:
+    # ১. গিটহাব থেকে আপনার কোডটা ওই কম্পিউটারে কপি করবে
+    - name: Checkout Code
+      uses: actions/checkout@v3
+
+    # ২. কম্পিউটারে Node.js ইন্সটল করবে
+    - name: Setup Node.js
+      uses: actions/setup-node@v3
+      with:
+        node-version: '18' # আপনার প্রজেক্টের ভার্সন
+
+    # ৩. সব প্যাকেজ ইন্সটল করবে
+    - name: Install Dependencies
+      run: npm install
+
+    # ৪. চেক করবে কোডে কোনো ভুল আছে কি না (যদি আপনার lint কনফিগার করা থাকে)
+    - name: Check Linting
+      run: npm run lint
+
+    # ৫. ফাইনালি চেক করবে প্রজেক্টটা ঠিকঠাক বিল্ড হচ্ছে কি না
+    - name: Test Build
+      run: npm run build
