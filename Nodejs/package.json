@@ -1,0 +1,12 @@
+{
+  "name": "nodejs",
+  "version": "1.0.0",
+  "description": "connected mongodb with my backend project",
+  "license": "ISC",
+  "author": "somen-dev",
+  "type": "commonjs",
+  "main": "2.Req-ResInNodeJs.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  }
+}
