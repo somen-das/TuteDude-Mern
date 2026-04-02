@@ -1,0 +1,15 @@
+services:
+  - type: web
+    name: todo-app-backend
+    env: node
+    region: singapore 
+    plan: free
+    buildCommand: npm install
+    startCommand: node server.js 
+    envVars:
+      - key: PORT
+        value: 3000
+      - key: MONGODB_URL
+        sync: false 
+      - key: FRONTEND_URL
+        value: https://assignment-8-somen.vercel.app
