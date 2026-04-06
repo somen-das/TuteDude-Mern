@@ -1,6 +1,8 @@
 const jwt = require('jsonwebtoken');
 const User = require('../models/User');
 
+const { sendEmail } = require('../utils/emailService');
+
 const generateToken = (id) => {
   return jwt.sign({ id }, process.env.JWT_SECRET, { expiresIn: '30d' });
 };
@@ -14,6 +16,17 @@ exports.registerUser = async (req, res) => {
     }
     const user = await User.create({ name, email, password, role, department });
     if (user) {
+      // Send Welcome Email
+      await sendEmail({
+        to: user.email,
+        subject: `Welcome to PassManager - ${role} Account Created`,
+        html: `
+          <h2>Welcome, ${user.name}!</h2>
+          <p>An administrator has created a <strong>${user.role}</strong> account for you in the Visitor Pass Management System.</p>
+          <p>You can login using this email and the password provided to you by the admin.</p>
+        `
+      });
+
       res.status(201).json({
         _id: user.id,
         name: user.name,

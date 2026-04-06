@@ -13,21 +13,21 @@ const Sidebar = () => {
   };
 
   return (
-    <aside style={{ width: '260px', padding: '24px', background: 'rgba(15, 23, 42, 0.8)', borderRight: '1px solid var(--surface-border)', display: 'flex', flexDirection: 'column', height: '100vh', position: 'fixed' }}>
-      <h2 style={{ fontSize: '1.5rem', fontWeight: 'bold', color: '#fff', marginBottom: '40px' }}>
+    <aside style={{ width: '260px', padding: '24px', background: 'var(--surface)', borderRight: '1px solid var(--surface-border)', display: 'flex', flexDirection: 'column', height: '100vh', position: 'fixed' }}>
+      <h2 style={{ fontSize: '1.5rem', fontWeight: 'bold', color: 'var(--text-color)', marginBottom: '40px' }}>
         Pass<span style={{ color: 'var(--primary)' }}>Manager</span>
       </h2>
 
       <nav style={{ flex: 1, display: 'flex', flexDirection: 'column', gap: '16px' }}>
-        <div style={{ display: 'flex', alignItems: 'center', gap: '12px', padding: '12px', background: 'rgba(59, 130, 246, 0.1)', borderRadius: '8px', color: 'var(--primary)', cursor: 'pointer' }}>
+        <div style={{ display: 'flex', alignItems: 'center', gap: '12px', padding: '12px', background: 'rgba(37, 99, 235, 0.1)', borderRadius: '6px', color: 'var(--primary)', cursor: 'pointer', fontWeight: '500' }}>
           <LayoutDashboard size={20} />
           <span>Dashboard</span>
         </div>
       </nav>
 
-      <div style={{ padding: '16px', background: 'rgba(255,255,255,0.05)', borderRadius: '8px', marginBottom: '16px' }}>
-        <p style={{ margin: 0, fontWeight: 'bold', fontSize: '0.9rem' }}>{user?.name}</p>
-        <p style={{ margin: 0, color: '#94a3b8', fontSize: '0.8rem' }}>{user?.role}</p>
+      <div style={{ padding: '16px', background: '#f8fafc', border: '1px solid var(--surface-border)', borderRadius: '6px', marginBottom: '16px' }}>
+        <p style={{ margin: 0, fontWeight: '600', fontSize: '0.9rem', color: '#0f172a' }}>{user?.name}</p>
+        <p style={{ margin: 0, color: '#64748b', fontSize: '0.8rem' }}>{user?.role}</p>
       </div>
 
       <button onClick={handleLogout} className="btn btn-danger" style={{ width: '100%' }}>

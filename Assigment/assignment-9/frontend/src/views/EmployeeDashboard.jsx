@@ -72,14 +72,14 @@ const EmployeeDashboard = () => {
                        <div style={{ fontSize: '0.7rem' }}>Pass: {appt.passId}</div>
                      </div>
                   ) : (
-                    <span style={{ color: '#94a3b8' }}>-</span>
+                    <span style={{ color: '#64748b' }}>-</span>
                   )}
                 </td>
               </tr>
             ))}
             {appointments.length === 0 && (
               <tr>
-                <td colSpan="6" style={{ textAlign: 'center', color: '#94a3b8' }}>No visitor requests found.</td>
+                <td colSpan="6" style={{ textAlign: 'center', color: '#64748b' }}>No visitor requests found.</td>
               </tr>
             )}
           </tbody>

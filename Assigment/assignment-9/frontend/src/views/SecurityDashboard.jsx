@@ -70,13 +70,13 @@ const SecurityDashboard = () => {
       <div className="glass-panel">
         <h3 style={{ fontSize: '1.25rem', marginBottom: '20px' }}>Scan Result</h3>
         {errorMsg && (
-          <div style={{ background: 'rgba(239, 68, 68, 0.2)', color: '#f87171', padding: '16px', borderRadius: '8px' }}>
+          <div style={{ background: '#fee2e2', color: '#dc2626', padding: '16px', borderRadius: '8px' }}>
             {errorMsg}
           </div>
         )}
         
         {scanResult && (
-          <div className="animate-fade-in" style={{ padding: '20px', background: 'rgba(16, 185, 129, 0.1)', border: '1px solid var(--success)', borderRadius: '8px' }}>
+          <div className="animate-fade-in" style={{ padding: '20px', background: '#d1fae5', border: '1px solid var(--success)', borderRadius: '8px' }}>
             <h4 style={{ color: 'var(--success)', marginBottom: '8px', fontSize: '1.2rem' }}>{scanResult.message}</h4>
             <div style={{ marginBottom: '16px' }}>
               <p><strong>Visitor:</strong> {scanResult.appointment?.visitorId?.name}</p>
@@ -87,7 +87,7 @@ const SecurityDashboard = () => {
         )}
         
         {!scanResult && !errorMsg && (
-          <div style={{ color: '#94a3b8', textAlign: 'center', padding: '40px 0' }}>
+          <div style={{ color: '#64748b', textAlign: 'center', padding: '40px 0' }}>
             Awaiting scan...
           </div>
         )}

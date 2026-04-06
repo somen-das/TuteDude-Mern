@@ -24,11 +24,11 @@ const Login = () => {
       <div className="glass-panel animate-fade-in" style={{ width: '100%', maxWidth: '400px' }}>
         <div style={{ textAlign: 'center', marginBottom: '32px' }}>
           <h2 className="heading" style={{ marginBottom: '8px' }}>Staff Login</h2>
-          <p style={{ color: '#94a3b8' }}>Access your PassManager dashboard</p>
+          <p style={{ color: '#475569' }}>Access your PassManager dashboard</p>
         </div>
 
         {error && (
-          <div style={{ background: 'rgba(239, 68, 68, 0.2)', color: '#f87171', padding: '12px', borderRadius: '8px', marginBottom: '20px', fontSize: '0.9rem' }}>
+          <div style={{ background: '#fee2e2', color: '#dc2626', padding: '12px', borderRadius: '8px', marginBottom: '20px', fontSize: '0.9rem' }}>
             {error}
           </div>
         )}
@@ -60,7 +60,7 @@ const Login = () => {
         </form>
 
         <div style={{ marginTop: '24px', textAlign: 'center', fontSize: '0.9rem' }}>
-          <span style={{ color: '#94a3b8' }}>Are you a visitor? </span>
+          <span style={{ color: '#475569' }}>Are you a visitor? </span>
           <Link to="/register-visitor" style={{ color: 'var(--primary)', textDecoration: 'none' }}>Pre-Register Here</Link>
         </div>
       </div>

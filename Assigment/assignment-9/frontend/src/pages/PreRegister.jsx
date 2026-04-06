@@ -42,10 +42,10 @@ const PreRegister = () => {
     <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', minHeight: '100vh', padding: '20px' }}>
       <div className="glass-panel animate-fade-in" style={{ width: '100%', maxWidth: '600px' }}>
         <h2 className="heading" style={{ textAlign: 'center' }}>Visitor Pre-Registration</h2>
-        <p style={{ textAlign: 'center', color: '#94a3b8', marginBottom: '24px' }}>Please fill out the form to request a visitor pass.</p>
+        <p style={{ textAlign: 'center', color: '#475569', marginBottom: '24px' }}>Please fill out the form to request a visitor pass.</p>
 
-        {successMsg && <div style={{ background: 'rgba(16, 185, 129, 0.2)', color: '#34d399', padding: '16px', borderRadius: '8px', marginBottom: '20px' }}>{successMsg}</div>}
-        {errorMsg && <div style={{ background: 'rgba(239, 68, 68, 0.2)', color: '#f87171', padding: '16px', borderRadius: '8px', marginBottom: '20px' }}>{errorMsg}</div>}
+        {successMsg && <div style={{ background: '#d1fae5', color: '#059669', padding: '16px', borderRadius: '8px', marginBottom: '20px' }}>{successMsg}</div>}
+        {errorMsg && <div style={{ background: '#fee2e2', color: '#dc2626', padding: '16px', borderRadius: '8px', marginBottom: '20px' }}>{errorMsg}</div>}
 
         <form onSubmit={handleSubmit} style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '16px' }}>
           <div>
@@ -88,7 +88,7 @@ const PreRegister = () => {
         </form>
 
         <div style={{ marginTop: '24px', textAlign: 'center', fontSize: '0.9rem' }}>
-          <span style={{ color: '#94a3b8' }}>Are you a staff member? </span>
+          <span style={{ color: '#475569' }}>Are you a staff member? </span>
           <Link to="/login" style={{ color: 'var(--primary)', textDecoration: 'none' }}>Staff Login</Link>
         </div>
       </div>
