@@ -11,7 +11,6 @@ const PreRegister = () => {
   const [errorMsg, setErrorMsg] = useState('');
 
   useEffect(() => {
-    alert(import.meta.env.VITE_API_URL)
     const fetchHosts = async () => {
       try {
         const { data } = await axios.get(import.meta.env.VITE_API_URL + '/visitors/hosts');
