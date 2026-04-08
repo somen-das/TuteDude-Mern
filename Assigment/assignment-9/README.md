@@ -58,3 +58,19 @@ npm run dev
 
 ## Demo Video & Evidence
 *(Generate through Antigravity Browser Recorder Tool during walkthroughs).*
+
+
+
+
+
+
+
+<!-- For my server and bd credentials -->
+# mongobd atlas credentials
+Username: somend551_db_user
+Password: N7JPz1L9gtUntb59
+
+mongodb://somend551_db_user:N7JPz1L9gtUntb59@ac-a2hzpwt-shard-00-00.kedkxs5.mongodb.net:27017,ac-a2hzpwt-shard-00-01.kedkxs5.mongodb.net:27017,ac-a2hzpwt-shard-00-02.kedkxs5.mongodb.net:27017/?ssl=true&replicaSet=atlas-ephgdq-shard-0&authSource=admin&appName=Cluster0
+
+# server url
+

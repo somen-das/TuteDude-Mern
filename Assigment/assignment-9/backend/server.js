@@ -22,11 +22,20 @@ app.use('/api/visitors', visitorRoutes);
 app.use('/api/appointments', appointmentRoutes);
 app.use('/api/analytics', analyticsRoutes);
 
+if (!process.env.MONGODB_URI) {
+  console.error('FATAL ERROR: MONGODB_URI is not defined.');
+  process.exit(1);
+}
+
 mongoose.connect(process.env.MONGODB_URI)
   .then(() => {
     console.log('Connected to MongoDB');
-    app.listen(PORT, () => {
-      console.log(`Server running on port ${PORT}`);
-    });
   })
-  .catch(err => console.error('MongoDB connection error:', err));
+  .catch(err => {
+    console.error('MongoDB connection error:', err.message);
+    process.exit(1); // Force exit with error code so Render shows exactly what failed
+  });
+
+app.listen(PORT, () => {
+  console.log(`Server running on port ${PORT}`);
+});
