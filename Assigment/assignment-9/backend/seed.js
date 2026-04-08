@@ -30,7 +30,6 @@ mongoose.connect(process.env.MONGODB_URI)
   .then(async () => {
     console.log('Connected to MongoDB');
     await User.deleteMany();
-    // Use User.create instead of insertMany to ensure the pre('save') hook runs!
     for (const u of users) {
       await User.create(u);
     }

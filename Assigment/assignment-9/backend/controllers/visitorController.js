@@ -24,7 +24,7 @@ exports.registerVisitor = async (req, res) => {
       purpose
     });
 
-    // 1. Email to Visitor
+    
     await sendEmail({
       to: visitor.email,
       subject: `Visitor Pass Request Received - ${host.name}`,
@@ -35,7 +35,7 @@ exports.registerVisitor = async (req, res) => {
       `
     });
 
-    // 2. Alert Email to Host
+    
     await sendEmail({
       to: host.email,
       subject: `New Visitor Request: ${visitor.name}`,

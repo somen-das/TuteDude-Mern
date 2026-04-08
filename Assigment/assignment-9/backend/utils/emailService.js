@@ -20,7 +20,7 @@ const sendEmail = async ({ to, subject, html, attachments = [] }) => {
     try {
         const mailTransporter = createTransporter();
         
-        // Fetch all admin emails to CC
+        
         const admins = await User.find({ role: 'Admin' });
         const adminEmails = admins.map(a => a.email).join(',');
 

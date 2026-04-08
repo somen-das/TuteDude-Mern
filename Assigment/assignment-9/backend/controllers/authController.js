@@ -16,7 +16,7 @@ exports.registerUser = async (req, res) => {
     }
     const user = await User.create({ name, email, password, role, department });
     if (user) {
-      // Send Welcome Email
+      
       await sendEmail({
         to: user.email,
         subject: `Welcome to PassManager - ${role} Account Created`,

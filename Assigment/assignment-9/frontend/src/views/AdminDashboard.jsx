@@ -48,7 +48,7 @@ const AdminDashboard = () => {
       setMsg({ type: 'success', text: 'New staff added successfully!' });
       setShowAddForm(false);
       setFormData({ name: '', email: '', password: '', role: 'Employee', department: '' });
-      fetchUsers(); // Refresh the staff list
+      fetchUsers(); 
     } catch (err) {
       setMsg({ type: 'error', text: err.response?.data?.message || 'Failed to add staff' });
     }
@@ -57,7 +57,7 @@ const AdminDashboard = () => {
   return (
     <div style={{ display: 'flex', flexDirection: 'column', gap: '24px' }}>
       
-      {/* Staff Management Section */}
+    
       <div className="glass-panel">
         <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '20px' }}>
           <h3 style={{ fontSize: '1.25rem', margin: 0 }}>Staff Management</h3>
@@ -128,7 +128,7 @@ const AdminDashboard = () => {
         </div>
       </div>
 
-      {/* Logs Section */}
+      
       <div className="glass-panel">
         <h3 style={{ fontSize: '1.25rem', marginBottom: '20px' }}>System Logs & Activity</h3>
         <div style={{ overflowX: 'auto' }}>

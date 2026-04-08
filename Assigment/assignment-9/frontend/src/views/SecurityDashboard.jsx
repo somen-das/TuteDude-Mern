@@ -17,7 +17,7 @@ const SecurityDashboard = () => {
       handleScanSubmit(text);
       scanner.clear();
     }, (err) => {
-      // Ignore scan errors, as they happen continuously when no QR is in frame
+      
     });
 
     return () => {

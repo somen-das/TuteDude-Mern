@@ -29,7 +29,6 @@ h1, h2, h3, h4, h5, h6 {
   color: #0f172a;
 }
 
-/* Panel Classes (replaces glass-panel) */
 .glass-panel {
   background: var(--surface);
   border: 1px solid var(--surface-border);
@@ -72,7 +71,6 @@ h1, h2, h3, h4, h5, h6 {
   background: #059669;
 }
 
-/* Minimalist Inputs */
 .input-field {
   width: 100%;
   padding: 10px 12px;
@@ -106,7 +104,6 @@ label {
   color: #0f172a;
 }
 
-/* Animations */
 @keyframes fadeIn {
   from { opacity: 0; transform: translateY(5px); }
   to { opacity: 1; transform: translateY(0); }
@@ -116,7 +113,6 @@ label {
   animation: fadeIn 0.3s ease forwards;
 }
 
-/* Table styling for Dashboards */
 .data-table {
   width: 100%;
   border-collapse: collapse;

@@ -8,11 +8,9 @@ dotenv.config();
 const app = express();
 const PORT = process.env.PORT || 5000;
 
-// Middleware
 app.use(express.json());
 app.use(cors());
 
-// Routes
 const authRoutes = require('./routes/auth');
 const visitorRoutes = require('./routes/visitors');
 const appointmentRoutes = require('./routes/appointments');
@@ -22,7 +20,6 @@ app.use('/api/auth', authRoutes);
 app.use('/api/visitors', visitorRoutes);
 app.use('/api/appointments', appointmentRoutes);
 
-// Database connection
 mongoose.connect(process.env.MONGODB_URI)
   .then(() => {
     console.log('Connected to MongoDB');

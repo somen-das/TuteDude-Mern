@@ -41,19 +41,17 @@ exports.updateAppointmentStatus = async (req, res) => {
       appointment.passId = crypto.randomBytes(8).toString('hex');
       qrDataURL = await QRCode.toDataURL(appointment.passId);
       
-      // Convert standard Data URL to buffer for nodemailer
       const base64Data = qrDataURL.replace(/^data:image\/png;base64,/, "");
       attachments.push({
           filename: 'qrcode.png',
           content: base64Data,
           encoding: 'base64',
-          cid: 'qrcode-image' // same cid value as in the html img src
+          cid: 'qrcode-image' 
       });
     }
     
     await appointment.save();
 
-    // Fire proper email to visitor based on status
     if (status === 'Approved') {
       await sendEmail({
         to: appointment.visitorId.email,
@@ -99,7 +97,6 @@ exports.scanQR = async (req, res) => {
     if (!log) {
       log = await CheckLog.create({ appointmentId: appointment._id, checkInTime: new Date(), status: 'Checked In' });
       
-      // Email Host upon Check-in
       await sendEmail({
         to: appointment.hostId.email,
         subject: `Your Visitor has Arrived!`,
@@ -116,7 +113,6 @@ exports.scanQR = async (req, res) => {
       log.status = 'Checked Out';
       await log.save();
 
-      // Email Visitor upon Check-out
       await sendEmail({
         to: appointment.visitorId.email,
         subject: `Checkout Confirmed - Thank you for visiting`,

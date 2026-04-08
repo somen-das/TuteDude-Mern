@@ -37,7 +37,6 @@ This will insert the following users:
 ### 2. Run Backend
 ```bash
 cd backend
-# Edit `.env` if you need to point MONGODB_URI differently
 npm run dev
 ```
 

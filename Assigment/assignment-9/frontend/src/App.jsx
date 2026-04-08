@@ -3,7 +3,6 @@ import { AuthProvider, AuthContext } from './context/AuthContext';
 import { useContext } from 'react';
 import './index.css';
 
-// Pages
 import Login from './pages/Login';
 import Dashboard from './pages/Dashboard';
 import PreRegister from './pages/PreRegister';
@@ -26,7 +25,6 @@ function App() {
           <Route path="/login" element={<Login />} />
           <Route path="/register-visitor" element={<PreRegister />} />
           
-          {/* Protected Routes */}
           <Route path="/dashboard" element={
             <ProtectedRoute>
               <Dashboard />
