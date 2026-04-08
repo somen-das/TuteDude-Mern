@@ -17,7 +17,7 @@ const AdminDashboard = () => {
 
   const fetchLogs = async () => {
     try {
-      const { data } = await axios.get('http://localhost:5000/api/appointments/logs', {
+      const { data } = await axios.get(process.env.VITE_APP_TITLE + '/appointments/logs', {
         headers: { Authorization: `Bearer ${user.token}` }
       });
       setLogs(data);
@@ -28,7 +28,7 @@ const AdminDashboard = () => {
 
   const fetchUsers = async () => {
     try {
-      const { data } = await axios.get('http://localhost:5000/api/auth/users', {
+      const { data } = await axios.get(process.env.VITE_APP_TITLE + '/auth/users', {
         headers: { Authorization: `Bearer ${user.token}` }
       });
       setStaffList(data);
@@ -44,7 +44,7 @@ const AdminDashboard = () => {
   const handleAddStaff = async (e) => {
     e.preventDefault();
     try {
-      await axios.post('http://localhost:5000/api/auth/register', formData);
+      await axios.post(process.env.VITE_APP_TITLE + '/auth/register', formData);
       setMsg({ type: 'success', text: 'New staff added successfully!' });
       setShowAddForm(false);
       setFormData({ name: '', email: '', password: '', role: 'Employee', department: '' });

@@ -11,7 +11,7 @@ const SecurityDashboard = () => {
 
   const handleScanSubmit = async (scannedId = passId) => {
     try {
-      const { data } = await axios.post('http://localhost:5000/api/appointments/scan', 
+      const { data } = await axios.post(process.env.VITE_APP_TITLE + '/appointments/scan', 
         { passId: scannedId },
         { headers: { Authorization: `Bearer ${user.token}` }}
       );

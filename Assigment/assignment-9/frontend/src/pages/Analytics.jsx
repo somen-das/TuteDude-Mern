@@ -19,7 +19,7 @@ const Analytics = () => {
     const fetchStats = async () => {
       try {
         const token = user?.token;
-        const res = await axios.get('http://localhost:5000/api/analytics/stats', {
+        const res = await axios.get(process.env.VITE_APP_TITLE + '/analytics/stats', {
           headers: { Authorization: `Bearer ${token}` }
         });
         setStats(res.data);

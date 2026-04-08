@@ -9,7 +9,7 @@ const EmployeeDashboard = () => {
 
   const fetchAppointments = async () => {
     try {
-      const { data } = await axios.get('http://localhost:5000/api/appointments', {
+      const { data } = await axios.get(process.env.VITE_APP_TITLE + '/appointments', {
         headers: { Authorization: `Bearer ${user.token}` }
       });
       setAppointments(data);
@@ -24,7 +24,7 @@ const EmployeeDashboard = () => {
 
   const handleStatusChange = async (id, newStatus) => {
     try {
-      await axios.put(`http://localhost:5000/api/appointments/${id}`, { status: newStatus }, {
+      await axios.put(process.env.VITE_APP_TITLE + `/appointments/${id}`, { status: newStatus }, {
         headers: { Authorization: `Bearer ${user.token}` }
       });
       fetchAppointments();
