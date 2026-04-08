@@ -11,9 +11,10 @@ const PreRegister = () => {
   const [errorMsg, setErrorMsg] = useState('');
 
   useEffect(() => {
+    alert(import.meta.env.VITE_API_URL)
     const fetchHosts = async () => {
       try {
-        const { data } = await axios.get(process.env.VITE_API_URL + '/visitors/hosts');
+        const { data } = await axios.get(import.meta.env.VITE_API_URL + '/visitors/hosts');
         setHosts(data);
       } catch (err) {
         console.error('Failed to load hosts');
@@ -29,7 +30,7 @@ const PreRegister = () => {
   const handleSubmit = async (e) => {
     e.preventDefault();
     try {
-      await axios.post(process.env.VITE_API_URL + '/visitors/register', formData);
+      await axios.post(import.meta.env.VITE_API_URL + '/visitors/register', formData);
       setSuccessMsg('Registration request submitted successfully! Once approved, you will receive your pass.');
       setErrorMsg('');
       setFormData({ name: '', email: '', phone: '', company: '', hostId: '', date: '', purpose: '' });
