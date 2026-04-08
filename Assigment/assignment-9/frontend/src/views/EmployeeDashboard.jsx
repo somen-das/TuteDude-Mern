@@ -9,7 +9,7 @@ const EmployeeDashboard = () => {
 
   const fetchAppointments = async () => {
     try {
-      const { data } = await axios.get(process.env.VITE_APP_TITLE + '/appointments', {
+      const { data } = await axios.get(process.env.VITE_API_URL + '/appointments', {
         headers: { Authorization: `Bearer ${user.token}` }
       });
       setAppointments(data);
@@ -24,7 +24,7 @@ const EmployeeDashboard = () => {
 
   const handleStatusChange = async (id, newStatus) => {
     try {
-      await axios.put(process.env.VITE_APP_TITLE + `/appointments/${id}`, { status: newStatus }, {
+      await axios.put(process.env.VITE_API_URL + `/appointments/${id}`, { status: newStatus }, {
         headers: { Authorization: `Bearer ${user.token}` }
       });
       fetchAppointments();
@@ -67,10 +67,10 @@ const EmployeeDashboard = () => {
                       <button onClick={() => handleStatusChange(appt._id, 'Rejected')} className="btn btn-danger" style={{ padding: '6px 12px', fontSize: '0.8rem' }}>Reject</button>
                     </div>
                   ) : appt.status === 'Approved' ? (
-                     <div>
-                       <QRCodeSVG value={appt.passId} size={50} />
-                       <div style={{ fontSize: '0.7rem' }}>Pass: {appt.passId}</div>
-                     </div>
+                    <div>
+                      <QRCodeSVG value={appt.passId} size={50} />
+                      <div style={{ fontSize: '0.7rem' }}>Pass: {appt.passId}</div>
+                    </div>
                   ) : (
                     <span style={{ color: '#64748b' }}>-</span>
                   )}

@@ -11,9 +11,9 @@ const SecurityDashboard = () => {
 
   const handleScanSubmit = async (scannedId = passId) => {
     try {
-      const { data } = await axios.post(process.env.VITE_APP_TITLE + '/appointments/scan', 
+      const { data } = await axios.post(process.env.VITE_API_URL + '/appointments/scan',
         { passId: scannedId },
-        { headers: { Authorization: `Bearer ${user.token}` }}
+        { headers: { Authorization: `Bearer ${user.token}` } }
       );
       setScanResult(data);
       setErrorMsg('');
@@ -33,16 +33,16 @@ const SecurityDashboard = () => {
     <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '24px' }}>
       <div className="glass-panel">
         <div id="reader" style={{ width: '100%', marginBottom: '20px', borderRadius: '8px', overflow: 'hidden' }}></div>
-        
+
         <form onSubmit={handleManualSubmit}>
           <label>Or Enter Pass ID Manually</label>
           <div style={{ display: 'flex', gap: '12px' }}>
-            <input 
-              type="text" 
-              className="input-field" 
-              value={passId} 
-              onChange={(e) => setPassId(e.target.value)} 
-              placeholder="e.g. 8fa19b..." 
+            <input
+              type="text"
+              className="input-field"
+              value={passId}
+              onChange={(e) => setPassId(e.target.value)}
+              placeholder="e.g. 8fa19b..."
               style={{ marginBottom: 0 }}
             />
             <button type="submit" className="btn btn-primary">Process</button>
@@ -57,7 +57,7 @@ const SecurityDashboard = () => {
             {errorMsg}
           </div>
         )}
-        
+
         {scanResult && (
           <div className="animate-fade-in" style={{ padding: '20px', background: '#d1fae5', border: '1px solid var(--success)', borderRadius: '8px' }}>
             <h4 style={{ color: 'var(--success)', marginBottom: '8px', fontSize: '1.2rem' }}>{scanResult.message}</h4>
@@ -68,7 +68,7 @@ const SecurityDashboard = () => {
             </div>
           </div>
         )}
-        
+
         {!scanResult && !errorMsg && (
           <div style={{ color: '#64748b', textAlign: 'center', padding: '40px 0' }}>
             Awaiting scan...

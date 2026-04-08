@@ -1,9 +1,9 @@
 import React, { useEffect, useState, useContext } from 'react';
 import axios from 'axios';
 import { AuthContext } from '../context/AuthContext';
-import { 
-  PieChart, Pie, Cell, 
-  BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, Legend, ResponsiveContainer 
+import {
+  PieChart, Pie, Cell,
+  BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, Legend, ResponsiveContainer
 } from 'recharts';
 import { TrendingUp, Users, CalendarCheck, CalendarX } from 'lucide-react';
 import './Analytics.css';
@@ -19,7 +19,7 @@ const Analytics = () => {
     const fetchStats = async () => {
       try {
         const token = user?.token;
-        const res = await axios.get(process.env.VITE_APP_TITLE + '/analytics/stats', {
+        const res = await axios.get(process.env.VITE_API_URL + '/analytics/stats', {
           headers: { Authorization: `Bearer ${token}` }
         });
         setStats(res.data);
