@@ -13,7 +13,7 @@ const PreRegister = () => {
   useEffect(() => {
     const fetchHosts = async () => {
       try {
-        const { data } = await axios.get(process.env.VITE_APP_TITLE + '/visitors/hosts');
+        const { data } = await axios.get(process.env.VITE_API_URL + '/visitors/hosts');
         setHosts(data);
       } catch (err) {
         console.error('Failed to load hosts');
@@ -29,7 +29,7 @@ const PreRegister = () => {
   const handleSubmit = async (e) => {
     e.preventDefault();
     try {
-      await axios.post(process.env.VITE_APP_TITLE + '/visitors/register', formData);
+      await axios.post(process.env.VITE_API_URL + '/visitors/register', formData);
       setSuccessMsg('Registration request submitted successfully! Once approved, you will receive your pass.');
       setErrorMsg('');
       setFormData({ name: '', email: '', phone: '', company: '', hostId: '', date: '', purpose: '' });
@@ -81,7 +81,7 @@ const PreRegister = () => {
             <label>Purpose of Visit</label>
             <input type="text" name="purpose" className="input-field" value={formData.purpose} onChange={handleChange} required />
           </div>
-          
+
           <div style={{ gridColumn: '1 / -1', marginTop: '16px' }}>
             <button type="submit" className="btn btn-success" style={{ width: '100%' }}>Submit Request</button>
           </div>
