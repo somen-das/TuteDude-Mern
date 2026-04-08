@@ -6,6 +6,7 @@ import './index.css';
 import Login from './pages/Login';
 import Dashboard from './pages/Dashboard';
 import PreRegister from './pages/PreRegister';
+import Home from './pages/Home';
 import AppLayout from './components/AppLayout';
 
 const ProtectedRoute = ({ children, roles }) => {
@@ -21,7 +22,7 @@ function App() {
     <AuthProvider>
       <Router>
         <Routes>
-          <Route path="/" element={<Navigate to="/register-visitor" replace />} />
+          <Route path="/" element={<Home />} />
           <Route path="/login" element={<Login />} />
           <Route path="/register-visitor" element={<PreRegister />} />
           
