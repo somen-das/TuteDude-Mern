@@ -7,6 +7,7 @@ const { sendEmail } = require('../utils/emailService');
 exports.getAppointments = async (req, res) => {
   try {
     let query = {};
+    if (req.user && req.user.organization) query.organization = req.user.organization;
     if (req.user.role === 'Employee') {
       query.hostId = req.user._id;
     }
@@ -95,7 +96,12 @@ exports.scanQR = async (req, res) => {
     let log = await CheckLog.findOne({ appointmentId: appointment._id });
     
     if (!log) {
-      log = await CheckLog.create({ appointmentId: appointment._id, checkInTime: new Date(), status: 'Checked In' });
+      log = await CheckLog.create({ 
+        appointmentId: appointment._id, 
+        checkInTime: new Date(), 
+        status: 'Checked In',
+        organization: appointment.organization
+      });
       
       await sendEmail({
         to: appointment.hostId.email,
@@ -134,7 +140,8 @@ exports.scanQR = async (req, res) => {
 
 exports.getLogs = async (req, res) => {
   try {
-    const logs = await CheckLog.find({})
+    const query = req.user && req.user.organization ? { organization: req.user.organization } : {};
+    const logs = await CheckLog.find(query)
       .populate({
         path: 'appointmentId',
         populate: [

@@ -7,21 +7,23 @@ const { sendEmail } = require('../utils/emailService');
 exports.registerVisitor = async (req, res) => {
   const { name, email, phone, company, hostId, date, purpose } = req.body;
   try {
-    let visitor = await Visitor.findOne({ email });
-    if (!visitor) {
-      visitor = await Visitor.create({ name, email, phone, company });
-    }
-    
     const host = await User.findById(hostId);
     if (!host || host.role !== 'Employee') {
       return res.status(400).json({ message: 'Invalid host selected' });
     }
 
+    let visitor = await Visitor.findOne({ email });
+    if (!visitor) {
+      visitor = await Visitor.create({ name, email, phone, company, organization: host.organization });
+    }
+    
+
     const appointment = await Appointment.create({
       visitorId: visitor._id,
       hostId: host._id,
       date,
-      purpose
+      purpose,
+      organization: host.organization
     });
 
     
@@ -59,7 +61,8 @@ exports.registerVisitor = async (req, res) => {
 
 exports.getVisitors = async (req, res) => {
   try {
-    const visitors = await Visitor.find({});
+    const query = req.user && req.user.organization ? { organization: req.user.organization } : {};
+    const visitors = await Visitor.find(query);
     res.json(visitors);
   } catch (error) {
     res.status(500).json({ message: error.message });
@@ -68,7 +71,9 @@ exports.getVisitors = async (req, res) => {
 
 exports.getHosts = async (req, res) => {
   try {
-    const hosts = await User.find({ role: 'Employee' }).select('name department _id');
+    const query = { role: 'Employee' };
+    if (req.user && req.user.organization) query.organization = req.user.organization;
+    const hosts = await User.find(query).select('name department _id');
     res.json(hosts);
   } catch (error) {
     res.status(500).json({ message: error.message });

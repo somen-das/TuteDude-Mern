@@ -1,20 +1,45 @@
-import { Link } from 'react-router-dom';
-import { Shield, Clock, Users, ArrowRight } from 'lucide-react';
+import React, { useContext } from 'react';
+import { Link, useNavigate } from 'react-router-dom';
+import { Shield, Clock, Users, ArrowRight, LogOut } from 'lucide-react';
+import { AuthContext } from '../context/AuthContext';
 import './Home.css';
 
 const Home = () => {
+  const { user, logout } = useContext(AuthContext);
+  const navigate = useNavigate();
+
+  const handleLogout = () => {
+    logout();
+    navigate('/');
+  };
+
   return (
     <div className="home-container">
       <nav className="home-nav">
         <div className="nav-brand">
           <Shield size={28} />
-          <span>VMS Portal</span>
+          <span>
+            <Link to="/" >
+            VMS Portal
+            </Link>
+            </span>
         </div>
         <div className="nav-links">
-          <Link to="/login" className="nav-btn">Admin Login</Link>
-          <Link to="/register-visitor" className="nav-btn nav-btn-primary">
-            Pre-Register
-          </Link>
+          {user ? (
+            <>
+              <Link to="/dashboard" className="nav-btn">Dashboard</Link>
+              <button onClick={handleLogout} className="nav-btn nav-btn-primary" style={{ border: 'none', cursor: 'pointer', display: 'flex', alignItems: 'center', gap: '8px' }}>
+                <LogOut size={16} /> Logout
+              </button>
+            </>
+          ) : (
+            <>
+              <Link to="/login" className="nav-btn">Admin Login</Link>
+              <Link to="/register-visitor" className="nav-btn nav-btn-primary">
+                Pre-Register
+              </Link>
+            </>
+          )}
         </div>
       </nav>
 
@@ -34,13 +59,22 @@ const Home = () => {
           </p>
           
           <div className="hero-cta">
-            <Link to="/register-visitor" className="cta-btn cta-primary">
-              Register as Visitor
-              <ArrowRight size={20} />
-            </Link>
-            <Link to="/login" className="cta-btn cta-secondary">
-              Staff Access
-            </Link>
+            {user ? (
+              <Link to="/dashboard" className="cta-btn cta-primary">
+                Go to Dashboard
+                <ArrowRight size={20} />
+              </Link>
+            ) : (
+              <>
+                <Link to="/register-visitor" className="cta-btn cta-primary">
+                  Register as Visitor
+                  <ArrowRight size={20} />
+                </Link>
+                <Link to="/login" className="cta-btn cta-secondary">
+                  Staff Access
+                </Link>
+              </>
+            )}
           </div>
         </div>
 

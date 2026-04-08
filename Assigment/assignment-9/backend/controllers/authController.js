@@ -8,13 +8,23 @@ const generateToken = (id) => {
 };
 
 exports.registerUser = async (req, res) => {
-  const { name, email, password, role, department } = req.body;
+  const { name, email, password, role, department, organizationName } = req.body;
   try {
+    let orgId = null;
+    if (organizationName) {
+      const Organization = require('../models/Organization');
+      let org = await Organization.findOne({ name: organizationName });
+      if (!org) {
+        org = await Organization.create({ name: organizationName });
+      }
+      orgId = org._id;
+    }
+
     const userExists = await User.findOne({ email });
     if (userExists) {
       return res.status(400).json({ message: 'User already exists' });
     }
-    const user = await User.create({ name, email, password, role, department });
+    const user = await User.create({ name, email, password, role, department, organization: orgId });
     if (user) {
       
       await sendEmail({
@@ -64,7 +74,8 @@ exports.loginUser = async (req, res) => {
 
 exports.getUsers = async (req, res) => {
   try {
-    const users = await User.find({}).select('-password');
+    const query = req.user && req.user.organization ? { organization: req.user.organization } : {};
+    const users = await User.find(query).select('-password');
     res.json(users);
   } catch (error) {
     res.status(500).json({ message: error.message });

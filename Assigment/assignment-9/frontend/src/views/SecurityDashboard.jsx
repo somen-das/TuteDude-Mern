@@ -1,7 +1,6 @@
-import React, { useState, useContext, useEffect } from 'react';
+import React, { useState, useContext } from 'react';
 import axios from 'axios';
 import { AuthContext } from '../context/AuthContext';
-import { Html5QrcodeScanner } from 'html5-qrcode';
 
 const SecurityDashboard = () => {
   const [passId, setPassId] = useState('');
@@ -9,21 +8,6 @@ const SecurityDashboard = () => {
   const [errorMsg, setErrorMsg] = useState('');
   const { user } = useContext(AuthContext);
 
-  useEffect(() => {
-    const scanner = new Html5QrcodeScanner('reader', { qrbox: { width: 250, height: 250 }, fps: 5 }, false);
-    
-    scanner.render((text) => {
-      setPassId(text);
-      handleScanSubmit(text);
-      scanner.clear();
-    }, (err) => {
-      
-    });
-
-    return () => {
-      scanner.clear().catch(error => console.error("Failed to clear html5QrcodeScanner. ", error));
-    };
-  }, []);
 
   const handleScanSubmit = async (scannedId = passId) => {
     try {
@@ -48,7 +32,6 @@ const SecurityDashboard = () => {
   return (
     <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '24px' }}>
       <div className="glass-panel">
-        <h3 style={{ fontSize: '1.25rem', marginBottom: '20px' }}>QR Scanner</h3>
         <div id="reader" style={{ width: '100%', marginBottom: '20px', borderRadius: '8px', overflow: 'hidden' }}></div>
         
         <form onSubmit={handleManualSubmit}>

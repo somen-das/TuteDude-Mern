@@ -5,6 +5,7 @@ import './index.css';
 
 import Login from './pages/Login';
 import Dashboard from './pages/Dashboard';
+import Analytics from './pages/Analytics';
 import PreRegister from './pages/PreRegister';
 import Home from './pages/Home';
 import AppLayout from './components/AppLayout';
@@ -29,6 +30,11 @@ function App() {
           <Route path="/dashboard" element={
             <ProtectedRoute>
               <Dashboard />
+            </ProtectedRoute>
+          } />
+          <Route path="/analytics" element={
+            <ProtectedRoute roles={['Admin']}>
+              <Analytics />
             </ProtectedRoute>
           } />
         </Routes>

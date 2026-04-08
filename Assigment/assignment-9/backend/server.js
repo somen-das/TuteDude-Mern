@@ -14,11 +14,13 @@ app.use(cors());
 const authRoutes = require('./routes/auth');
 const visitorRoutes = require('./routes/visitors');
 const appointmentRoutes = require('./routes/appointments');
+const analyticsRoutes = require('./routes/analytics');
 const authMiddleware = require('./middleware/authMiddleware');
 
 app.use('/api/auth', authRoutes);
 app.use('/api/visitors', visitorRoutes);
 app.use('/api/appointments', appointmentRoutes);
+app.use('/api/analytics', analyticsRoutes);
 
 mongoose.connect(process.env.MONGODB_URI)
   .then(() => {
