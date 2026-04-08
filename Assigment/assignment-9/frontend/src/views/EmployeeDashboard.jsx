@@ -9,7 +9,7 @@ const EmployeeDashboard = () => {
 
   const fetchAppointments = async () => {
     try {
-      const { data } = await axios.get(process.env.VITE_API_URL + '/appointments', {
+      const { data } = await axios.get(import.meta.env.VITE_API_URL + '/appointments', {
         headers: { Authorization: `Bearer ${user.token}` }
       });
       setAppointments(data);
@@ -24,7 +24,7 @@ const EmployeeDashboard = () => {
 
   const handleStatusChange = async (id, newStatus) => {
     try {
-      await axios.put(process.env.VITE_API_URL + `/appointments/${id}`, { status: newStatus }, {
+      await axios.put(import.meta.env.VITE_API_URL + `/appointments/${id}`, { status: newStatus }, {
         headers: { Authorization: `Bearer ${user.token}` }
       });
       fetchAppointments();

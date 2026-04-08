@@ -7,22 +7,29 @@ dotenv.config();
 const users = [
   {
     name: 'Admin User',
-    email: 'admin@example.com',
+    email: 'mainadmin@yopmail.com',
     password: 'password123',
     role: 'Admin'
   },
   {
     name: 'Security Guard frontdesk',
-    email: 'security@example.com',
+    email: 'security@yopmail.com',
     password: 'password123',
     role: 'Security'
   },
   {
-    name: 'Jane Doe',
-    email: 'jane.host@example.com',
+    name: 'Baishali',
+    email: 'baishali.host@yopmail.com',
     password: 'password123',
     role: 'Employee',
-    department: 'Engineering'
+    department: 'HR'
+  },
+  {
+    name: 'Somen',
+    email: 'somen.host@yopmail.com',
+    password: 'password123',
+    role: 'Employee',
+    department: 'Engineer'
   }
 ];
 
