@@ -9,53 +9,61 @@ exports.getDashboardStats = async (req, res) => {
 
     const totalVisitors = await Visitor.countDocuments(orgQuery);
     
-    const appointments = await Appointment.find(orgQuery);
-    const pendingAppointments = appointments.filter(a => a.status === 'Pending').length;
-    const approvedAppointments = appointments.filter(a => a.status === 'Approved').length;
-    const rejectedAppointments = appointments.filter(a => a.status === 'Rejected').length;
+
+    const allAppointments = await Appointment.find(orgQuery).populate('hostId', 'name');
     
-    const hostsAggregation = await Appointment.aggregate([
-      { $match: orgQuery },
-      { $group: { _id: "$hostId", count: { $sum: 1 } } },
-      { $sort: { count: -1 } },
-      { $limit: 5 }
-    ]);
+    const pendingAppointments = allAppointments.filter(a => a.status === 'Pending').length;
+    const approvedAppointments = allAppointments.filter(a => a.status === 'Approved').length;
+    const rejectedAppointments = allAppointments.filter(a => a.status === 'Rejected').length;
     
-    const hostIds = hostsAggregation.map(h => h._id);
-    const hosts = await User.find({ _id: { $in: hostIds } }, 'name');
-    const mostActiveHosts = hostsAggregation.map(h => ({
-      name: hosts.find(user => user._id.toString() === h._id.toString())?.name || 'Unknown',
-      count: h.count
-    }));
+    const hostActivity = {};
+    allAppointments.forEach(appointment => {
+      if (appointment.hostId && appointment.hostId.name) {
+        const name = appointment.hostId.name;
+        if (!hostActivity[name]) {
+          hostActivity[name] = 0;
+        }
+        hostActivity[name]++;
+      }
+    });
+
+    const mostActiveHosts = Object.keys(hostActivity)
+      .map(name => ({ name, count: hostActivity[name] }))
+      .sort((a, b) => b.count - a.count)
+      .slice(0, 5);
 
     const sevenDaysAgo = new Date();
     sevenDaysAgo.setDate(sevenDaysAgo.getDate() - 7);
     
     const checkLogs = await CheckLog.find({ ...orgQuery, checkInTime: { $gte: sevenDaysAgo } });
+    
     const checkInByDay = {
       Mon: 0, Tue: 0, Wed: 0, Thu: 0, Fri: 0, Sat: 0, Sun: 0
     };
-    checkLogs.forEach(log => {
-      if (log.checkInTime) {
-        const day = new Date(log.checkInTime).toLocaleDateString('en-US', { weekday: 'short' });
-        if (checkInByDay[day] !== undefined) {
-          checkInByDay[day]++;
+
+    for (let i = 0; i < checkLogs.length; i++) {
+        const log = checkLogs[i];
+        if (log.checkInTime) {
+            const dateStr = new Date(log.checkInTime).toLocaleDateString('en-US', { weekday: 'short' });
+            if (checkInByDay[dateStr] !== undefined) {
+                checkInByDay[dateStr]++;
+            }
         }
-      }
-    });
+    }
 
     res.json({
-      totalVisitors,
+      totalVisitors: totalVisitors,
       appointments: {
-        total: appointments.length,
+        total: allAppointments.length,
         pending: pendingAppointments,
         approved: approvedAppointments,
         rejected: rejectedAppointments
       },
-      mostActiveHosts,
+      mostActiveHosts: mostActiveHosts,
       checkInsWeekly: Object.keys(checkInByDay).map(day => ({ name: day, checkIns: checkInByDay[day] }))
     });
   } catch (error) {
-    res.status(500).json({ message: error.message });
+    console.error("Dashboard Error:", error);
+    res.status(500).json({ message: "An error occurred while fetching dashboard stats" });
   }
 };

@@ -67,9 +67,18 @@ const EmployeeDashboard = () => {
                       <button onClick={() => handleStatusChange(appt._id, 'Rejected')} className="btn btn-danger" style={{ padding: '6px 12px', fontSize: '0.8rem' }}>Reject</button>
                     </div>
                   ) : appt.status === 'Approved' ? (
-                    <div>
-                      <QRCodeSVG value={appt.passId} size={50} />
-                      <div style={{ fontSize: '0.7rem' }}>Pass: {appt.passId}</div>
+                    <div style={{ display: 'flex', alignItems: 'center', gap: '16px' }}>
+                      <div style={{ textAlign: 'center' }}>
+                        <QRCodeSVG value={appt.passId} size={50} />
+                        <div style={{ fontSize: '0.7rem' }}>Pass: {appt.passId}</div>
+                      </div>
+                      <button 
+                        onClick={() => window.open(import.meta.env.VITE_API_URL + '/badges/' + appt._id + '?token=' + user.token, '_blank')} 
+                        className="btn btn-primary" 
+                        style={{ padding: '6px 12px', fontSize: '0.8rem' }}
+                      >
+                        Download PDF Badge
+                      </button>
                     </div>
                   ) : (
                     <span style={{ color: '#64748b' }}>-</span>

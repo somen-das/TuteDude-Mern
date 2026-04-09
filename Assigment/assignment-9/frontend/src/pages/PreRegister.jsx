@@ -26,15 +26,30 @@ const PreRegister = () => {
     setFormData({ ...formData, [e.target.name]: e.target.value });
   };
 
+  const [photoFile, setPhotoFile] = useState(null);
+
   const handleSubmit = async (e) => {
     e.preventDefault();
     try {
-      await axios.post(import.meta.env.VITE_API_URL + '/visitors/register', formData);
+      let photoUrl = '';
+      if (photoFile) {
+        const fileData = new FormData();
+        fileData.append('photo', photoFile);
+        const uploadRes = await axios.post(import.meta.env.VITE_API_URL + '/upload', fileData, {
+          headers: { 'Content-Type': 'multipart/form-data' }
+        });
+        photoUrl = uploadRes.data.filePath;
+      }
+
+      const payload = { ...formData, photo: photoUrl };
+      await axios.post(import.meta.env.VITE_API_URL + '/visitors/register', payload);
+      
       setSuccessMsg('Registration request submitted successfully! Once approved, you will receive your pass.');
       setErrorMsg('');
       setFormData({ name: '', email: '', phone: '', company: '', hostId: '', date: '', purpose: '' });
+      setPhotoFile(null);
     } catch (err) {
-      setErrorMsg(err.response?.data?.message || 'Failed to submit registration');
+      setErrorMsg(err.response?.data?.message || err.response?.data || 'Failed to submit registration');
     }
   };
 
@@ -80,6 +95,10 @@ const PreRegister = () => {
           <div>
             <label>Purpose of Visit</label>
             <input type="text" name="purpose" className="input-field" value={formData.purpose} onChange={handleChange} required />
+          </div>
+          <div style={{ gridColumn: '1 / -1' }}>
+            <label>Visitor Photo</label>
+            <input type="file" accept="image/*" className="input-field" onChange={(e) => setPhotoFile(e.target.files[0])} required />
           </div>
 
           <div style={{ gridColumn: '1 / -1', marginTop: '16px' }}>

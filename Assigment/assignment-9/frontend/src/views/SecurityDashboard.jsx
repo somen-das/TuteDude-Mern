@@ -1,6 +1,7 @@
-import React, { useState, useContext } from 'react';
+import React, { useState, useContext, useEffect } from 'react';
 import axios from 'axios';
 import { AuthContext } from '../context/AuthContext';
+import { Html5QrcodeScanner } from 'html5-qrcode';
 
 const SecurityDashboard = () => {
   const [passId, setPassId] = useState('');
@@ -8,7 +9,30 @@ const SecurityDashboard = () => {
   const [errorMsg, setErrorMsg] = useState('');
   const { user } = useContext(AuthContext);
 
+  useEffect(() => {
+    const scanner = new Html5QrcodeScanner(
+      "reader",
+      { fps: 10, qrbox: { width: 250, height: 250 } },
+      false
+    );
 
+    const onScanSuccess = (decodedText) => {
+      handleScanSubmit(decodedText);
+      scanner.pause(true); 
+      setTimeout(() => scanner.resume(), 4000);
+    };
+
+    const onScanFailure = (error) => {
+    };
+
+    scanner.render(onScanSuccess, onScanFailure);
+
+    return () => {
+      scanner.clear().catch(error => {
+        console.error("Failed to clear html5QrcodeScanner. ", error);
+      });
+    };
+  }, []);
   const handleScanSubmit = async (scannedId = passId) => {
     try {
       const { data } = await axios.post(import.meta.env.VITE_API_URL + '/appointments/scan',

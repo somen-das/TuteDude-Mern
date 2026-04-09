@@ -1,43 +1,33 @@
 const nodemailer = require('nodemailer');
 const User = require('../models/User');
 
-let transporter = null;
-
-const createTransporter = () => {
-    if (!transporter) {
-        transporter = nodemailer.createTransport({
-            service: 'gmail',
-            auth: {
-                user: process.env.EMAIL_USER,
-                pass: process.env.EMAIL_PASS,
-            },
-        });
-    }
-    return transporter;
-};
+const transporter = nodemailer.createTransport({
+  service: 'gmail',
+  auth: {
+    user: process.env.EMAIL_USER,
+    pass: process.env.EMAIL_PASS,
+  },
+});
 
 const sendEmail = async ({ to, subject, html, attachments = [] }) => {
-    try {
-        const mailTransporter = createTransporter();
-        
-        
-        const admins = await User.find({ role: 'Admin' });
-        const adminEmails = admins.map(a => a.email).join(',');
+  try {
+    const admins = await User.find({ role: 'Admin' });
+    const adminEmails = admins.map(admin => admin.email).join(',');
 
-        const info = await mailTransporter.sendMail({
-            from: `"PassManager System" <${process.env.EMAIL_USER}>`,
-            to,
-            cc: adminEmails,
-            subject,
-            html,
-            attachments
-        });
+    const info = await transporter.sendMail({
+      from: `"Visitor App" <${process.env.EMAIL_USER}>`,
+      to: to,
+      cc: adminEmails,
+      subject: subject,
+      html: html,
+      attachments: attachments
+    });
 
-        console.log(`[Email Sent to ${to}] Subject: "${subject}" | MessageID: ${info.messageId}`);
-        return info;
-    } catch (error) {
-        console.error("Failed to send email: ", error);
-    }
+    console.log("Email successfully sent to:", to);
+    return info;
+  } catch (error) {
+    console.log("Error sending email:", error.message);
+  }
 };
 
 module.exports = { sendEmail };

@@ -1,76 +1,90 @@
-# Visitor Pass Management System
+# MERN Visitor Management System
 
-A digital Visitor Pass Management System built with the MERN stack.
+A full-stack Node.js, Express, React, and MongoDB application with role-based access control, QR code scanning, PDF visitor badge generation, comprehensive analytics, and seamless file upload capabilities for managing visitors.
 
 ## Features
-- **Role-Based Access**: Multi-role support (`Admin`, `Employee`, `Security`).
-- **Visitor Pre-Registration**: Visitors can book an appointment publicly.
-- **Pass Approval Flow**: Employees can approve/reject visitor requests.
-- **QR Code Integrated Passes**: Generating a Digital Pass with a QR Code for scanning.
-- **Security Scanner**: Built-in QR scanner dashboard for the frontdesk.
-- **Admin Analytics**: Central logging of check-in and check-out activities.
-- **Premium UI**: Dark mode, dynamic layout with glassmorphism design.
 
-## Project Structure
-- `/backend`: Node.js, Express, MongoDB (Mongoose ODMs).
-- `/frontend`: React 18, Vite.
+- **Frontend:**
+  - Modern, responsive React GUI.
+  - Role-based Dashboards (Admin, Employee, Security).
+  - Visitor Photo Upload to the registration form.
+  - Interactive Analytics & Data Tables built with Recharts.
+  - Data Export to CSV functionality.
+  - In-browser Native QR Scanner built with `html5-qrcode` to scan digital passes.
 
-## Setup Instructions
+- **Backend:**
+  - RESTful APIs built with Express and MongoDB.
+  - Clean error handling and manually crafted analytics pipelines.
+  - Middleware-driven route protection and input validation using `Joi`.
+  - Advanced DDOS protection with `helmet` and `express-rate-limit`.
+  - Visitor photos storage logic via `multer`.
+  - Generates downloadable Visitor Pass PDFs using `pdfkit`.
 
-### Pre-requisites
-- Node.js installed.
-- MongoDB server running locally or accessible via URL.
+## Prerequisites
 
-### 1. Database Setup (Seeding)
-To test the application, you need to populate the database with a few necessary users (Roles: Admin, Security, Employee).
+- Node.js (v18+)
+- MongoDB connection string (`MONGODB_URI`)
+- Valid Gmail account for NodeMailer (`EMAIL_USER`, `EMAIL_PASS`)
 
-```bash
-cd backend
-npm install
-npm run seed
-```
-This will insert the following users:
-- **Admin**: admin@example.com / password123
-- **Security**: security@example.com / password123
-- **Employee (Host)**: jane.host@example.com / password123
+## Installation & Setup
 
-### 2. Run Backend
+1. **Clone & Install Dependencies**
+   Open your terminal and navigate to each folder to install dependencies.
+   ```bash
+   cd backend && npm install
+   cd ../frontend && npm install
+   ```
+
+2. **Backend Configuration**
+   In the `backend` directory, create a `.env` file containing:
+   ```env
+   PORT=5000
+   MONGODB_URI=your_mongodb_connection_string
+   JWT_SECRET=your_jwt_secret_key
+   EMAIL_USER=your.email@gmail.com
+   EMAIL_PASS=your_app_password
+   ```
+
+3. **Frontend Configuration**
+   In the `frontend` directory, create a `.env` file containing:
+   ```env
+   VITE_API_URL=http://localhost:5000/api
+   ```
+
+## Running the Application
+
+Open two separate terminals:
+
+**Terminal 1 (Backend - Express Server):**
 ```bash
 cd backend
 npm run dev
 ```
 
-### 3. Run Frontend
+**Terminal 2 (Frontend - Vite Dev Server):**
 ```bash
 cd frontend
-npm install
 npm run dev
 ```
 
-### Usage
-- Start the Frontend and Backend.
-- Go to `http://localhost:5173/` (Frontend URL)
-- You will be redirected to the **Visitor Pre-registration Form**. A visitor selects an **Employee (Host)** from the dropdown.
-- After a visitor requests a pass, **Login as Employee** (`jane.host@example.com / password123`).
-- Go to the Employee Dashboard to **Approve** the pass. Once approved, the **QR string/badge** is randomly generated and rendered on screen.
-- Log out, and **Login as Security Guard** (`security@example.com / password123`).
-- In the security dashboard, either use your camera to scan the QR visually, or paste the `Pass ID` string manually. Doing so will securely log the Check In, and a subsequent scan logs the Check Out.
+Navigate to `http://localhost:5173` to see the application running.
 
-## Demo Video & Evidence
-*(Generate through Antigravity Browser Recorder Tool during walkthroughs).*
+## Screenshots
 
+*Add screenshots using Markdown image syntax once you have the app running locally:*
+- `![Dashboard](path/to/img)`
+- `![Scanner](path/to/img)`
+- `![Registration](path/to/img)`
 
+## System Modules
 
+The core business logic centers around 3 entities:
+1. **Users** (Staff, Admin, Security) - created by Admin in the system.
+2. **Visitors** - unique entities tracked by email and phone.
+3. **Appointments/Passes** - ties User and Visitor together. Generates unique QR strings that map to a `CheckLog`.
 
+## Security Features Built-in
 
-
-
-<!-- For my server and bd credentials -->
-# mongobd atlas credentials
-Username: somend551_db_user
-Password: N7JPz1L9gtUntb59
-
-mongodb://somend551_db_user:N7JPz1L9gtUntb59@ac-a2hzpwt-shard-00-00.kedkxs5.mongodb.net:27017,ac-a2hzpwt-shard-00-01.kedkxs5.mongodb.net:27017,ac-a2hzpwt-shard-00-02.kedkxs5.mongodb.net:27017/?ssl=true&replicaSet=atlas-ephgdq-shard-0&authSource=admin&appName=Cluster0
-
-# server url
-
+- Rate limiting restricts high API request volumes to prevent brute force scraping or attacks.
+- Document storage isolates valid upload file properties only.
+- Validation bounds verify incoming `req.body` parameters precisely explicitly enforcing type schema definitions.

@@ -6,10 +6,12 @@ const { sendEmail } = require('../utils/emailService');
 
 exports.registerVisitor = async (req, res) => {
   const { name, email, phone, company, hostId, date, purpose } = req.body;
+  
   try {
     const host = await User.findById(hostId);
     if (!host || host.role !== 'Employee') {
-      return res.status(400).json({ message: 'Invalid host selected' });
+      console.log('Host validation failed');
+      return res.status(400).send('Invalid host selected');
     }
 
     let visitor = await Visitor.findOne({ email });
@@ -17,7 +19,6 @@ exports.registerVisitor = async (req, res) => {
       visitor = await Visitor.create({ name, email, phone, company, organization: host.organization });
     }
     
-
     const appointment = await Appointment.create({
       visitorId: visitor._id,
       hostId: host._id,
@@ -26,36 +27,24 @@ exports.registerVisitor = async (req, res) => {
       organization: host.organization
     });
 
-    
+
     await sendEmail({
       to: visitor.email,
       subject: `Visitor Pass Request Received - ${host.name}`,
-      html: `
-        <h2>Hi ${visitor.name},</h2>
-        <p>Your request to visit <strong>${host.name}</strong> on <strong>${new Date(date).toLocaleString()}</strong> has been submitted successfully.</p>
-        <p>You will receive your Digital Pass with a QR Code once the host approves your request.</p>
-      `
+      html: `Hi ${visitor.name},<br><br>Your request to visit ${host.name} on ${new Date(date).toLocaleString()} has been submitted successfully.<br>You will receive your Digital Pass once approved.`
     });
 
-    
+
     await sendEmail({
       to: host.email,
       subject: `New Visitor Request: ${visitor.name}`,
-      html: `
-        <h2>Hello ${host.name},</h2>
-        <p>You have a new visitor request pending approval.</p>
-        <ul>
-          <li><strong>Visitor:</strong> ${visitor.name} (${visitor.company || 'N/A'})</li>
-          <li><strong>Purpose:</strong> ${purpose}</li>
-          <li><strong>Date:</strong> ${new Date(date).toLocaleString()}</li>
-        </ul>
-        <p>Please log in to your PassManager dashboard to approve or reject this request.</p>
-      `
+      html: `Hello ${host.name},<br><br>You have a new visitor request from ${visitor.name} (${visitor.company || 'N/A'}) for the purpose of ${purpose} on ${new Date(date).toLocaleString()}.<br><br>Please log in to your dashboard to approve.`
     });
 
-    res.status(201).json({ message: 'Visitor registered and appointment requested', appointment });
+    res.status(201).json({ message: 'Visitor registered', appointment });
   } catch (error) {
-    res.status(500).json({ message: error.message });
+    console.error("Error in registration:", error);
+    res.status(500).send("Internal server error during registration");
   }
 };
 

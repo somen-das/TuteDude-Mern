@@ -1,7 +1,7 @@
 import React, { useEffect, useState, useContext } from 'react';
 import axios from 'axios';
 import { AuthContext } from '../context/AuthContext';
-
+import { CSVLink } from 'react-csv';
 const AdminDashboard = () => {
   const [logs, setLogs] = useState([]);
   const [staffList, setStaffList] = useState([]);
@@ -130,7 +130,23 @@ const AdminDashboard = () => {
 
 
       <div className="glass-panel">
-        <h3 style={{ fontSize: '1.25rem', marginBottom: '20px' }}>System Logs & Activity</h3>
+        <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '20px' }}>
+          <h3 style={{ fontSize: '1.25rem', margin: 0 }}>System Logs & Activity</h3>
+          <CSVLink 
+            data={logs.map(log => ({
+              Visitor: log.appointmentId?.visitorId?.name,
+              Host: log.appointmentId?.hostId?.name,
+              Status: log.status,
+              CheckIn: log.checkInTime ? new Date(log.checkInTime).toLocaleString() : '',
+              CheckOut: log.checkOutTime ? new Date(log.checkOutTime).toLocaleString() : ''
+            }))}
+            filename={"visitor-logs.csv"}
+            className="btn btn-success"
+            style={{ textDecoration: 'none', padding: '6px 12px', fontSize: '0.8rem' }}
+          >
+            Export to CSV
+          </CSVLink>
+        </div>
         <div style={{ overflowX: 'auto' }}>
           <table className="data-table">
             <thead>

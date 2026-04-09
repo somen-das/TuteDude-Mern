@@ -1,6 +1,5 @@
 const Appointment = require('../models/Appointment');
 const CheckLog = require('../models/CheckLog');
-const crypto = require('crypto');
 const QRCode = require('qrcode');
 const { sendEmail } = require('../utils/emailService');
 
@@ -16,6 +15,7 @@ exports.getAppointments = async (req, res) => {
       .populate('hostId', 'name department')
       .sort({ date: -1 });
     res.json(appointments);
+    console.log('appointmentsappointmentsappointments==>', appointments);
   } catch (error) {
     res.status(500).json({ message: error.message });
   }
@@ -24,30 +24,30 @@ exports.getAppointments = async (req, res) => {
 exports.updateAppointmentStatus = async (req, res) => {
   const { status } = req.body;
   try {
-    let appointment = await Appointment.findById(req.params.id)
+    const appointment = await Appointment.findById(req.params.id)
       .populate('visitorId')
       .populate('hostId');
       
-    if (!appointment) return res.status(404).json({ message: 'Appointment not found' });
+    if (!appointment) {
+      return res.status(404).send('Appointment not found');
+    }
     
     if (req.user.role === 'Employee' && appointment.hostId._id.toString() !== req.user._id.toString()) {
-      return res.status(403).json({ message: 'Not authorized to update this appointment' });
+      return res.status(403).send('Not authorized to update this appointment');
     }
 
     appointment.status = status;
-    let qrDataURL = null;
     let attachments = [];
 
     if (status === 'Approved' && !appointment.passId) {
-      appointment.passId = crypto.randomBytes(8).toString('hex');
-      qrDataURL = await QRCode.toDataURL(appointment.passId);
-      
+      appointment.passId = Math.random().toString(36).substring(2, 10).toUpperCase();
+      const qrDataURL = await QRCode.toDataURL(appointment.passId);
       const base64Data = qrDataURL.replace(/^data:image\/png;base64,/, "");
+      
       attachments.push({
-          filename: 'qrcode.png',
+          filename: 'pass-qr-code.png',
           content: base64Data,
-          encoding: 'base64',
-          cid: 'qrcode-image' 
+          encoding: 'base64'
       });
     }
     
@@ -56,33 +56,24 @@ exports.updateAppointmentStatus = async (req, res) => {
     if (status === 'Approved') {
       await sendEmail({
         to: appointment.visitorId.email,
-        subject: `Your Visitor Pass is Approved - Pass ID: ${appointment.passId}`,
-        html: `
-          <h2>Request Approved!</h2>
-          <p>Hi ${appointment.visitorId.name}, your request to visit <strong>${appointment.hostId.name}</strong> on ${new Date(appointment.date).toLocaleString()} has been approved.</p>
-          <div style="padding: 20px; background: #f0f0f0; display: inline-block; border-radius: 8px;">
-            <h3>Your Digital Pass: ${appointment.passId}</h3>
-            <p>Please present this QR code at the security desk upon arrival.</p>
-            <img src="cid:qrcode-image" alt="QR Code" style="width: 200px; height: 200px;" />
-          </div>
-        `,
-        attachments
+        subject: `Pass Approved! ID: ${appointment.passId}`,
+        html: `Hi ${appointment.visitorId.name},<br><br>Your visit to ${appointment.hostId.name} is approved. Your digital pass ID is ${appointment.passId}.<br><br>Please see the attached QR code.`,
+        attachments: attachments
       });
-    } else if (status === 'Rejected') {
+    }
+
+    if (status === 'Rejected') {
       await sendEmail({
         to: appointment.visitorId.email,
-        subject: `Visitor Request Update`,
-        html: `
-          <h2>Request Rejected</h2>
-          <p>Hi ${appointment.visitorId.name}, unfortunately your request to visit <strong>${appointment.hostId.name}</strong> has been rejected by the host.</p>
-          <p>Please reach out to your contact directly if this is an error.</p>
-        `
+        subject: `Visit Request Rejected`,
+        html: `Hi ${appointment.visitorId.name},<br><br>Your request to visit ${appointment.hostId.name} was rejected. Please contact them directly for more info.`
       });
     }
 
     res.json(appointment);
   } catch (error) {
-    res.status(500).json({ message: error.message });
+    console.error("Status update error:", error);
+    res.status(500).send('Internal server error');
   }
 };
 
@@ -90,8 +81,13 @@ exports.scanQR = async (req, res) => {
   const { passId } = req.body;
   try {
     const appointment = await Appointment.findOne({ passId }).populate('visitorId').populate('hostId');
-    if (!appointment) return res.status(404).json({ message: 'Invalid Pass' });
-    if (appointment.status !== 'Approved') return res.status(400).json({ message: 'Pass is not approved' });
+    
+    if (!appointment) {
+      return res.status(404).send('Invalid Pass ID');
+    }
+    if (appointment.status !== 'Approved') {
+      return res.status(400).send('This pass is not approved or has expired');
+    }
 
     let log = await CheckLog.findOne({ appointmentId: appointment._id });
     
@@ -105,36 +101,31 @@ exports.scanQR = async (req, res) => {
       
       await sendEmail({
         to: appointment.hostId.email,
-        subject: `Your Visitor has Arrived!`,
-        html: `
-          <h2>Visitor Checked In</h2>
-          <p>Hi ${appointment.hostId.name},</p>
-          <p>Your visitor <strong>${appointment.visitorId.name}</strong> has just checked in at the Front Desk.</p>
-        `
+        subject: `Visitor Arrived: ${appointment.visitorId.name}`,
+        html: `Hi ${appointment.hostId.name},<br><br>Your visitor ${appointment.visitorId.name} has just checked in.`
       });
 
-      return res.json({ message: 'Checked In Successfully', appointment, log });
-    } else if (log.status === 'Checked In') {
+      return res.json({ message: 'Checked In Successfully', passId, status: 'Checked In' });
+    }
+    
+    if (log.status === 'Checked In') {
       log.checkOutTime = new Date();
       log.status = 'Checked Out';
       await log.save();
 
       await sendEmail({
         to: appointment.visitorId.email,
-        subject: `Checkout Confirmed - Thank you for visiting`,
-        html: `
-          <h2>Thanks for Visiting!</h2>
-          <p>Hi ${appointment.visitorId.name}, you have successfully checked out from your meeting with ${appointment.hostId.name}.</p>
-          <p>We hope you had a great time.</p>
-        `
+        subject: `Thanks for visiting!`,
+        html: `Hi ${appointment.visitorId.name},<br><br>You have successfully checked out. Have a great day!`
       });
 
-      return res.json({ message: 'Checked Out Successfully', appointment, log });
-    } else {
-      return res.status(400).json({ message: 'Already Checked Out', appointment, log });
+      return res.json({ message: 'Checked Out Successfully', passId, status: 'Checked Out' });
     }
+    
+    return res.status(400).send('Already Checked Out');
   } catch (error) {
-    res.status(500).json({ message: error.message });
+    console.error("Scan error:", error);
+    res.status(500).send("Error scanning QR code");
   }
 };
 
