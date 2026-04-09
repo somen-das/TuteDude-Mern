@@ -7,7 +7,8 @@ const registerVisitorSchema = Joi.object({
   company: Joi.string().allow('', null),
   hostId: Joi.string().required(),
   date: Joi.date().iso().required(),
-  purpose: Joi.string().required()
+  purpose: Joi.string().required(),
+  photo: Joi.string().allow('', null)
 });
 
 const updateAppointmentSchema = Joi.object({

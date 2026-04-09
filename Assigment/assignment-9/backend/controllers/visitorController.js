@@ -5,7 +5,7 @@ const User = require('../models/User');
 const { sendEmail } = require('../utils/emailService');
 
 exports.registerVisitor = async (req, res) => {
-  const { name, email, phone, company, hostId, date, purpose } = req.body;
+  const { name, email, phone, company, hostId, date, purpose, photo } = req.body;
   
   try {
     const host = await User.findById(hostId);
@@ -16,7 +16,7 @@ exports.registerVisitor = async (req, res) => {
 
     let visitor = await Visitor.findOne({ email });
     if (!visitor) {
-      visitor = await Visitor.create({ name, email, phone, company, organization: host.organization });
+      visitor = await Visitor.create({ name, email, phone, company, organization: host.organization, photoUrl: photo });
     }
     
     const appointment = await Appointment.create({
