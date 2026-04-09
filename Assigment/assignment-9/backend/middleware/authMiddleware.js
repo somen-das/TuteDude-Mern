@@ -2,32 +2,50 @@ const jwt = require('jsonwebtoken');
 const User = require('../models/User');
 
 const protect = async (req, res, next) => {
-  let token;
-  if (req.headers.authorization && req.headers.authorization.startsWith('Bearer')) {
-    token = req.headers.authorization.split(' ')[1];
-  } else if (req.query.token) {
-    token = req.query.token;
-  }
-
-  if (token) {
-    try {
-      const decoded = jwt.verify(token, process.env.JWT_SECRET);
-      req.user = await User.findById(decoded.id).select('-password');
-      next();
-    } catch (error) {
-      res.status(401).json({ message: 'Not authorized, token failed' });
+  try {
+    const authHeader = req.headers.authorization;
+    
+    if (!authHeader || !authHeader.startsWith('Bearer ')) {
+      console.log("No token found in header");
+      return res.status(401).json({ message: 'Not authorized, no token' });
     }
-  } else {
-    res.status(401).json({ message: 'Not authorized, no token' });
+
+    const token = authHeader.split(' ')[1];
+
+    const decoded = jwt.verify(token, process.env.JWT_SECRET);
+    
+    const user = await User.findById(decoded.id).select('-password');
+    
+    if (!user) {
+      console.log("User not found for this token");
+      return res.status(401).json({ message: 'Not authorized, user not found' });
+    }
+
+    req.user = user;
+    
+    next();
+  } catch (error) {
+    console.log("Token verification failed:", error.message);
+    res.status(401).json({ message: 'Not authorized, token failed' });
   }
 };
 
 const authorize = (...roles) => {
   return (req, res, next) => {
-    if (!roles.includes(req.user.role)) {
-      return res.status(403).json({ message: `Access denied. Only ${roles.join(' or ')} can perform this action.` });
+    let hasRole = false;
+    for (let i = 0; i < roles.length; i++) {
+        if (req.user.role === roles[i]) {
+            hasRole = true;
+            break;
+        }
     }
-    next();
+    
+    if (hasRole) {
+      next();
+    } else {
+      console.log("User does not have permission");
+      res.status(403).json({ message: 'Access denied. You do not have permission to do this.' });
+    }
   };
 };
 

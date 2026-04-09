@@ -1,5 +1,4 @@
 const nodemailer = require('nodemailer');
-const User = require('../models/User');
 
 const transporter = nodemailer.createTransport({
   service: 'gmail',
@@ -11,22 +10,20 @@ const transporter = nodemailer.createTransport({
 
 const sendEmail = async ({ to, subject, html, attachments = [] }) => {
   try {
-    const admins = await User.find({ role: 'Admin' });
-    const adminEmails = admins.map(admin => admin.email).join(',');
-
     const info = await transporter.sendMail({
-      from: `"Visitor App" <${process.env.EMAIL_USER}>`,
+      from: process.env.EMAIL_USER,
       to: to,
-      cc: adminEmails,
       subject: subject,
       html: html,
       attachments: attachments
     });
 
     console.log("Email successfully sent to:", to);
-    return info;
+    return true;
   } catch (error) {
-    console.log("Error sending email:", error.message);
+    console.log("Failed to send email. Check your EMAIL_USER and EMAIL_PASS environment variables.");
+    console.log("Error details:", error.message);
+    return false; 
   }
 };
 

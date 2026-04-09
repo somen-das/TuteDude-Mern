@@ -8,24 +8,38 @@ const generateToken = (id) => {
 };
 
 exports.registerUser = async (req, res) => {
-  const { name, email, password, role, department, organizationName } = req.body;
   try {
+    const { name, email, password, role, department, organizationName } = req.body;
+    
     let orgId = null;
     if (organizationName) {
       const Organization = require('../models/Organization');
       let org = await Organization.findOne({ name: organizationName });
+      
       if (!org) {
         org = await Organization.create({ name: organizationName });
+        console.log("Created a new organization:", organizationName);
       }
       orgId = org._id;
     }
 
     const userExists = await User.findOne({ email });
     if (userExists) {
+      console.log("Registration failed: User already exists");
       return res.status(400).json({ message: 'User already exists' });
     }
-    const user = await User.create({ name, email, password, role, department, organization: orgId });
+    
+    const user = await User.create({ 
+        name, 
+        email, 
+        password, 
+        role, 
+        department, 
+        organization: orgId 
+    });
+    
     if (user) {
+      console.log("User successfully created in database");
       
       await sendEmail({
         to: user.email,
@@ -45,9 +59,11 @@ exports.registerUser = async (req, res) => {
         token: generateToken(user._id)
       });
     } else {
+      console.log("Failed to create user object");
       res.status(400).json({ message: 'Invalid user data' });
     }
   } catch (error) {
+    console.log("Error in registerUser:", error);
     res.status(500).json({ message: error.message });
   }
 };

@@ -4,7 +4,6 @@ const multer = require('multer');
 const { v2: cloudinary } = require('cloudinary');
 const { CloudinaryStorage } = require('multer-storage-cloudinary');
 
-// Configure Cloudinary
 cloudinary.config({
   cloud_name: process.env.CLOUDINARY_CLOUD_NAME,
   api_key: process.env.CLOUDINARY_API_KEY,
@@ -30,7 +29,6 @@ router.post('/', upload.single('photo'), (req, res) => {
       return res.status(400).json({ message: 'Please upload a file' });
     }
     
-    // req.file.path will contain the Cloudinary URL
     res.status(200).json({
       message: 'File uploaded successfully',
       filePath: req.file.path

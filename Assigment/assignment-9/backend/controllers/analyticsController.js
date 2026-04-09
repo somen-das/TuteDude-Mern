@@ -5,65 +5,104 @@ const User = require('../models/User');
 
 exports.getDashboardStats = async (req, res) => {
   try {
-    const orgQuery = req.user && req.user.organization ? { organization: req.user.organization } : {};
+    let orgQuery = {};
+    if (req.user && req.user.organization) {
+      orgQuery.organization = req.user.organization;
+    }
 
     const totalVisitors = await Visitor.countDocuments(orgQuery);
     
-
     const allAppointments = await Appointment.find(orgQuery).populate('hostId', 'name');
     
-    const pendingAppointments = allAppointments.filter(a => a.status === 'Pending').length;
-    const approvedAppointments = allAppointments.filter(a => a.status === 'Approved').length;
-    const rejectedAppointments = allAppointments.filter(a => a.status === 'Rejected').length;
+    let pendingCount = 0;
+    let approvedCount = 0;
+    let rejectedCount = 0;
     
-    const hostActivity = {};
-    allAppointments.forEach(appointment => {
-      if (appointment.hostId && appointment.hostId.name) {
-        const name = appointment.hostId.name;
-        if (!hostActivity[name]) {
-          hostActivity[name] = 0;
-        }
-        hostActivity[name]++;
+    let hostActivity = {};
+
+    for (let i = 0; i < allAppointments.length; i++) {
+      let appointment = allAppointments[i];
+      
+      if (appointment.status === 'Pending') {
+        pendingCount++;
+      } else if (appointment.status === 'Approved') {
+        approvedCount++;
+      } else if (appointment.status === 'Rejected') {
+        rejectedCount++;
       }
-    });
+      
+      if (appointment.hostId && appointment.hostId.name) {
+        let hostName = appointment.hostId.name;
+        if (!hostActivity[hostName]) {
+          hostActivity[hostName] = 0;
+        }
+        hostActivity[hostName]++;
+      }
+    }
 
-    const mostActiveHosts = Object.keys(hostActivity)
-      .map(name => ({ name, count: hostActivity[name] }))
-      .sort((a, b) => b.count - a.count)
-      .slice(0, 5);
+    let hostsArray = [];
+    for (let host in hostActivity) {
+      hostsArray.push({
+        name: host,
+        count: hostActivity[host]
+      });
+    }
+    
+    for (let i = 0; i < hostsArray.length; i++) {
+      for (let j = i + 1; j < hostsArray.length; j++) {
+        if (hostsArray[j].count > hostsArray[i].count) {
+          let temp = hostsArray[i];
+          hostsArray[i] = hostsArray[j];
+          hostsArray[j] = temp;
+        }
+      }
+    }
+    
+    let mostActiveHosts = [];
+    for(let i = 0; i < hostsArray.length && i < 5; i++) {
+        mostActiveHosts.push(hostsArray[i]);
+    }
 
+    const today = new Date();
     const sevenDaysAgo = new Date();
-    sevenDaysAgo.setDate(sevenDaysAgo.getDate() - 7);
+    sevenDaysAgo.setDate(today.getDate() - 7);
     
-    const checkLogs = await CheckLog.find({ ...orgQuery, checkInTime: { $gte: sevenDaysAgo } });
+    orgQuery.checkInTime = { $gte: sevenDaysAgo };
+    const checkLogs = await CheckLog.find(orgQuery);
     
-    const checkInByDay = {
+    let checkInByDay = {
       Mon: 0, Tue: 0, Wed: 0, Thu: 0, Fri: 0, Sat: 0, Sun: 0
     };
 
     for (let i = 0; i < checkLogs.length; i++) {
-        const log = checkLogs[i];
+        let log = checkLogs[i];
         if (log.checkInTime) {
-            const dateStr = new Date(log.checkInTime).toLocaleDateString('en-US', { weekday: 'short' });
+            let dateStr = new Date(log.checkInTime).toLocaleDateString('en-US', { weekday: 'short' });
             if (checkInByDay[dateStr] !== undefined) {
                 checkInByDay[dateStr]++;
             }
         }
     }
 
+    let checkInsWeeklyArray = [];
+    for (let day in checkInByDay) {
+        checkInsWeeklyArray.push({ name: day, checkIns: checkInByDay[day] });
+    }
+
     res.json({
       totalVisitors: totalVisitors,
       appointments: {
         total: allAppointments.length,
-        pending: pendingAppointments,
-        approved: approvedAppointments,
-        rejected: rejectedAppointments
+        pending: pendingCount,
+        approved: approvedCount,
+        rejected: rejectedCount
       },
       mostActiveHosts: mostActiveHosts,
-      checkInsWeekly: Object.keys(checkInByDay).map(day => ({ name: day, checkIns: checkInByDay[day] }))
+      checkInsWeekly: checkInsWeeklyArray
     });
+    
   } catch (error) {
-    console.error("Dashboard Error:", error);
-    res.status(500).json({ message: "An error occurred while fetching dashboard stats" });
+    console.log("There was an error in getDashboardStats:", error);
+    res.status(500).json({ message: "Server error getting analytics" });
   }
 };
