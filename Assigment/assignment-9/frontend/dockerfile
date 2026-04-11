@@ -1,0 +1,20 @@
+# my project node version
+FROM node:24.13.0
+
+# create a folder under the container
+WORKDIR /app
+
+# atfirst copy the depengency and packages
+COPY package*.json ./
+
+# install all depengenvcy
+RUN npm install
+
+# copy all code
+COPY . .
+
+# my local port
+EXPOSE 5173
+
+# project run command
+CMD ["npm", "run", "dev", "--", "--host"]

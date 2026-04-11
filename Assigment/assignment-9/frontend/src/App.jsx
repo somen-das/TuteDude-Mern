@@ -8,12 +8,13 @@ import Dashboard from './pages/Dashboard';
 import Analytics from './pages/Analytics';
 import PreRegister from './pages/PreRegister';
 import Home from './pages/Home';
+
 import AppLayout from './components/AppLayout';
 
 const ProtectedRoute = ({ children, roles }) => {
   const { user, loading } = useContext(AuthContext);
   if (loading) return <div>Loading...</div>;
-  if (!user) return <Navigate to="/login" replace />;
+  if (!user) return <Navigate to="/visitor/login" replace />;
   if (roles && !roles.includes(user.role)) return <Navigate to="/dashboard" replace />;
   return <AppLayout>{children}</AppLayout>;
 };
@@ -24,7 +25,8 @@ function App() {
       <Router>
         <Routes>
           <Route path="/" element={<Home />} />
-          <Route path="/login" element={<Login />} />
+          <Route path="/admin/login" element={<Login role="Admin" />} />
+          <Route path="/visitor/login" element={<Login role="Visitor" />} />
           <Route path="/register-visitor" element={<PreRegister />} />
           
           <Route path="/dashboard" element={

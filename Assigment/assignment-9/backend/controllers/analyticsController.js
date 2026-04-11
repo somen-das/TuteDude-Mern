@@ -1,6 +1,5 @@
 const Visitor = require('../models/Visitor');
 const Appointment = require('../models/Appointment');
-const CheckLog = require('../models/CheckLog');
 const User = require('../models/User');
 
 exports.getDashboardStats = async (req, res) => {
@@ -68,7 +67,7 @@ exports.getDashboardStats = async (req, res) => {
     sevenDaysAgo.setDate(today.getDate() - 7);
     
     orgQuery.checkInTime = { $gte: sevenDaysAgo };
-    const checkLogs = await CheckLog.find(orgQuery);
+    const checkLogs = await Appointment.find(orgQuery);
     
     let checkInByDay = {
       Mon: 0, Tue: 0, Wed: 0, Thu: 0, Fri: 0, Sat: 0, Sun: 0

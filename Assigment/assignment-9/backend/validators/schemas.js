@@ -4,11 +4,21 @@ const registerVisitorSchema = Joi.object({
   name: Joi.string().required(),
   email: Joi.string().email().required(),
   phone: Joi.string().required(),
+  password: Joi.string().min(6).required(),
+  confirmPassword: Joi.string().valid(Joi.ref('password')).required(),
   company: Joi.string().allow('', null),
+  // hostId: Joi.string().required(),
+  // date: Joi.date().iso().required(),
+  // purpose: Joi.string().required(),
+  photoUrl: Joi.string().allow('', null),
+  role: Joi.string().valid('Visitor').default('Visitor')
+});
+
+const appointmentVisitorSchema = Joi.object({
   hostId: Joi.string().required(),
   date: Joi.date().iso().required(),
+  email: Joi.string().email().required(),
   purpose: Joi.string().required(),
-  photo: Joi.string().allow('', null)
 });
 
 const updateAppointmentSchema = Joi.object({
@@ -31,6 +41,7 @@ const registerUserSchema = Joi.object({
 
 module.exports = {
   registerVisitorSchema,
+  appointmentVisitorSchema,
   updateAppointmentSchema,
   loginSchema,
   registerUserSchema

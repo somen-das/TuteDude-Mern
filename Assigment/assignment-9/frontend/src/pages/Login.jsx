@@ -2,7 +2,7 @@ import React, { useState, useContext } from 'react';
 import { AuthContext } from '../context/AuthContext';
 import { useNavigate, Link } from 'react-router-dom';
 
-const Login = () => {
+const Login = ({ role }) => {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [error, setError] = useState('');
@@ -12,7 +12,7 @@ const Login = () => {
   const handleSubmit = async (e) => {
     e.preventDefault();
     try {
-      await login(email, password);
+      await login(email, password, role);
       navigate('/dashboard');
     } catch (err) {
       setError(err);

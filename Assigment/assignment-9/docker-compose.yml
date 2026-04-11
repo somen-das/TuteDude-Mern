@@ -1,0 +1,40 @@
+version: '3.8'
+
+services:
+  # my MongoDB Service
+  mongodb:
+    image: mongo:latest
+    ports:
+      - "27017:27017"
+    volumes:
+      - mongo-data:/data/db
+
+  # my Backend Service
+  backend:
+    build: ./backend
+    ports:
+      - "5000:5000"
+    environment:
+      - MONGODB_URI=mongodb://mongodb:27017/visitor_pass
+      - JWT_SECRET=thisisasecretkey
+      - FRONTEND_URL=http://localhost:5173
+      - EMAIL_USER=somend551@gmail.com
+      - EMAIL_PASS=nqqv menv qdpw cvdy
+      - CLOUDINARY_API_KEY=789739257519861
+      - CLOUDINARY_API_SECRET=-oxiSl6t180gTftULuwBrKd5w6U
+      - CLOUDINARY_CLOUD_NAME=dwysh6bvr
+    depends_on:
+      - mongodb
+
+  # my Frontend Service
+  frontend:
+    build: ./frontend
+    ports:
+      - "5173:5173"
+    environment:
+      - VITE_API_URL=http://localhost:5000/api
+    depends_on:
+      - backend
+
+volumes:
+  mongo-data:

@@ -60,6 +60,12 @@
   box-shadow: 0 4px 6px -1px rgba(37, 99, 235, 0.2), 0 2px 4px -1px rgba(37, 99, 235, 0.1);
 }
 
+.btn-primary:disabled {
+  background: var(--primary);
+  opacity: 0.6;
+  cursor: not-allowed;
+  color: white;
+}
 .nav-btn-primary:hover {
   background: var(--primary-hover);
   color: white;

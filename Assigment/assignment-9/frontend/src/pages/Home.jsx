@@ -34,9 +34,10 @@ const Home = () => {
             </>
           ) : (
             <>
-              <Link to="/login" className="nav-btn">Admin Login</Link>
+              {/* <Link to="/admin/login" className="nav-btn">Admin Login</Link> */}
+              <Link to="/visitor/login" className="nav-btn">Visitor Login</Link>
               <Link to="/register-visitor" className="nav-btn nav-btn-primary">
-                Pre-Register
+                Visitor Register
               </Link>
             </>
           )}
@@ -70,7 +71,7 @@ const Home = () => {
                   Register as Visitor
                   <ArrowRight size={20} />
                 </Link>
-                <Link to="/login" className="cta-btn cta-secondary">
+                <Link to="/admin/login" className="cta-btn cta-secondary">
                   Staff Access
                 </Link>
               </>

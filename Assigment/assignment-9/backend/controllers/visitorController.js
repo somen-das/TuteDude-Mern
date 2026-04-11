@@ -1,32 +1,88 @@
 const Visitor = require('../models/Visitor');
 const Appointment = require('../models/Appointment');
 const User = require('../models/User');
-
+const bcrypt = require('bcryptjs');
 const { sendEmail } = require('../utils/emailService');
+const jwt = require('jsonwebtoken');
+const generateToken = (id) => {
+  return jwt.sign({ id }, process.env.JWT_SECRET, { expiresIn: '30d' });
+};
 
-exports.registerVisitor = async (req, res) => {
-  const { name, email, phone, company, hostId, date, purpose, photo } = req.body;
+
+const registerVisitor = async (req, res) => {
+  console.log("Register API HIT");
+  const { name, email, phone, password, confirmPassword, company, hostId, date, purpose, photoUrl } = req.body;
+  console.log('Registering visitor with data:', req.body);
+  try {
+    if (password !== confirmPassword) {
+      return res.status(400).json({ message: "Passwords do not match!" });
+    }
+    let visitor = await Visitor.findOne({ email });
+    if (!visitor) {
+      const salt = await bcrypt.genSalt(10);
+    const hashedPassword = await bcrypt.hash(password, salt);
+
+      visitor = await Visitor.create({ name, email, phone, password: hashedPassword, company, photoUrl: photoUrl, role: 'Visitor' });
+    } else{
+      return res.status(400).send('Visitor with this email already exists. Please log-in to book an appointment.');
+    }
+    await sendEmail({
+      to: visitor.email,
+      subject: `Registeration Received`,
+      html: `Hi ${visitor.name},<BR><BR>Your registration request has been received successfully. Please log in to your dashboard to book an appointment with your host.`
+    });
+
+    res.status(201).json({ message: 'Visitor registered', visitor });
+  } catch (error) {
+    console.error("Error in registration:", error);
+    res.status(500).send("Internal server error during registration");
+  }
+};
+
+
+const loginUser = async (req, res) => {
+  const { email, password } = req.body;
+  try {
+    const visitor = await Visitor.findOne({ email });
+    if (visitor && (await visitor.matchPassword(password))) {
+      res.json({
+        _id: visitor.id,
+        name: visitor.name,
+        email: visitor.email,
+        role: visitor.role,
+        token: generateToken(visitor._id)
+      });
+    } else {
+      res.status(401).json({ message: 'Invalid email or password' });
+    }
+  } catch (error) {
+    res.status(500).json({ message: error.message });
+  }
+};
+
+const appointmentVisitor = async (req, res) => {
+  const { email, phone, password, confirmPassword, company, hostId, date, purpose, token } = req.body;
   
   try {
     const host = await User.findById(hostId);
+    console.log('Host found:', host);
     if (!host || host.role !== 'Employee') {
       console.log('Host validation failed');
       return res.status(400).send('Invalid host selected');
     }
 
     let visitor = await Visitor.findOne({ email });
-    if (!visitor) {
-      visitor = await Visitor.create({ name, email, phone, company, organization: host.organization, photoUrl: photo });
-    }
     
-    const appointment = await Appointment.create({
+    if (visitor) {
+      console.log('Visitor found:', visitor);
+      const appointment = await Appointment.create({
       visitorId: visitor._id,
       hostId: host._id,
       date,
       purpose,
-      organization: host.organization
+      organization: host.company,
+      photoUrl: visitor.photoUrl
     });
-
 
     await sendEmail({
       to: visitor.email,
@@ -34,21 +90,39 @@ exports.registerVisitor = async (req, res) => {
       html: `Hi ${visitor.name},<br><br>Your request to visit ${host.name} on ${new Date(date).toLocaleString()} has been submitted successfully.<br>You will receive your Digital Pass once approved.`
     });
 
-
     await sendEmail({
       to: host.email,
       subject: `New Visitor Request: ${visitor.name}`,
       html: `Hello ${host.name},<br><br>You have a new visitor request from ${visitor.name} (${visitor.company || 'N/A'}) for the purpose of ${purpose} on ${new Date(date).toLocaleString()}.<br><br>Please log in to your dashboard to approve.`
     });
+    res.status(201).json({ message: 'Visitor appointment created', appointment });
 
-    res.status(201).json({ message: 'Visitor registered', appointment });
+  } else {
+      return res.status(400).send('Visitor with this email already exists. Please log in to book an appointment.');
+    }
+    
   } catch (error) {
     console.error("Error in registration:", error);
-    res.status(500).send("Internal server error during registration");
+    res.status(500).send(`Internal server error during registration ${error}`);
   }
 };
 
-exports.getVisitors = async (req, res) => {
+const appointmentVisitorGet = async (req, res) => {
+  const { email } = req.body;
+  try{
+    const visitor = await Visitor.findOne({ email });
+    if (!visitor) {
+      return res.status(404).send('Visitor not found');
+    }
+    const appointments = await Appointment.find({ visitorId: visitor._id }).populate('hostId', 'name email');
+    res.status(200).json({ appointments });
+  } catch(error){
+    console.error("Error in fetching appointments:", error);
+    res.status(500).send(`Internal server error during fetching appointments ${error}`);
+  }
+}
+
+const getVisitors = async (req, res) => {
   try {
     const query = req.user && req.user.organization ? { organization: req.user.organization } : {};
     const visitors = await Visitor.find(query);
@@ -58,7 +132,7 @@ exports.getVisitors = async (req, res) => {
   }
 };
 
-exports.getHosts = async (req, res) => {
+const getHosts = async (req, res) => {
   try {
     const query = { role: 'Employee' };
     if (req.user && req.user.organization) query.organization = req.user.organization;
@@ -68,3 +142,8 @@ exports.getHosts = async (req, res) => {
     res.status(500).json({ message: error.message });
   }
 };
+
+
+module.exports = {
+  registerVisitor, loginUser, appointmentVisitor, appointmentVisitorGet, getVisitors, getHosts
+}

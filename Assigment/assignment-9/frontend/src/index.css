@@ -71,6 +71,20 @@ h1, h2, h3, h4, h5, h6 {
   background: #059669;
 }
 
+.btn-warning {
+  background: var(--warning);
+}
+.btn-warning:hover {
+  background: #d97706;
+}
+.btn-info {
+  background: #3b82f6;
+}
+.btn-info:hover {
+  background: #2563eb;
+}
+
+
 .input-field {
   width: 100%;
   padding: 10px 12px;
@@ -144,3 +158,240 @@ label {
 .badge-pending { background: #fef3c7; color: #d97706; border: 1px solid #fde68a; }
 .badge-approved { background: #d1fae5; color: #059669; border: 1px solid #a7f3d0; }
 .badge-rejected { background: #fee2e2; color: #dc2626; border: 1px solid #fecaca; }
+.downloadA{
+  text-decoration: none;
+}
+
+
+.modal-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  inset: 0;
+  /* width: 100vw; */
+  height: 100vh;
+  background: rgba(0, 0, 0, 0.6);
+  
+  display: flex;
+  justify-content: center;
+  align-items: center;
+
+  z-index: 9999;
+}
+
+.modal-box {
+  background: #ffffff;
+  border-radius: 12px;
+
+  width: 90%;
+  max-width: 600px;
+
+  max-height: 90vh;
+  overflow-y: auto;
+
+  padding: 24px;
+  position: relative;
+
+  box-shadow: 0 20px 60px rgba(0,0,0,0.3);
+}
+
+.modal-close {
+  position: absolute;
+  top: 12px;
+  right: 12px;
+
+  background: #f80404;
+  border: none;
+  border-radius: 50%;
+
+  width: 24px;
+  height: 32px;
+
+  font-size: 16px;
+  cursor: pointer;
+}
+
+.modal-box {
+  animation: modalFade 0.25s ease;
+}
+
+@keyframes modalFade {
+  from {
+    opacity: 0;
+    transform: translateY(-20px) scale(0.95);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+  }
+}
+
+
+.loading-overlay {
+  position: fixed;
+  inset: 0;
+
+  background: rgba(0, 0, 0, 0.8);
+  
+  display: flex;
+  justify-content: center;
+  align-items: center;
+
+  z-index: 99999; 
+}
+
+.spinner {
+  width: 60px;
+  height: 60px;
+  border: 6px solid #444;
+  border-top: 6px solid #22c55e;
+  border-radius: 50%;
+  animation: spin 1s linear infinite;
+}
+
+@keyframes spin {
+  100% {
+    transform: rotate(360deg);
+  }
+}
+
+
+
+
+
+.three-dot-btn {
+  background: transparent;
+  border: none;
+  font-size: 20px;
+  cursor: pointer;
+}
+
+.dropdown-menu {
+  position: absolute;
+  right: 0;
+  top: 30px;
+  background: white;
+  border-radius: 8px;
+  box-shadow: 0 10px 30px rgba(0,0,0,0.2);
+  padding: 8px;
+  display: flex;
+  flex-direction: column;
+  z-index: 100;
+  gap: 5px;
+}
+
+.dropdown-menu button {
+  padding: 8px 12px;
+  border: none;
+  background: auto;
+  text-align: left;
+  cursor: pointer;
+}
+
+/* .dropdown-menu button:hover {
+  background: #f1f5f9;
+} */
+
+
+.button-confirm {
+    display: flex;
+    grid-row: 20px;
+    row-gap: 10px;
+    gap: 20px;
+    margin-top: 20px;
+}
+
+
+
+/* for toast */
+.toast {
+  position: fixed;
+  top: 20px;
+  right: 20px;
+  padding: 14px 20px;
+  border-radius: 10px;
+  color: white;
+  font-weight: 500;
+  z-index: 9999;
+  animation: slideIn 0.3s ease;
+}
+
+.toast-success {
+  background: #16a34a;
+}
+
+.toast-error {
+  background: #dc2626;
+}
+
+.toast-warning {
+  background: #f59e0b;
+}
+
+@keyframes slideIn {
+  from {
+    transform: translateX(120%);
+  }
+  to {
+    transform: translateX(0);
+  }
+}
+
+
+.glass-panel-withImage{
+  display: flex;
+  justify-content: space-between;
+
+  img{
+        margin-bottom: 15px;
+        height: 100px;
+        width: 100px;
+        border-radius: 50px;
+  }
+}
+
+.confirmbtn{
+  margin-top: 20px;
+}
+
+.purpose-text {
+  position: relative;
+  cursor: pointer;
+}
+
+
+
+
+
+.purpose-wrapper {
+  position: relative;
+  display: inline-block;
+}
+
+.tooltip-box {
+  position: absolute;
+  top: 120%;
+  left: 0;
+
+  width: 300px;
+  max-height: 200px;
+  overflow-y: auto;
+
+  background: #fff;
+  border: 1px solid #ddd;
+  padding: 10px;
+  border-radius: 8px;
+
+  box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+
+  opacity: 0;
+  visibility: hidden;
+  transition: 0.2s;
+
+  z-index: 9999;
+}
+
+.purpose-wrapper:hover .tooltip-box {
+  opacity: 1;
+  visibility: visible;
+}

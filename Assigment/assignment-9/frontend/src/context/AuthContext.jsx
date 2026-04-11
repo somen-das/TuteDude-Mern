@@ -15,12 +15,19 @@ export const AuthProvider = ({ children }) => {
     setLoading(false);
   }, []);
 
-  const login = async (email, password) => {
+  const login = async (email, password, role) => {
     try {
-      const { data } = await axios.post(import.meta.env.VITE_API_URL + '/auth/login', { email, password });
-      setUser(data);
-      localStorage.setItem('userInfo', JSON.stringify(data));
-      return data;
+      if(role === 'Admin') {
+        const { data } = await axios.post(import.meta.env.VITE_API_URL + '/auth/login', { email, password });
+        setUser(data);
+        localStorage.setItem('userInfo', JSON.stringify(data));
+        return data; 
+      } else if(role === 'Visitor') {
+        const { data } = await axios.post(import.meta.env.VITE_API_URL + '/visitors/login', { email, password });
+        setUser(data);
+        localStorage.setItem('userInfo', JSON.stringify(data));
+        return data;
+      }
     } catch (error) {
       throw error.response?.data?.message || 'Login failed';
     }

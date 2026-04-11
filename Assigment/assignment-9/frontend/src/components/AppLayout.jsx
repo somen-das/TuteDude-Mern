@@ -11,7 +11,7 @@ const Sidebar = () => {
 
   const handleLogout = () => {
     logout();
-    navigate('/login');
+    navigate('/visitor/login');
   };
 
   const isActive = (path) => location.pathname === path;

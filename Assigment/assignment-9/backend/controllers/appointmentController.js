@@ -1,10 +1,13 @@
 const Appointment = require('../models/Appointment');
-const CheckLog = require('../models/CheckLog');
 const QRCode = require('qrcode');
 const { sendEmail } = require('../utils/emailService');
 const crypto = require('crypto');
+const PDFDocument = require('pdfkit');
+const { generatePassPDF } = require('../utils/pdfGenerator');
 
-exports.getAppointments = async (req, res) => {
+const getAppointments = async (req, res) => {
+  console.log("Fetching appointments for user:", req.user);
+  
   try {
     let query = {};
     if (req.user && req.user.organization) query.organization = req.user.organization;
@@ -16,61 +19,58 @@ exports.getAppointments = async (req, res) => {
       .populate('hostId', 'name department')
       .sort({ date: -1 });
     res.json(appointments);
-    console.log('appointmentsappointmentsappointments==>', appointments);
   } catch (error) {
     res.status(500).json({ message: error.message });
   }
 };
 
-exports.updateAppointmentStatus = async (req, res) => {
+const updateAppointmentStatus = async (req, res) => {
   const { status } = req.body;
-  console.log("Updating status to:", status); 
-
   try {
+
     const appointment = await Appointment.findById(req.params.id)
       .populate('visitorId')
       .populate('hostId');
-      
     if (!appointment) {
-      console.log("Appointment not found in DB");
-      return res.status(404).send('Appointment not found');
+      return res.status(404).send({message: 'Appointment not found'});
     }
-    
-    if (req.user.role === 'Employee') {
-        if (appointment.hostId._id.toString() !== req.user._id.toString()) {
-            console.log("Employee unauthorized to edit this appointment");
-            return res.status(403).send('Not authorized to update this appointment');
-        }
-    }
-
     appointment.status = status;
-    
     let attachments = [];
+        if (status === 'Approved') {
 
-    if (status === 'Approved') {
       if (!appointment.passId) {
-        console.log("Generating pass ID and QR code...");
+
         const randomBytes = crypto.randomBytes(4).toString('hex').toUpperCase();
         appointment.passId = randomBytes;
-        
-        const qrDataURL = await QRCode.toDataURL(appointment.passId);
-        
-        const base64Data = qrDataURL.replace(/^data:image\/png;base64,/, "");
-        
-        attachments.push({
-            filename: 'pass-qr-code.png',
-            content: base64Data,
-            encoding: 'base64'
-        });
-        console.log("QR code generated and attached");
       }
-    }
-    
+      if (!appointment.pdfPassId) {
+
+        appointment.pdfPassId = `PDF-${appointment.passId}`;
+      }
+      if(appointment?.passId){
+
+        const qrDataURL = await QRCode.toDataURL(appointment.passId);
+        const base64Data = qrDataURL.replace(/^data:image\/png;base64,/, "");
+        const pdfBuffer = await generatePassPDF(appointment, base64Data);
+  
+        attachments.push({
+          filename: `Pass-${appointment.passId}.pdf`,
+          content: pdfBuffer,
+          contentType: 'application/pdf'
+        });
+      }
+       }
+
+       if (status === 'Rejected') {
+       await appointment.deleteOne();
+       res.json({ message: 'Appointment rejected and deleted' });
+        //  appointment.passId = undefined;
+        //  appointment.pdfPassId = undefined;
+       }
+  
     await appointment.save();
-    console.log("Appointment saved in DB");
 
     if (status === 'Approved') {
-      console.log("Sending approval email");
       await sendEmail({
         to: appointment.visitorId.email,
         subject: `Pass Approved! ID: ${appointment.passId}`,
@@ -80,7 +80,6 @@ exports.updateAppointmentStatus = async (req, res) => {
     }
 
     if (status === 'Rejected') {
-      console.log("Sending rejection email");
       await sendEmail({
         to: appointment.visitorId.email,
         subject: `Visit Request Rejected`,
@@ -90,79 +89,95 @@ exports.updateAppointmentStatus = async (req, res) => {
 
     res.json(appointment);
   } catch (error) {
-    console.log("Status update error:", error);
-    res.status(500).send('Internal server error');
+    res.status(500).send({message: 'Internal server error: ' + error.message});
   }
 };
 
-exports.scanQR = async (req, res) => {
+const downloadPass = async (req, res) => {
+  try {
+    const appointment = await Appointment.findOne({ pdfPassId: req.params.pdfPassId })
+      .populate('visitorId')
+      .populate('hostId');
+    if (!appointment) {
+      return res.status(404).send({message: 'Pass not found'});
+    }
+
+    const qrDataURL = await QRCode.toDataURL(appointment.passId);
+    const base64Data = qrDataURL.replace(/^data:image\/png;base64,/, "");
+
+    const pdfBuffer = await generatePassPDF(appointment, base64Data);
+
+    res.setHeader('Content-Type', 'application/pdf');
+    res.setHeader('Content-Disposition', `attachment; filename=Pass-${appointment.passId}.pdf`);
+    
+    res.send(pdfBuffer);
+
+  } catch (error) {
+    console.error("PDF Download Error:", error);
+    res.status(500).send("Error generating PDF");
+  }
+};
+
+const scanQR = async (req, res) => {
   const { passId } = req.body;
-  console.log("Scanning pass ID:", passId);
   
   try {
     const appointment = await Appointment.findOne({ passId }).populate('visitorId').populate('hostId');
     
     if (!appointment) {
-      console.log("Pass ID not found");
-      return res.status(404).send('Invalid Pass ID');
+      return res.status(404).send({message:'Invalid Pass ID Okay !'});
     }
     
     if (appointment.status !== 'Approved') {
-      console.log("Pass is not approved");
-      return res.status(400).send('This pass is not approved or has expired');
+      return res.status(400).send({message:'This pass is not approved or has expired'});
     }
 
-    let log = await CheckLog.findOne({ appointmentId: appointment._id });
-    
-    if (!log) {
-      console.log("No log found. Checking in visitor.");
-      log = await CheckLog.create({ 
-        appointmentId: appointment._id, 
-        checkInTime: new Date(), 
-        status: 'Checked In',
-        organization: appointment.organization
-      });
+    if (!appointment.checkStatus || appointment.checkStatus === 'Not Checked In') {
+       await Appointment.updateMany(
+        { passId: passId },
+       { checkInTime: new Date(), 
+        checkStatus: 'Checked In'}
+      );
       
-      console.log("Sending arrival email to host");
       await sendEmail({
         to: appointment.hostId.email,
         subject: `Visitor Arrived: ${appointment.visitorId.name}`,
         html: `Hi ${appointment.hostId.name},<br><br>Your visitor ${appointment.visitorId.name} has just checked in.`
       });
 
-      return res.json({ message: 'Checked In Successfully', passId: passId, status: 'Checked In' });
+      return res.json({ message: 'Checked In Successfully', passId: passId, appointment:appointment, status: 'Checked In' });
     }
     
-    if (log.status === 'Checked In') {
-      console.log("Log found with Checked In status. Checking out visitor.");
-      log.checkOutTime = new Date();
-      log.status = 'Checked Out';
+    if (appointment.checkStatus === 'Checked In') {
+      await Appointment.updateMany(
+        { passId: passId },
+       { checkOutTime: new Date(), 
+        checkStatus: 'Checked Out'}
+      );
       
-      await log.save();
+      await appointment.save();
 
-      console.log("Sending checkout email to visitor");
       await sendEmail({
         to: appointment.visitorId.email,
         subject: `Thanks for visiting!`,
         html: `Hi ${appointment.visitorId.name},<br><br>You have successfully checked out. Have a great day!`
       });
 
-      return res.json({ message: 'Checked Out Successfully', passId: passId, status: 'Checked Out' });
+      return res.json({ message: 'Checked Out Successfully', passId: passId, appointment:appointment, status: 'Checked Out' });
     }
     
-    console.log("Visitor already checked out");
-    return res.status(400).send('Already Checked Out');
+    return res.status(400).send({message:'Already Checked Out'});
     
   } catch (error) {
-    console.log("Scan error:", error);
-    res.status(500).send("Error scanning QR code");
+    console.log("Scan QR Error:", error);
+    res.status(500).send({message:"Error scanning QR code"});
   }
 };
 
-exports.getLogs = async (req, res) => {
+const getLogs = async (req, res) => {
   try {
     const query = req.user && req.user.organization ? { organization: req.user.organization } : {};
-    const logs = await CheckLog.find(query)
+    const logs = await Appointment.find(query)
       .populate({
         path: 'appointmentId',
         populate: [
@@ -174,4 +189,27 @@ exports.getLogs = async (req, res) => {
   } catch (error) {
     res.status(500).json({ message: error.message });
   }
+};
+
+const deleteAppointment = async (req, res) =>{
+  try{
+    const appointment = await Appointment.findById(req.params.id);
+    if(!appointment){
+      return res.status(404).json({ message: 'Appointment not found' });
+    }
+    await appointment.deleteOne();
+    res.json({ message: 'Appointment deleted successfully' });
+  }catch(error){
+    console.log("Delete Appointment Error:", error);
+    res.status(500).json({ message: error.message });
+  }
+}
+
+module.exports = {
+  getAppointments,
+  updateAppointmentStatus,
+  scanQR,
+  getLogs,
+  downloadPass,
+  deleteAppointment
 };
