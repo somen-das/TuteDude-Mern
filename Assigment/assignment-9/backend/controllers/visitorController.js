@@ -50,7 +50,8 @@ const loginUser = async (req, res) => {
         name: visitor.name,
         email: visitor.email,
         role: visitor.role,
-        token: generateToken(visitor._id)
+        token: generateToken(visitor._id),
+        visitor: visitor
       });
     } else {
       res.status(401).json({ message: 'Invalid email or password' });
@@ -80,7 +81,7 @@ const appointmentVisitor = async (req, res) => {
       hostId: host._id,
       date,
       purpose,
-      organization: host.company,
+      // organization: host.company,
       photoUrl: visitor.photoUrl
     });
 
@@ -124,7 +125,7 @@ const appointmentVisitorGet = async (req, res) => {
 
 const getVisitors = async (req, res) => {
   try {
-    const query = req.user && req.user.organization ? { organization: req.user.organization } : {};
+    const query = req.user || {};
     const visitors = await Visitor.find(query);
     res.json(visitors);
   } catch (error) {
@@ -135,7 +136,7 @@ const getVisitors = async (req, res) => {
 const getHosts = async (req, res) => {
   try {
     const query = { role: 'Employee' };
-    if (req.user && req.user.organization) query.organization = req.user.organization;
+    // if (req.user && req.user.organization) query.organization = req.user.organization;
     const hosts = await User.find(query).select('name department _id');
     res.json(hosts);
   } catch (error) {
@@ -143,7 +144,23 @@ const getHosts = async (req, res) => {
   }
 };
 
+const editUsers = async (req, res) =>{
+  const {name} = req.body;
+  try{
+    const visitor = await Visitor.findById(req.user.id);
+    if(!visitor){
+      return res.status(404).json({message:"Visitor Not Found"})
+    }
+    visitor.name = name || visitor.name;
+    await visitor.save();
+
+    res.json({message: "Your Profile has been updated", user:visitor})
+  } catch(error){
+    res.status(500).json({message:error.message})
+  }
+}
+
 
 module.exports = {
-  registerVisitor, loginUser, appointmentVisitor, appointmentVisitorGet, getVisitors, getHosts
+  registerVisitor, loginUser, appointmentVisitor, appointmentVisitorGet, getVisitors, getHosts, editUsers
 }

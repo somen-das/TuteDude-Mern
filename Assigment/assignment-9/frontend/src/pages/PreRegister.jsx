@@ -51,7 +51,6 @@ const PreRegister = ({ page, onSuccess, setLoading  }) => {
         }, 1000);
       
       } catch(err){
-        console.log("Error submitting appointment request: 1", err.response?.data);
         setErrorMsg(err.response?.data?.message || err.response?.data || 'Failed to submit appointment request');
       }finally{
         setLoading(false);
@@ -89,14 +88,12 @@ const PreRegister = ({ page, onSuccess, setLoading  }) => {
       setFormData({ name: '', email: '', phone: '', password: '', confirmPassword: '', company: '', hostId: '', date: '', purpose: '' });
       setPhotoFile(null);
     } catch (err) {
-      console.log("Error submitting appointment request: 2", err.response?.data);
       setErrorMsg(err.response?.data?.message || err.response?.data || 'Failed to submit registration');
     } finally {
       setLoadingState(false);
     }
   };
 
-console.log("Rendering PreRegister with page:",{ successMsg, errorMsg, page});
   return (
     <>
     <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', minHeight: '40vh', padding: '20px' }}>

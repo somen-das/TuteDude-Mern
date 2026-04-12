@@ -1,9 +1,9 @@
-
 import React, { useEffect, useState, useContext } from 'react';
 import axios from 'axios';
 import { AuthContext } from '../context/AuthContext';
 import ConfirmModal from '../components/ConfirmModal';
 import Toast from '../components/Toast';
+import Modal from '../components/Modal';
 
 const EmployeeDashboard = ({ setLoading }) => {
   const [appointments, setAppointments] = useState([]);
@@ -13,6 +13,10 @@ const EmployeeDashboard = ({ setLoading }) => {
   const [confirmData, setConfirmData] = useState(null);
   const [viewData, setViewData] = useState(null);
   const [toast, setToast] = useState(null);
+  
+  // Tab State
+  const [activeTab, setActiveTab] = useState('pending');
+  
   const API = import.meta.env.VITE_API_URL;
 
   const fetchAppointments = async () => {
@@ -20,7 +24,9 @@ const EmployeeDashboard = ({ setLoading }) => {
       const { data } = await axios.get(`${API}/appointments`, {
         headers: { Authorization: `Bearer ${user.token}` }
       });
-      setAppointments(data);
+      // Basic sorting by date
+      const sorted = data.sort((a, b) => new Date(b.date) - new Date(a.date));
+      setAppointments(sorted);
     } catch (err) {
       console.error(err);
     }
@@ -30,201 +36,125 @@ const EmployeeDashboard = ({ setLoading }) => {
     fetchAppointments();
   }, [user]);
 
-
-  const openConfirm = (action, appt) => {
-    setConfirmData({ action, appt });
-  };
-
-  const handleDelete = (appt) => {
-    const meetingTime = new Date(appt.date);
-    const now = new Date();
-
-    if (appt.status === "Approved" && meetingTime > now) {
-      setConfirmData({
-        action: "Blocked",
-        message: "Already approved. You can delete after meeting."
-      });
-      return;
-    }
-
-    openConfirm("Delete", appt);
-  };
+  // Filtering Logic
+  const pendingRequests = appointments.filter(app => app.status === 'Pending');
+  const approvedRequests = appointments.filter(app => app.status === 'Approved' && app.checkStatus !== 'Checked Out');
+  const historyRequests = appointments.filter(app => app.status === 'Rejected' || app.checkStatus === 'Checked Out');
 
   const confirmAction = async () => {
     const { action, appt } = confirmData;
     try {
-      
+      setLoading(true);
       if (action === "Delete") {
-        setLoading(true);
         await axios.delete(`${API}/appointments/${appt._id}`, {
           headers: { Authorization: `Bearer ${user.token}` }
         });
         setToast({ message: "Appointment deleted successfully", type: "error" });
       } else {
-        setLoading(true);
         await axios.put(`${API}/appointments/${appt._id}`, {
           status: action,
         }, {
           headers: { Authorization: `Bearer ${user.token}` }
         });
-        setToast({ message: "Appointment updated successfully", type: "success" });
+        setToast({ message: `Appointment ${action} successfully`, type: "success" });
       }
       fetchAppointments();
       setConfirmData(null);
       setOpenMenuId(null);
     } catch (err) {
-      setLoading(false);
       console.error(err);
-    } finally{
+      setToast({ message: "Action failed", type: "error" });
+    } finally {
       setLoading(false);
     }
   };
 
-  return (
-    <div className="glass-panel" onClick={() => setOpenMenuId(null)}>
-      <h3 style={{ fontSize: '1.25rem', marginBottom: '20px' }}>
-        Visitor Requests
-      </h3>
-
-      <div >
-        <table className="data-table">
-          <thead>
-            <tr>
-              <th>Visitor Name</th>
-              <th>Company</th>
-              <th>Date</th>
-              <th>Purpose</th>
-              <th>Status</th>
-              <th>Pass</th>
-              <th>Actions</th>
-            </tr>
-          </thead>
-
-          <tbody>
-            {appointments.map(appt => (
-              <tr key={appt._id}>
-                <td>{appt.visitorId?.name}</td>
-                <td>{appt.visitorId?.company || 'N/A'}</td>
-                <td>{new Date(appt.date).toLocaleString()}</td>
-                <td className="purpose-cell">
-                  <div className="purpose-wrapper">
-                    <span className="short-text">
-                      {appt.purpose.length > 20
-                        ? appt.purpose.slice(0, 20) + "..."
-                        : appt.purpose}
-                    </span>
-
-                    <div className="tooltip-box">
-                      {appt.purpose}
-                    </div>
-                  </div>
-                </td>
-
-                <td>
-                  <span className={`badge badge-${appt.status.toLowerCase()}`}>
-                    {appt.status}
-                  </span>
-                </td>
-
-                <td>
-                  {appt.status === 'Approved' ? (
-                    <div>
-                      <div style={{ fontSize: '0.7rem' }}>
-                        Pass: {appt.passId}
-                      </div>
-                    </div>
-                  ) : (
-                    "-"
-                  )}
-                </td>
-
-               
-                <td style={{ position: "relative" }}>
-                  <div onClick={(e)=>e.stopPropagation()}> 
-                  <button 
-                    onClick={() => setOpenMenuId(openMenuId === appt._id ? null : appt._id) } 
-                    className="three-dot-btn" >
-                    ⋮
-                  </button>
-
+  const renderTable = (data) => (
+    <div style={{ overflowX: 'auto' }}>
+      <table className="data-table">
+        <thead>
+          <tr>
+            <th>Visitor Name</th>
+            <th>Company</th>
+            <th>Date</th>
+            <th>Status</th>
+            <th>Pass</th>
+            <th>Actions</th>
+          </tr>
+        </thead>
+        <tbody>
+          {data.length > 0 ? data.map(appt => (
+            <tr key={appt._id}>
+              <td>{appt.visitorId?.name}</td>
+              <td>{appt.visitorId?.company || 'N/A'}</td>
+              <td>{new Date(appt.date).toLocaleString()}</td>
+              <td>
+                <span className={`badge badge-${appt.status.toLowerCase()}`}>{appt.status}</span>
+              </td>
+              <td>{appt.status === 'Approved' ? `ID: ${appt.passId}` : "-"}</td>
+              <td style={{ position: "relative" }}>
+                <div onClick={(e) => e.stopPropagation()}>
+                  <button onClick={() => setOpenMenuId(openMenuId === appt._id ? null : appt._id)} className="three-dot-btn">⋮</button>
                   {openMenuId === appt._id && (
                     <div className="dropdown-menu">
                       {appt.status === "Pending" && (
                         <>
-                          <button className='btn btn-success' onClick={() => openConfirm("Approved", appt)}>Approve</button>
-                          <button className='btn btn-warning' onClick={() => openConfirm("Rejected", appt)}>Reject</button>
-                          <button className='btn btn-danger' onClick={() => handleDelete(appt)}>Delete</button>
+                          <button className='btn btn-success' onClick={() => setConfirmData({action: "Approved", appt})}>Approve</button>
+                          <button className='btn btn-warning' onClick={() => setConfirmData({action: "Rejected", appt})}>Reject</button>
                         </>
                       )}
-
-                      {appt.status === "Approved" && (
-                        <button className='btn btn-danger' onClick={() => handleDelete(appt)}>Delete</button>
-                      )}
-
+                      <button className='btn btn-danger' onClick={() => setConfirmData({action: "Delete", appt})}>Delete</button>
                       <button className='btn btn-info' onClick={() => setViewData(appt)}>View</button>
                     </div>
                   )}
-                  </div>
-                </td>
-              </tr>
-            ))}
+                </div>
+              </td>
+            </tr>
+          )) : (
+            <tr><td colSpan="6" style={{ textAlign: 'center', padding: '30px', color: '#94a3b8' }}>No records found.</td></tr>
+          )}
+        </tbody>
+      </table>
+    </div>
+  );
 
-            {appointments.length === 0 && (
-              <tr>
-                <td colSpan="7" style={{ textAlign: 'center' }}>
-                  No visitor requests found.
-                </td>
-              </tr>
-            )}
-          </tbody>
-        </table>
+  return (
+    <div className="glass-panel" onClick={() => setOpenMenuId(null)}>
+      <h3 style={{ fontSize: '1.25rem', marginBottom: '20px' }}>Employee Dashboard</h3>
+
+      
+      <div className="tab-container">
+        <button 
+          className={`tab-btn ${activeTab === 'pending' ? 'active orange' : ''}`} 
+          onClick={() => setActiveTab('pending')}
+        >
+          New Requests ({pendingRequests.length})
+        </button>
+        <button 
+          className={`tab-btn ${activeTab === 'approved' ? 'active green' : ''}`} 
+          onClick={() => setActiveTab('approved')}
+        >
+          Approved ({approvedRequests.length})
+        </button>
+        <button 
+          className={`tab-btn ${activeTab === 'history' ? 'active gray' : ''}`} 
+          onClick={() => setActiveTab('history')}
+        >
+          History ({historyRequests.length})
+        </button>
       </div>
 
-      {/* for confirm modal */}
-      {confirmData && (
-        <ConfirmModal confirmData={confirmData} setConfirmData={setConfirmData} confirmAction={confirmAction} />
-      )}
+      <div className="animate-fade-in">
+        {activeTab === 'pending' && renderTable(pendingRequests)}
+        {activeTab === 'approved' && renderTable(approvedRequests)}
+        {activeTab === 'history' && renderTable(historyRequests)}
+      </div>
 
-      {/* for view modal */}
-      {viewData && (
-        <div className="modal-overlay"  onClick={() => setConfirmData(null)} >
-          <div className="modal-box" onClick={(e) => e.stopPropagation()}>
-            <button className="modal-close btn btn-danger"
-                onClick={() => setViewData(null)}>
-                ✖
-            </button>
-            <h3>Visitor Details</h3>
-            <div className="glass-panel-withImage">
-            <div>
-            <p><b>Name:</b> {viewData.visitorId?.name}</p>
-            <p><b>Email:</b> {viewData.visitorId?.email}</p>
-            <p><b>Phone:</b> {viewData.visitorId?.phone}</p>
-            <p><b>Company:</b> {viewData.visitorId?.company}</p>
-            <p><b>Purpose:</b> {viewData.purpose}</p>
-            <p><b>Date:</b> {new Date(viewData.date).toLocaleString()}</p>
-            </div>
-            <div >
-              {viewData.photoUrl ? (
-                <img src={viewData.photoUrl} alt="Visitor" />
-              ) : (
-                <p>No photo available</p>
-              )}
+      <ConfirmModal confirmData={confirmData} setConfirmData={setConfirmData} confirmAction={confirmAction} />
 
-            </div>
-            </div>
+      <Modal isOpen={!!viewData} onClose={() => setViewData(null)} title="Visitor Information" viewData={viewData}></Modal>
 
-          </div>
-        </div>
-      )}
-
-
-      {toast && (
-  <Toast
-    message={toast.message}
-    type={toast.type}
-    onClose={() => setToast(null)}
-  />
-)}
+      {toast && <Toast message={toast.message} type={toast.type} onClose={() => setToast(null)} />}
     </div>
   );
 };

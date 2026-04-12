@@ -23,7 +23,6 @@ const Analytics = () => {
           headers: { Authorization: `Bearer ${token}` }
         });
         setStats(res.data);
-        console.log(res);
       } catch (error) {
         console.error('Error fetching analytics:', error);
       } finally {

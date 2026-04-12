@@ -7,7 +7,6 @@ const appointmentSchema = new mongoose.Schema({
   purpose: { type: String, required: true },
   status: { type: String, enum: ['Pending', 'Approved', 'Rejected'], default: 'Pending' },
   passId: { type: String, unique: true, sparse: true },
-  organization: { type: mongoose.Schema.Types.ObjectId, ref: 'Organization' },
   pdfPassId: { type: String, sparse: true, unique: true, },
   photoUrl: { type: String },
   checkInTime: { type: Date },

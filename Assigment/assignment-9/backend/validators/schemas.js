@@ -34,7 +34,6 @@ const registerUserSchema = Joi.object({
   name: Joi.string().required(),
   email: Joi.string().email().required(),
   password: Joi.string().min(6).required(),
-  organization: Joi.string().required(),
   role: Joi.string().valid('Admin', 'Employee').default('Employee'),
   department: Joi.string().allow('', null)
 });

@@ -1,110 +1,128 @@
-import React, { useContext, useState } from 'react'
-import PreRegister from '../pages/PreRegister'
-import { AuthContext } from '../context/AuthContext';
+import React, { useEffect, useState, useContext } from 'react';
 import axios from 'axios';
-import { useEffect } from 'react';
+import { AuthContext } from '../context/AuthContext';
+import Modal from '../components/Modal';
+import PreRegister from '../pages/PreRegister';
 
-const VisitorDashboard = ({setLoading}) => {
+const VisitorDashboard = ({ setLoading }) => {
   const { user } = useContext(AuthContext);
-    const [showAddForm, setShowAddForm] = useState(false);
-    const [appointments, setAppointments] = useState([]);
+  const [showAddForm, setShowAddForm] = useState(false);
+  const [appointments, setAppointments] = useState([]);
+  const [activeTab, setActiveTab] = useState('approved');
+
   const fetchAppointments = async () => {
-    try{
-      const {data} = await axios.post(import.meta.env.VITE_API_URL + '/visitors/visitor-appointments', { email: user.email });
-       setAppointments(data?.appointments);
-    } catch(error){
+    try {
+      const { data } = await axios.post(import.meta.env.VITE_API_URL + '/visitors/visitor-appointments', { email: user.email });
+      setAppointments(data.appointments);
+    } catch (error) {
       console.error("Error in fetching appointments:", error);
     }
-  }
-      const handleSuccess = () => {
-  setShowAddForm(false);   // modal close
-  fetchAppointments();     // data refresh
-};
+  };
 
-  useEffect(()=>{
+  const handleSuccess = () => {
+    setShowAddForm(false);
     fetchAppointments();
-  }, [user])
+  };
+
+  useEffect(() => {
+    fetchAppointments();
+  }, [user]);
+
+  
+  const approvedApps = appointments.filter(app => app.status === 'Approved' && app.checkStatus !== 'Checked Out');
+  const pendingApps = appointments.filter(app => app.status === 'Pending');
+  const completedApps = appointments.filter(app => app.checkStatus === 'Checked Out' || app.status === 'Rejected');
+
+
+  const renderTable = (data, emptyMsg) => (
+    <div style={{ overflowX: 'auto' }}>
+      <table className="data-table">
+        <thead>
+          <tr><th>Host</th><th>Status</th><th>Date</th><th>Pass ID</th><th>Action</th></tr>
+        </thead>
+        <tbody>
+          {data.length > 0 ? (
+            data.map(log => (
+              <tr key={log._id}>
+                <td>{log?.hostId?.name}</td>
+                <td><span className={`badge badge-${log.status.toLowerCase()}`}>{log.status}</span></td>
+                <td>{log.date ? new Date(log.date).toLocaleString() : '-'}</td>
+                <td>{log.passId || '-'}</td>
+                <td>
+                  {log.passId ? (
+                    <a href={`${import.meta.env.VITE_API_URL}/appointments/download-pass/${log.pdfPassId}`} target="_blank" rel="noopener noreferrer" className={activeTab === "history" ? "btn btn-sm btn-outline-primary disable" : "btn btn-sm btn-outline-primary"}>
+                      Download
+                    </a>
+                  ) : '-'}
+                </td>
+              </tr>
+            ))
+          ) : (
+            <tr><td colSpan="5" style={{ textAlign: 'center', padding: '40px', color: '#94a3b8' }}>{emptyMsg}</td></tr>
+          )}
+        </tbody>
+      </table>
+    </div>
+  );
 
   return (
     <div>
-      <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '20px' }}>
-          <h3 style={{ fontSize: '1.25rem', margin: 0 }}>Appointments Add</h3>
-          <button onClick={() => setShowAddForm(!showAddForm)} className="btn btn-primary" style={{ padding: '8px 16px' }}>
-            {showAddForm ? 'Cancel' : '+ Add New Appointment'}
-          </button>
-        </div>
-      {/* {showAddForm && <PreRegister page="visitor-dashboard" />} */}
-      
-    {showAddForm && (
-  <div className="modal-overlay" onClick={() => setShowAddForm(false)}>
-    
-    <div className="modal-box" onClick={(e) => e.stopPropagation()} >
-      
-      <button className="modal-close" onClick={() => setShowAddForm(false)} >
-        ✖
-      </button>
+      <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '24px' }}>
+        <h3 style={{ fontSize: '1.5rem', fontWeight: 'bold' }}>Visitor Portal</h3>
+        <button onClick={() => setShowAddForm(true)} className="btn btn-primary">+ New Appointment</button>
+      </div>
 
-      <PreRegister page="visitor-dashboard" onSuccess={handleSuccess} setLoading={setLoading} />
+      <Modal isOpen={showAddForm} onClose={() => setShowAddForm(false)} title="Schedule New Visit">
+        <PreRegister page="visitor-dashboard" onSuccess={handleSuccess} setLoading={setLoading} />
+      </Modal>
+
+      
+      <div className="tab-container">
+        <button 
+          className={`tab-btn ${activeTab === 'approved' ? 'active green' : ''}`} 
+          onClick={() => setActiveTab('approved')}
+        >
+          Approved ({approvedApps.length})
+        </button>
+        <button 
+          className={`tab-btn ${activeTab === 'pending' ? 'active orange' : ''}`} 
+          onClick={() => setActiveTab('pending')}
+        >
+          Pending ({pendingApps.length})
+        </button>
+        <button 
+          className={`tab-btn ${activeTab === 'history' ? 'active gray' : ''}`} 
+          onClick={() => setActiveTab('history')}
+        >
+          History ({completedApps.length})
+        </button>
+      </div>
+
+  
+      <div className="glass-panel animate-fade-in">
+        {activeTab === 'approved' && (
+          <>
+            <h4 style={{ color: '#10b981', marginBottom: '15px' }}>Active & Approved Passes</h4>
+            {renderTable(approvedApps, "No active approved appointments found.")}
+          </>
+        )}
+
+        {activeTab === 'pending' && (
+          <>
+            <h4 style={{ color: '#f59e0b', marginBottom: '15px' }}>Pending Requests</h4>
+            {renderTable(pendingApps, "No pending requests at the moment.")}
+          </>
+        )}
+
+        {activeTab === 'history' && (
+          <>
+            <h4 style={{ color: '#64748b', marginBottom: '15px' }}>Visit History</h4>
+            {renderTable(completedApps, "Your visit history is empty.")}
+          </>
+        )}
+      </div>
     </div>
+  );
+};
 
-  </div>
-)}
-      
-      <div className="glass-panel">
-              <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '20px' }}>
-                <h3 style={{ fontSize: '1.25rem', margin: 0 }}>System Logs & Activity</h3>
-                
-              </div>
-              <div style={{ overflowX: 'auto' }}>
-                <table className="data-table">
-                  <thead>
-                    <tr>
-                      <th>Visitor</th>
-                      <th>Host</th>
-                      <th>Status</th>
-                      {/* <th>Check In</th>
-                      <th>Check Out</th> */}
-                      <th>Date</th>
-                      <th>Pass Id</th>
-                      <th>Pass Download</th>
-                    </tr>
-                  </thead>
-                  <tbody>
-                    {appointments.map(log => (
-                      <tr key={log._id}>
-                        <td>{user?.name}</td>
-                        <td>{log?.hostId?.name}</td>
-                        <td>
-                          <span className={`badge ${log.status === 'Approved' ? 'badge-approved' : (log.status === 'Pending' ? 'badge-pending' : 'badge-rejected')}`}>
-                            {log.status}
-                          </span>
-                        </td>
-                        {/* <td>{log.checkInTime ? new Date(log.checkInTime).toLocaleString() : '-'}</td> */}
-                        {/* <td>{log.checkOutTime ? new Date(log.checkOutTime).toLocaleString() : '-'}</td> */}
-                        <td>{log.date ? new Date(log.date).toLocaleString() : '-'}</td>
-                        <td>{log.passId || '-'}</td>
-                        <td>
-                          {log.passId ? (
-                            <a href={`${import.meta.env.VITE_API_URL}/appointments/download-pass/${log.pdfPassId}`} target="_blank" rel="noopener noreferrer" className="btn btn-sm btn-outline-primary downloadA">
-                              Download
-                            </a>
-                          ) : (
-                            '-'
-                          )}
-                        </td>
-                      </tr>
-                    ))}
-                    {appointments.length === 0 && (
-                      <tr>
-                        <td colSpan="5" style={{ textAlign: 'center', color: '#64748b' }}>No appointments available yet.</td>
-                      </tr>
-                    )}
-                  </tbody>
-                </table>
-              </div>
-            </div>
-    </div>
-  )
-}
-
-export default VisitorDashboard
+export default VisitorDashboard;

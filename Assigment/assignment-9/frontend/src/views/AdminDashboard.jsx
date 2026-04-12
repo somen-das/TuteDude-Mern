@@ -2,6 +2,7 @@ import React, { useEffect, useState, useContext } from 'react';
 import axios from 'axios';
 import { AuthContext } from '../context/AuthContext';
 import { CSVLink } from 'react-csv';
+import ConfirmModal from '../components/ConfirmModal';
 const AdminDashboard = () => {
   const [logs, setLogs] = useState([]);
   const [staffList, setStaffList] = useState([]);
@@ -9,7 +10,12 @@ const AdminDashboard = () => {
   const [formData, setFormData] = useState({ name: '', email: '', password: '', role: 'Employee', department: '' });
   const [msg, setMsg] = useState({ type: '', text: '' });
   const { user } = useContext(AuthContext);
-
+  const [confirmData, setConfirmData] = useState(null);
+  const [openMenuId, setOpenMenuId] = useState(null);
+  const [editUserId, setEditUserId] = useState(null);
+  const [editRole, setEditRole] = useState('');
+    const [activeLogTab, setActiveLogTab] = useState('active');
+  const API = import.meta.env.VITE_API_URL;
   useEffect(() => {
     fetchLogs();
     fetchUsers();
@@ -20,6 +26,7 @@ const AdminDashboard = () => {
       const { data } = await axios.get(import.meta.env.VITE_API_URL + '/appointments/logs', {
         headers: { Authorization: `Bearer ${user.token}` }
       });
+
       setLogs(data);
     } catch (err) {
       console.error(err);
@@ -54,9 +61,86 @@ const AdminDashboard = () => {
     }
   };
 
-  return (
-    <div style={{ display: 'flex', flexDirection: 'column', gap: '24px' }}>
+  const openConfirm = (action, user) => {
+  setConfirmData({ action, user });
+};
 
+  const confirmAction = async () => {
+  const { action, user: targetUser } = confirmData;
+  try {
+    if (action === "Delete") {
+     const data = await axios.delete(`${API}/auth/users/${targetUser._id}`, {
+        headers: { 
+          Authorization: `Bearer ${user.token}`
+        }
+      });
+      fetchUsers();
+      setConfirmData(null);
+      setOpenMenuId(null);
+      setMsg({ type: 'success', text: data?.data?.message });
+    }
+
+  } catch (err) {
+    console.error(err);
+    setMsg({ type: 'error', text: 'Failed to delete user' });
+  }
+};
+
+const handleRoleUpdate = async (id) => {
+  try {
+    await axios.put(`${API}/auth/users/${id}`, {
+      role: editRole
+    }, {
+      headers: { Authorization: `Bearer ${user.token}` }
+    });
+
+    setEditUserId(null);
+    fetchUsers();
+  } catch (err) {
+    console.error(err);
+  }
+};
+
+const activeVisits = logs.filter(log => log.status === 'Approved' && log.checkStatus === 'Checked In');
+  const pendingRequests = logs.filter(log => log.status === 'Pending');
+  const completedHistory = logs.filter(log => log.checkStatus === 'Checked Out' || log.status === 'Rejected');
+
+  const renderLogTable = (data) => (
+    <div style={{ overflowX: 'auto' }}>
+      <table className="data-table">
+        <thead>
+          <tr>
+            <th>Visitor</th>
+            <th>Host</th>
+            <th>Status</th>
+            <th>Check In</th>
+            <th>Check Out</th>
+          </tr>
+        </thead>
+        <tbody>
+          {data.length > 0 ? data.map(log => (
+            <tr key={log._id}>
+              <td>{log?.visitorId?.name}</td>
+              <td>{log?.hostId?.name}</td>
+              <td>
+                <span className={`badge ${log.checkStatus === 'Checked In' ? 'badge-pending' : (log.checkStatus === 'Checked Out' ? 'badge-approved' : 'badge-rejected')}`}>
+                  {log.checkStatus !== 'Not Checked In' ? log.checkStatus : log.status}
+                </span>
+              </td>
+              <td>{log.checkInTime ? new Date(log.checkInTime).toLocaleString() : '-'}</td>
+              <td>{log.checkOutTime ? new Date(log.checkOutTime).toLocaleString() : '-'}</td>
+            </tr>
+          )) : (
+            <tr><td colSpan="5" style={{ textAlign: 'center', padding: '30px', color: '#94a3b8' }}>No records found in this category.</td></tr>
+          )}
+        </tbody>
+      </table>
+    </div>
+  );
+
+
+return (
+    <div style={{ display: 'flex', flexDirection: 'column', gap: '24px' }}>
 
       <div className="glass-panel">
         <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '20px' }}>
@@ -112,6 +196,7 @@ const AdminDashboard = () => {
                 <th>Email</th>
                 <th>Role</th>
                 <th>Department</th>
+                <th>Actions</th>
               </tr>
             </thead>
             <tbody>
@@ -119,8 +204,66 @@ const AdminDashboard = () => {
                 <tr key={staff._id}>
                   <td>{staff.name}</td>
                   <td>{staff.email}</td>
-                  <td><span className="badge badge-approved">{staff.role}</span></td>
+                  {/* <td><span className="badge badge-approved">{staff.role}</span></td> */}
+                  <td>
+                    {editUserId === staff._id ? (
+                      <select
+                        value={editRole}
+                        onChange={(e) => setEditRole(e.target.value)}
+                        className="input-field"
+                      >
+                        <option value="Employee">Employee</option>
+                        <option value="Security">Security</option>
+                      </select>
+                    ) : (
+                      <span className="badge badge-approved">{staff.role}</span>
+                    )}
+                  </td>
                   <td>{staff.department || '-'}</td>
+                  <td style={{ position: "relative" }}>
+                    <div onClick={(e) => e.stopPropagation()}>
+                      <button
+                        onClick={() =>
+                          setOpenMenuId(openMenuId === staff._id ? null : staff._id)
+                        }
+                        className="three-dot-btn"
+                      >
+                        ⋮
+                      </button>
+
+                      {openMenuId === staff._id && (
+                        <div className="dropdown-menu">
+
+                          <button
+                            className="btn btn-warning"
+                            onClick={() => {
+                              setEditUserId(staff._id);
+                              setEditRole(staff.role);
+                              // setOpenMenuId(null);
+                            }}
+                          >
+                            Edit
+                          </button>
+
+                          {editUserId === staff._id && (
+                            <button
+                              className="btn btn-success"
+                              onClick={() => handleRoleUpdate(staff._id)}
+                            >
+                              Save
+                            </button>
+                          )}
+
+                          <button
+                            className="btn btn-danger"
+                            onClick={() => openConfirm("Delete", staff)}
+                          >
+                            Delete
+                          </button>
+                        </div>
+                      )}
+                    </div>
+                  </td>
                 </tr>
               ))}
             </tbody>
@@ -128,59 +271,61 @@ const AdminDashboard = () => {
         </div>
       </div>
 
+              {confirmData && (
+        <ConfirmModal confirmData={confirmData} setConfirmData={setConfirmData} confirmAction={confirmAction} />
+      )}
 
-      <div className="glass-panel">
+       <div style={{ display: 'flex', flexDirection: 'column', gap: '24px' }}>
+      <div className="glass-panel animate-fade-in">
         <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '20px' }}>
           <h3 style={{ fontSize: '1.25rem', margin: 0 }}>System Logs & Activity</h3>
           <CSVLink 
             data={logs.map(log => ({
-              Visitor: log.appointmentId?.visitorId?.name,
-              Host: log.appointmentId?.hostId?.name,
+              Visitor: log?.visitorId?.name,
+              Host: log?.hostId?.name,
               Status: log.status,
+              CheckStatus: log.checkStatus,
               CheckIn: log.checkInTime ? new Date(log.checkInTime).toLocaleString() : '',
               CheckOut: log.checkOutTime ? new Date(log.checkOutTime).toLocaleString() : ''
             }))}
-            filename={"visitor-logs.csv"}
+            filename={"all-visitor-logs.csv"}
             className="btn btn-success"
             style={{ textDecoration: 'none', padding: '6px 12px', fontSize: '0.8rem' }}
           >
-            Export to CSV
+            Export All to CSV
           </CSVLink>
         </div>
-        <div style={{ overflowX: 'auto' }}>
-          <table className="data-table">
-            <thead>
-              <tr>
-                <th>Visitor</th>
-                <th>Host</th>
-                <th>Status</th>
-                <th>Check In</th>
-                <th>Check Out</th>
-              </tr>
-            </thead>
-            <tbody>
-              {logs.map(log => (
-                <tr key={log._id}>
-                  <td>{log.appointmentId?.visitorId?.name}</td>
-                  <td>{log.appointmentId?.hostId?.name}</td>
-                  <td>
-                    <span className={`badge ${log.status === 'Checked In' ? 'badge-pending' : (log.status === 'Checked Out' ? 'badge-approved' : 'badge-rejected')}`}>
-                      {log.status}
-                    </span>
-                  </td>
-                  <td>{log.checkInTime ? new Date(log.checkInTime).toLocaleString() : '-'}</td>
-                  <td>{log.checkOutTime ? new Date(log.checkOutTime).toLocaleString() : '-'}</td>
-                </tr>
-              ))}
-              {logs.length === 0 && (
-                <tr>
-                  <td colSpan="5" style={{ textAlign: 'center', color: '#64748b' }}>No logs available yet.</td>
-                </tr>
-              )}
-            </tbody>
-          </table>
+
+        <div className="tab-container" style={{ marginBottom: '20px' }}>
+          <button 
+            className={`tab-btn ${activeLogTab === 'active' ? 'active green' : ''}`} 
+            onClick={() => setActiveLogTab('active')}
+          >
+            Active Visits ({activeVisits.length})
+          </button>
+          <button 
+            className={`tab-btn ${activeLogTab === 'pending' ? 'active orange' : ''}`} 
+            onClick={() => setActiveLogTab('pending')}
+          >
+            Pending ({pendingRequests.length})
+          </button>
+          <button 
+            className={`tab-btn ${activeLogTab === 'history' ? 'active gray' : ''}`} 
+            onClick={() => setActiveLogTab('history')}
+          >
+            History ({completedHistory.length})
+          </button>
         </div>
+
+        {activeLogTab === 'active' && renderLogTable(activeVisits)}
+        {activeLogTab === 'pending' && renderLogTable(pendingRequests)}
+        {activeLogTab === 'history' && renderLogTable(completedHistory)}
       </div>
+
+      {confirmData && (
+        <ConfirmModal confirmData={confirmData} setConfirmData={setConfirmData} confirmAction={confirmAction} />
+      )}
+    </div>
 
     </div>
   );

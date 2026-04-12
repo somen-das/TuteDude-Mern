@@ -10,7 +10,7 @@ const getAppointments = async (req, res) => {
   
   try {
     let query = {};
-    if (req.user && req.user.organization) query.organization = req.user.organization;
+    // if (req.user ) query.organization = req.user.organization;
     if (req.user.role === 'Employee') {
       query.hostId = req.user._id;
     }
@@ -176,17 +176,22 @@ const scanQR = async (req, res) => {
 
 const getLogs = async (req, res) => {
   try {
-    const query = req.user && req.user.organization ? { organization: req.user.organization } : {};
+    let query = { checkStatus: { $exists: true, $ne: null } };
+
+    if (req.user && req.user.role === 'Employee') {
+      query.hostId = req.user._id;
+    }
+
+    console.log("Fetching logs with query:", query);
+
     const logs = await Appointment.find(query)
-      .populate({
-        path: 'appointmentId',
-        populate: [
-          { path: 'visitorId' },
-          { path: 'hostId', select: 'name' }
-        ]
-      }).sort({ createdAt: -1 });
+      .populate('visitorId', 'name email phone company') 
+      .populate('hostId', 'name department')
+      .sort({ updatedAt: -1 });
+
     res.json(logs);
   } catch (error) {
+    console.error("GetLogs Error:", error);
     res.status(500).json({ message: error.message });
   }
 };

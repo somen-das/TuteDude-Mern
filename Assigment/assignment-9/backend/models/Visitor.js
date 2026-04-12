@@ -9,9 +9,9 @@ const visitorSchema = new mongoose.Schema({
   role: { type: String, enum: ['Visitor'], default: 'Visitor' },
   company: { type: String },
   photoUrl: { type: String },
-  organization: { type: mongoose.Schema.Types.ObjectId, ref: 'Organization' },
   // _id: { type: String, default: uuidv4, unique: true }
 }, { timestamps: true });
+
 
 visitorSchema.methods.matchPassword = async function (enteredPassword) {
   return await bcrypt.compare(enteredPassword, this.password);
