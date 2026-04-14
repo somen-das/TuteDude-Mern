@@ -402,9 +402,6 @@ a.btn.btn-sm.btn-outline-primary.disable {
   cursor: pointer;
 }
 
-/* .dropdown-menu button:hover {
-  background: #f1f5f9;
-} */
 
 
 .button-confirm {
@@ -417,7 +414,6 @@ a.btn.btn-sm.btn-outline-primary.disable {
 
 
 
-/* for toast */
 .toast {
   position: fixed;
   top: 20px;
@@ -512,7 +508,6 @@ a.btn.btn-sm.btn-outline-primary.disable {
 
 
 
-/* Layout Grid */
 .security-grid {
   display: grid;
   grid-template-columns: 1fr 1fr;
@@ -525,7 +520,6 @@ a.btn.btn-sm.btn-outline-primary.disable {
   }
 }
 
-/* Reader Styling */
 #reader {
   border-radius: 12px;
   overflow: hidden;
@@ -540,7 +534,6 @@ a.btn.btn-sm.btn-outline-primary.disable {
   border-radius: 6px !important;
 }
 
-/* Scan Result Card */
 .scan-success-card {
   padding: 24px;
   background: #f0fdf4;
@@ -566,7 +559,6 @@ a.btn.btn-sm.btn-outline-primary.disable {
   font-style: italic;
 }
 
-/* Modal Internal Layout */
 .visitor-modal-content {
   display: flex;
   flex-direction: column;
@@ -598,12 +590,11 @@ a.btn.btn-sm.btn-outline-primary.disable {
 }
 
 
-/* Visitor Info Layout */
 .visitor-info {
   display: flex;
   flex-direction: column;
   gap: 10px;
-  min-width: 0; /* Critical: Grid item wrap hote help kore */
+  min-width: 0;
 }
 
 .visitor-info p {
@@ -612,7 +603,6 @@ a.btn.btn-sm.btn-outline-primary.disable {
   color: #475569;
 }
 
-/* Purpose Text specifically handling */
 .purpose-box {
   margin-top: 5px;
 }
@@ -625,19 +615,18 @@ a.btn.btn-sm.btn-outline-primary.disable {
   font-size: 0.9rem;
   color: #334155;
   
-  /* Text Wrapping Logic */
+
   word-wrap: break-word;
   overflow-wrap: break-word;
-  word-break: break-all; /* Eita boro boro 'jsdfks...' text-ke bhenge debe */
+  word-break: break-all; 
   white-space: normal;
   line-height: 1.4;
   border-left: 3px solid #cbd5e1;
 }
 
-/* Image alignment fix */
 .glass-panel-withImage {
   display: grid;
-  grid-template-columns: 1fr 160px; /* Text-ke beshi priority dewa holo */
+  grid-template-columns: 1fr 160px;
   gap: 20px;
   background: #f8fafc;
   padding: 16px;
@@ -655,9 +644,9 @@ a.btn.btn-sm.btn-outline-primary.disable {
 
 @media (max-width: 500px) {
   .glass-panel-withImage {
-    grid-template-columns: 1fr; /* Mobile-e image niche chole jabe */
+    grid-template-columns: 1fr; 
   }
   .visitor-photo-frame {
-    order: -1; /* Mobile-e image opore thakbe */
+    order: -1;/
   }
 }

@@ -10,6 +10,5 @@ router.post('/login', validate(loginSchema), loginUser);
 router.post('/appointment', validate(appointmentVisitorSchema), appointmentVisitor);
 router.post('/visitor-appointments', appointmentVisitorGet);
 router.get('/hosts', getHosts);
-// router.get('/', protect, getVisitors);
 
 module.exports = router;

@@ -9,7 +9,6 @@ const visitorSchema = new mongoose.Schema({
   role: { type: String, enum: ['Visitor'], default: 'Visitor' },
   company: { type: String },
   photoUrl: { type: String },
-  // _id: { type: String, default: uuidv4, unique: true }
 }, { timestamps: true });
 
 

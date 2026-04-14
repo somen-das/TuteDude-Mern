@@ -5,9 +5,7 @@ const User = require('../models/User');
 exports.getDashboardStats = async (req, res) => {
   try {
     let orgQuery = {};
-    // if (req.user && req.user.organization) {
-    //   orgQuery.organization = req.user.organization;
-    // }
+  
 
     const totalVisitors = await Visitor.countDocuments(orgQuery);
     

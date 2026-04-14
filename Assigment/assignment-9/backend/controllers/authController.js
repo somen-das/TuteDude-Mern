@@ -3,8 +3,8 @@ const User = require('../models/User');
 const Visitor = require('../models/Visitor');
 const { sendEmail } = require('../utils/emailService');
 
-const generateToken = (id) => {
-  return jwt.sign({ id }, process.env.JWT_SECRET, { expiresIn: '30d' });
+const generateToken = (id, role) => {
+  return jwt.sign({ id, role }, process.env.JWT_SECRET, { expiresIn: '30d' });
 };
 
 exports.registerUser = async (req, res) => {
@@ -12,16 +12,7 @@ exports.registerUser = async (req, res) => {
     const { name, email, password, role, department } = req.body;
     
     let orgId = null;
-    // if (organizationName) {
-    //   const Organization = require('../models/Organization');
-    //   let org = await Organization.findOne({ name: organizationName });
-      
-    //   if (!org) {
-    //     org = await Organization.create({ name: organizationName });
-    //     console.log("Created a new organization:", organizationName);
-    //   }
-    //   orgId = org._id;
-    // }
+  
 
     const userExists = await User.findOne({ email });
     if (userExists) {
@@ -35,7 +26,6 @@ exports.registerUser = async (req, res) => {
         password, 
         role, 
         department, 
-        // organization: orgId 
     });
     
     if (user) {
@@ -56,7 +46,7 @@ exports.registerUser = async (req, res) => {
         name: user.name,
         email: user.email,
         role: user.role,
-        token: generateToken(user._id)
+        token: generateToken(user._id, user.role)
       });
     } else {
       console.log("Failed to create user object");
@@ -78,7 +68,7 @@ exports.loginUser = async (req, res) => {
         name: user.name,
         email: user.email,
         role: user.role,
-        token: generateToken(user._id)
+        token: generateToken(user._id, user.role)
       });
     } else {
       res.status(401).json({ message: 'Invalid email or password' });
@@ -149,7 +139,6 @@ exports.editSingleUser = async (req, res) => {
       findUser.name = name || findUser.name;
       await findUser.save();
       
-      // Password soriye pathano security-r jonno bhalo
       const userResponse = findUser.toObject();
       delete userResponse.password;
 
@@ -157,7 +146,6 @@ exports.editSingleUser = async (req, res) => {
     }
   } catch (error) {
     console.error('Error in editSingleUser:', error.message);
-    // Ekhane ensure koro jeno 'res' object-ta exist kore
     if (!res.headersSent) {
       return res.status(500).json({ message: error.message });
     }

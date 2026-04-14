@@ -1,42 +1,4 @@
-// const PDFDocument = require('pdfkit');
-// const axios = require('axios');
-// const generatePassPDF = (appointment, qrBase64) => {
-//   return new Promise(async (resolve, reject) => {
-//     const doc = new PDFDocument({ size: 'A6' });
-//     let buffers = [];
-//     doc.on('data', buffers.push.bind(buffers));
-//     doc.on('end', () => resolve(Buffer.concat(buffers)));
 
-//     doc.fontSize(16).text('VISITOR PASS', { align: 'center' }).moveDown();
-//     if (appointment.visitorId && appointment.visitorId.photoUrl) {
-//       try {
-//         const response = await axios.get(appointment.visitorId.photoUrl, { responseType: 'arraybuffer' });
-//         const imageBuffer = Buffer.from(response.data, 'utf-8');
-        
-//         doc.image(imageBuffer, 120, 90, { width: 30, height: 30 });
-//       } catch (err) {
-//         console.log("Photo load korte error hoyeche, skipping photo...");
-//       }
-//     }
-
-//     doc.fontSize(12).text(`Pass ID: ${appointment.passId}`, { align: 'center', margin: 30 }).moveDown();
-//     doc.text(`Visitor: ${appointment.visitorId.name}`);
-//     doc.text(`Host: ${appointment.hostId.name}`);
-//     doc.text(`Date: ${new Date(appointment.date).toLocaleDateString()}`);
-//     doc.moveDown();
-
-    
-//     doc.image(Buffer.from(qrBase64, 'base64'), {
-//       fit: [100, 100],
-//       align: 'center',
-//       valign: 'center'
-//     });
-
-//     doc.end();
-//   });
-// };
-
-// module.exports = { generatePassPDF };
 
 
 

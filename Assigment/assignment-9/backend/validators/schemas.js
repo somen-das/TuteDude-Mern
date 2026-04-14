@@ -7,9 +7,6 @@ const registerVisitorSchema = Joi.object({
   password: Joi.string().min(6).required(),
   confirmPassword: Joi.string().valid(Joi.ref('password')).required(),
   company: Joi.string().allow('', null),
-  // hostId: Joi.string().required(),
-  // date: Joi.date().iso().required(),
-  // purpose: Joi.string().required(),
   photoUrl: Joi.string().allow('', null),
   role: Joi.string().valid('Visitor').default('Visitor')
 });

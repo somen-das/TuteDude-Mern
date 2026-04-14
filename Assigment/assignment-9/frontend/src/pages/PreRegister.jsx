@@ -3,6 +3,7 @@ import axios from 'axios';
 import { Link } from 'react-router-dom';
 import { AuthContext } from '../context/AuthContext';
 import Loading from '../components/Loading';
+import { editUser } from '../../../backend/controllers/authController';
 
 const PreRegister = ({ page, onSuccess, setLoading  }) => {
   const { user } = useContext(AuthContext);
@@ -24,6 +25,9 @@ const PreRegister = ({ page, onSuccess, setLoading  }) => {
     };
     fetchHosts();
   }, []);
+const validateEmail = (email) => {
+  return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email);
+};
 
   const handleChange = (e) => {
     setFormData({ ...formData, [e.target.name]: e.target.value });
@@ -35,6 +39,10 @@ const PreRegister = ({ page, onSuccess, setLoading  }) => {
     e.preventDefault();
 
     if(page === 'visitor-dashboard') {
+      if (!validateEmail(editUser.email)) {
+    setErrorMsg("Please enter a valid email address");
+    return;
+  }
       try{
         setLoading(true);
       const appointmentPayload = {
@@ -61,14 +69,11 @@ const PreRegister = ({ page, onSuccess, setLoading  }) => {
     try {
       setLoadingState(true);
       let photoUrl = "https://res.cloudinary.com/dwysh6bvr/image/upload/v1775825615/visitor_passes/czciecopau7opagozdq8.jpg";
-      // if (photoFile) {
-      //   const fileData = new FormData();
-      //   fileData.append('photo', photoFile);
-      //   const uploadRes = await axios.post(import.meta.env.VITE_API_URL + '/upload', fileData, {
-      //     headers: { 'Content-Type': 'multipart/form-data' }
-      //   });
-      //   photoUrl = uploadRes.data.filePath;
-      // }
+
+      if (!validateEmail(editUser.email)) {
+    setErrorMsg("Please enter a valid email address");
+    return;
+  }
 
       const payload = { 
         name:formData.name, 

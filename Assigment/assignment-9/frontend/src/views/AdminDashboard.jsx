@@ -101,7 +101,8 @@ const handleRoleUpdate = async (id) => {
   }
 };
 
-const activeVisits = logs.filter(log => log.status === 'Approved' && log.checkStatus === 'Checked In');
+  const activeVisits = logs.filter(log => log.status === 'Approved' && log.checkStatus === 'Checked In');
+  const NoVisit = logs.filter(log => log.status === 'Approved' && log.checkStatus === 'Not Checked In');
   const pendingRequests = logs.filter(log => log.status === 'Pending');
   const completedHistory = logs.filter(log => log.checkStatus === 'Checked Out' || log.status === 'Rejected');
 
@@ -123,7 +124,13 @@ const activeVisits = logs.filter(log => log.status === 'Approved' && log.checkSt
               <td>{log?.visitorId?.name}</td>
               <td>{log?.hostId?.name}</td>
               <td>
-                <span className={`badge ${log.checkStatus === 'Checked In' ? 'badge-pending' : (log.checkStatus === 'Checked Out' ? 'badge-approved' : 'badge-rejected')}`}>
+                <span className={`badge ${
+                  (log.status === 'Approved') 
+                  ? "badge-approved"
+                  : (log.status === 'Pending')
+                  ? "badge-pending"
+                  : ""
+                }`}>
                   {log.checkStatus !== 'Not Checked In' ? log.checkStatus : log.status}
                 </span>
               </td>
@@ -239,7 +246,6 @@ return (
                             onClick={() => {
                               setEditUserId(staff._id);
                               setEditRole(staff.role);
-                              // setOpenMenuId(null);
                             }}
                           >
                             Edit
@@ -304,20 +310,27 @@ return (
             Active Visits ({activeVisits.length})
           </button>
           <button 
+            className={`tab-btn ${activeLogTab === 'NoVisit' ? 'active orange' : ''}`} 
+            onClick={() => setActiveLogTab('NoVisit')}
+          >
+            Approved (but not visit) ({NoVisit.length})
+          </button>
+          <button 
             className={`tab-btn ${activeLogTab === 'pending' ? 'active orange' : ''}`} 
             onClick={() => setActiveLogTab('pending')}
           >
-            Pending ({pendingRequests.length})
+            Not Approved ({pendingRequests.length})
           </button>
           <button 
             className={`tab-btn ${activeLogTab === 'history' ? 'active gray' : ''}`} 
             onClick={() => setActiveLogTab('history')}
           >
-            History ({completedHistory.length})
+            History (already visits) ({completedHistory.length})
           </button>
         </div>
 
         {activeLogTab === 'active' && renderLogTable(activeVisits)}
+        {activeLogTab === 'NoVisit' && renderLogTable(NoVisit)}
         {activeLogTab === 'pending' && renderLogTable(pendingRequests)}
         {activeLogTab === 'history' && renderLogTable(completedHistory)}
       </div>

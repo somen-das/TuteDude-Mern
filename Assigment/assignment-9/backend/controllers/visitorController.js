@@ -4,8 +4,8 @@ const User = require('../models/User');
 const bcrypt = require('bcryptjs');
 const { sendEmail } = require('../utils/emailService');
 const jwt = require('jsonwebtoken');
-const generateToken = (id) => {
-  return jwt.sign({ id }, process.env.JWT_SECRET, { expiresIn: '30d' });
+const generateToken = (id, role) => {
+  return jwt.sign({ id, role }, process.env.JWT_SECRET, { expiresIn: '30d' });
 };
 
 
@@ -50,7 +50,7 @@ const loginUser = async (req, res) => {
         name: visitor.name,
         email: visitor.email,
         role: visitor.role,
-        token: generateToken(visitor._id),
+        token: generateToken(visitor._id, visitor.role),
         visitor: visitor
       });
     } else {
@@ -81,7 +81,6 @@ const appointmentVisitor = async (req, res) => {
       hostId: host._id,
       date,
       purpose,
-      // organization: host.company,
       photoUrl: visitor.photoUrl
     });
 
@@ -136,7 +135,6 @@ const getVisitors = async (req, res) => {
 const getHosts = async (req, res) => {
   try {
     const query = { role: 'Employee' };
-    // if (req.user && req.user.organization) query.organization = req.user.organization;
     const hosts = await User.find(query).select('name department _id');
     res.json(hosts);
   } catch (error) {

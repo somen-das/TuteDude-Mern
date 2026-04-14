@@ -1,4 +1,5 @@
 const Appointment = require('../models/Appointment');
+const Visitor = require('../models/Visitor')
 const QRCode = require('qrcode');
 const { sendEmail } = require('../utils/emailService');
 const crypto = require('crypto');
@@ -10,10 +11,11 @@ const getAppointments = async (req, res) => {
   
   try {
     let query = {};
-    // if (req.user ) query.organization = req.user.organization;
+    
     if (req.user.role === 'Employee') {
       query.hostId = req.user._id;
     }
+
     const appointments = await Appointment.find(query)
       .populate('visitorId')
       .populate('hostId', 'name department')
@@ -64,8 +66,7 @@ const updateAppointmentStatus = async (req, res) => {
        if (status === 'Rejected') {
        await appointment.deleteOne();
        res.json({ message: 'Appointment rejected and deleted' });
-        //  appointment.passId = undefined;
-        //  appointment.pdfPassId = undefined;
+       
        }
   
     await appointment.save();
@@ -210,11 +211,107 @@ const deleteAppointment = async (req, res) =>{
   }
 }
 
+
+const getAppointmentsSearch = async (req, res) => {
+  try {
+    const { search } = req.query;
+
+    let appointments = await Appointment.find()
+      .populate('visitorId')
+      .populate('hostId', 'name department');
+
+    let filteredData = appointments;
+
+    if (search) {
+      const searchData = search.toLowerCase();
+
+      filteredData = appointments.filter(app =>
+        app.visitorId?.name?.toLowerCase().includes(searchData) ||
+        app.hostId?.name?.toLowerCase().includes(searchData) ||
+        app.purpose?.toLowerCase().includes(searchData)
+      );
+    }
+
+    console.log('filteredDatafilteredData', filteredData)
+    res.status(200).json({
+      data: filteredData,
+      length:filteredData.length
+    });
+
+  } catch (error) {
+    res.status(500).json({
+      error: `Server Error ${error.message}`
+    });
+  }
+};
+
+
+const getAppointmentsFilter = async (req, res) => {
+  try {
+    const {status} = req.query;
+
+      let appointments = await Appointment.find()
+
+    let filteredData = appointments;
+
+    if(status){
+      const statusData = status.toLowerCase();
+     filteredData =  appointments.filter(res =>
+        res.status?.toLowerCase().includes(statusData)
+      )
+
+      res.status(200).json({
+        data: filteredData,
+        length: filteredData.length
+      })
+    }
+
+
+  } catch (error) {
+    res.status(500).json({ message: error.message });
+  }
+};
+
+
+
+const getAppointmentsExport = async (req, res) => {
+  try {
+    let query = {};
+
+    const appointments = await Appointment.find(query)
+      .populate('visitorId')
+      .populate('hostId', 'name department');
+
+    let csv = 'Visitor Name,Visitor Email,Host Name,Department,Date,Status,Purpose\n';
+
+    appointments.forEach(app => {
+      csv += `${app.visitorId?.name || ''},`;
+      csv += `${app.visitorId?.email || ''},`;
+      csv += `${app.hostId?.name || ''},`;
+      csv += `${app.hostId?.department || ''},`;
+      csv += `${new Date(app.date).toLocaleString()},`;
+      csv += `${app.status || ''},`;
+      csv += `${app.purpose || ''}\n`;
+    });
+
+    res.header('Content-Type', 'text/csv');
+    res.attachment('allAppointments.csv');
+    console.log('csv', csv)
+    return res.send(csv);
+
+  } catch (error) {
+    res.status(500).json({ message: error.message });
+  }
+};
+
 module.exports = {
   getAppointments,
   updateAppointmentStatus,
   scanQR,
   getLogs,
   downloadPass,
-  deleteAppointment
+  deleteAppointment,
+  getAppointmentsSearch,
+  getAppointmentsFilter, 
+  getAppointmentsExport
 };

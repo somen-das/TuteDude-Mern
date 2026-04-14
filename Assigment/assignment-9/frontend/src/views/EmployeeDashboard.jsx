@@ -14,7 +14,7 @@ const EmployeeDashboard = ({ setLoading }) => {
   const [viewData, setViewData] = useState(null);
   const [toast, setToast] = useState(null);
   
-  // Tab State
+ 
   const [activeTab, setActiveTab] = useState('pending');
   
   const API = import.meta.env.VITE_API_URL;
@@ -24,7 +24,7 @@ const EmployeeDashboard = ({ setLoading }) => {
       const { data } = await axios.get(`${API}/appointments`, {
         headers: { Authorization: `Bearer ${user.token}` }
       });
-      // Basic sorting by date
+    
       const sorted = data.sort((a, b) => new Date(b.date) - new Date(a.date));
       setAppointments(sorted);
     } catch (err) {
@@ -36,7 +36,6 @@ const EmployeeDashboard = ({ setLoading }) => {
     fetchAppointments();
   }, [user]);
 
-  // Filtering Logic
   const pendingRequests = appointments.filter(app => app.status === 'Pending');
   const approvedRequests = appointments.filter(app => app.status === 'Approved' && app.checkStatus !== 'Checked Out');
   const historyRequests = appointments.filter(app => app.status === 'Rejected' || app.checkStatus === 'Checked Out');
