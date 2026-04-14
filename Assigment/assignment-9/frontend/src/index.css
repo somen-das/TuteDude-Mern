@@ -647,6 +647,6 @@ a.btn.btn-sm.btn-outline-primary.disable {
     grid-template-columns: 1fr; 
   }
   .visitor-photo-frame {
-    order: -1;/
+    order: -1;
   }
 }

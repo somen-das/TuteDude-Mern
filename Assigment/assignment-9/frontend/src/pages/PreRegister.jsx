@@ -3,7 +3,6 @@ import axios from 'axios';
 import { Link } from 'react-router-dom';
 import { AuthContext } from '../context/AuthContext';
 import Loading from '../components/Loading';
-import { editUser } from '../../../backend/controllers/authController';
 
 const PreRegister = ({ page, onSuccess, setLoading  }) => {
   const { user } = useContext(AuthContext);
@@ -39,7 +38,7 @@ const validateEmail = (email) => {
     e.preventDefault();
 
     if(page === 'visitor-dashboard') {
-      if (!validateEmail(editUser.email)) {
+      if (!validateEmail(formData.email)) {
     setErrorMsg("Please enter a valid email address");
     return;
   }
@@ -70,7 +69,7 @@ const validateEmail = (email) => {
       setLoadingState(true);
       let photoUrl = "https://res.cloudinary.com/dwysh6bvr/image/upload/v1775825615/visitor_passes/czciecopau7opagozdq8.jpg";
 
-      if (!validateEmail(editUser.email)) {
+      if (!validateEmail(formData.email)) {
     setErrorMsg("Please enter a valid email address");
     return;
   }
