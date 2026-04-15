@@ -1,5 +1,4 @@
 import React, { useEffect, useState, useContext } from 'react';
-import axios from 'axios';
 import { AuthContext } from '../context/AuthContext';
 import {
   PieChart, Pie, Cell,
@@ -11,17 +10,16 @@ import './Analytics.css';
 const COLORS = ['#10b981', '#f59e0b', '#ef4444'];
 
 const Analytics = () => {
-  const { user } = useContext(AuthContext);
+  const { user, API } = useContext(AuthContext);
   const [stats, setStats] = useState(null);
   const [loading, setLoading] = useState(true);
 
-  useEffect(() => {
+  useEffect( () => {
     const fetchStats = async () => {
       try {
         const token = user?.token;
-        const res = await axios.get(import.meta.env.VITE_API_URL + '/analytics/stats', {
-          headers: { Authorization: `Bearer ${token}` }
-        });
+        const res = await API.get('/analytics/stats');
+        console.log('resana', res)
         setStats(res.data);
       } catch (error) {
         console.error('Error fetching analytics:', error);
@@ -30,7 +28,7 @@ const Analytics = () => {
       }
     };
     fetchStats();
-  }, []);
+  }, [user]);
 
   if (loading) return <div className="p-8">Loading analytics...</div>;
   if (!stats) return <div className="p-8">Failed to load analytics data.</div>;
@@ -48,6 +46,7 @@ const Analytics = () => {
         <p className="subtitle">Overview and visitor trends across your organization.</p>
       </div>
 
+      {/* total appoitmens details on approve and pending status  */}
       <div className="kpi-grid">
         <div className="kpi-card glass-panel">
           <div className="kpi-header">
@@ -72,13 +71,13 @@ const Analytics = () => {
         </div>
         <div className="kpi-card glass-panel">
           <div className="kpi-header">
-            <h3 className="kpi-title">Active Hosts</h3>
+            <h3 className="kpi-title">Approved Appointments</h3>
             <TrendingUp className="kpi-icon" style={{ color: '#8b5cf6' }} />
           </div>
-          <p className="kpi-value">{stats.mostActiveHosts.length}</p>
+          <p className="kpi-value">{stats.appointments.approved}</p>
         </div>
       </div>
-
+    {/* approove and reject pai charte and weekley visit on pie bar */}
       <div className="charts-grid">
         <div className="chart-card glass-panel">
           <h3 className="chart-title">Appointment Statuses</h3>
@@ -119,22 +118,7 @@ const Analytics = () => {
         </div>
       </div>
 
-      {stats.mostActiveHosts.length > 0 && (
-        <div className="hosts-section glass-panel">
-          <h3 className="chart-title">Most Active Hosts</h3>
-          <div className="hosts-list">
-            {stats.mostActiveHosts.map((host, idx) => (
-              <div key={idx} className="host-item">
-                <div className="host-info">
-                  <div className="host-avatar">{host.name.charAt(0)}</div>
-                  <span className="host-name">{host.name}</span>
-                </div>
-                <div className="host-count">{host.count} Appointments</div>
-              </div>
-            ))}
-          </div>
-        </div>
-      )}
+     
     </div>
   );
 };

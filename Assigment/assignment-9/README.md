@@ -174,3 +174,4 @@ http://localhost:5173
 * Advanced analytics dashboard
 * Mobile app version
 * Improved UI/UX and accessibility
+

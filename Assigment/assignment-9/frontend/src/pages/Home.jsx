@@ -45,11 +45,6 @@ const Home = () => {
       </nav>
 
       <main className="hero-section">
-        <div className="hero-bg-shapes">
-          <div className="shape shape-1"></div>
-          <div className="shape shape-2"></div>
-          <div className="shape shape-3"></div>
-        </div>
 
         <div className="hero-content">
           <h1 className="hero-title">

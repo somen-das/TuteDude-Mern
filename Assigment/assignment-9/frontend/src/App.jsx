@@ -14,7 +14,7 @@ import AppLayout from './components/AppLayout';
 const ProtectedRoute = ({ children, roles }) => {
   const { user, loading } = useContext(AuthContext);
   if (loading) return <div>Loading...</div>;
-  if (!user) return <Navigate to="/visitor/login" replace />;
+  if (!user) return <Navigate to="/" replace />;
   if (roles && !roles.includes(user.role)) return <Navigate to="/dashboard" replace />;
   return <AppLayout>{children}</AppLayout>;
 };

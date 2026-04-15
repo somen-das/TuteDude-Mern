@@ -6,10 +6,9 @@ import SecurityDashboard from '../views/SecurityDashboard';
 import VisitorDashboard from '../views/VisitorDashboard';
 import Loading from '../components/Loading';
 import defaultUser from '../assets/icons/user.png';
-import axios from 'axios';
 import Toast from '../components/Toast';
 const Dashboard = () => {
-  const { user, setUser } = useContext(AuthContext);
+  const { user, setUser, API } = useContext(AuthContext);
   const [isEditing, setIsEditing] = useState(false);
   const [name, setName] = useState(user?.name || '');
   const [loading, setLoading] = useState(false);
@@ -18,8 +17,7 @@ const Dashboard = () => {
   const handleUpdate = async () => {
     try {
       setLoading(true);
-      const res = await axios.put(
-        `${import.meta.env.VITE_API_URL}/auth/edit/${user._id}`,
+      const res = await API.put(`/auth/edit/${user._id}`,
         {
           name: name,
           role: user.role
@@ -34,11 +32,11 @@ const Dashboard = () => {
       localStorage.setItem('userInfo', JSON.stringify(updatedUser))
       setUser(updatedUser);
       setIsEditing(false);
-      setToast({ message: "Name Update Successfully", type: "success", onClose: () => { } })
+      setToast({ message: "Name Update Successfully", type: "success", onClose: () => setToast(null) })
 
     } catch (err) {
       console.error('error message',err.response?.data || err.message);
-      setToast({ message: err.message, type: "error", onClose: () => { } })
+      setToast({ message: err.message, type: "error", onClose: () => setToast(null) })
     } finally {
       setLoading(false);
     }

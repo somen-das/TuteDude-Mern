@@ -1,21 +1,21 @@
 import React, { useEffect, useState, useContext } from 'react';
-import axios from 'axios';
 import { AuthContext } from '../context/AuthContext';
 import { CSVLink } from 'react-csv';
 import ConfirmModal from '../components/ConfirmModal';
+import Loading from '../components/Loading';
 const AdminDashboard = () => {
   const [logs, setLogs] = useState([]);
   const [staffList, setStaffList] = useState([]);
   const [showAddForm, setShowAddForm] = useState(false);
   const [formData, setFormData] = useState({ name: '', email: '', password: '', role: 'Employee', department: '' });
   const [msg, setMsg] = useState({ type: '', text: '' });
-  const { user } = useContext(AuthContext);
+  const { user, API } = useContext(AuthContext);
   const [confirmData, setConfirmData] = useState(null);
   const [openMenuId, setOpenMenuId] = useState(null);
   const [editUserId, setEditUserId] = useState(null);
   const [editRole, setEditRole] = useState('');
-    const [activeLogTab, setActiveLogTab] = useState('active');
-  const API = import.meta.env.VITE_API_URL;
+  const [loading, setLoading] = useState(false);
+  const [activeLogTab, setActiveLogTab] = useState('active');
   useEffect(() => {
     fetchLogs();
     fetchUsers();
@@ -23,27 +23,32 @@ const AdminDashboard = () => {
 
   const fetchLogs = async () => {
     try {
-      const { data } = await axios.get(import.meta.env.VITE_API_URL + '/appointments/logs', {
-        headers: { Authorization: `Bearer ${user.token}` }
-      });
+      setLoading(true)
+      const { data } = await API.get('/appointments/logs');
 
       setLogs(data);
     } catch (err) {
       console.error(err);
+    } finally {
+      setLoading(false)
     }
   };
 
   const fetchUsers = async () => {
     try {
-      const { data } = await axios.get(import.meta.env.VITE_API_URL + '/auth/users', {
-        headers: { Authorization: `Bearer ${user.token}` }
-      });
+      setLoading(true)
+
+      const { data } = await API.get('/auth/users');
       setStaffList(data);
     } catch (err) {
       console.error(err);
+    } finally {
+      setLoading(false)
     }
   };
-
+  const validateEmail = (email) => {
+    return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email);
+  };
   const handleInputChange = (e) => {
     setFormData({ ...formData, [e.target.name]: e.target.value });
   };
@@ -51,55 +56,68 @@ const AdminDashboard = () => {
   const handleAddStaff = async (e) => {
     e.preventDefault();
     try {
-      await axios.post(import.meta.env.VITE_API_URL + '/auth/register', formData);
+
+      if (!validateEmail(formData.email)) {
+        setMsg({ type: 'error', text: 'Invalid email format' });
+        return;
+      }
+      if (formData.name.length < 3) {
+
+        setMsg({ type: 'error', text: 'Name must be at least 3 characters' });
+        return;
+      }
+      if (formData.password.length < 6) {
+        setMsg({ type: 'error', text: 'Password must be at least 6 characters' });
+        return;
+      }
+
+      setLoading(true)
+
+      await API.post('/auth/register', formData);
       setMsg({ type: 'success', text: 'New staff added successfully!' });
       setShowAddForm(false);
       setFormData({ name: '', email: '', password: '', role: 'Employee', department: '' });
       fetchUsers();
     } catch (err) {
       setMsg({ type: 'error', text: err.response?.data?.message || 'Failed to add staff' });
+    } finally {
+      setLoading(false)
     }
   };
 
   const openConfirm = (action, user) => {
-  setConfirmData({ action, user });
-};
+    setConfirmData({ action, user });
+  };
 
   const confirmAction = async () => {
-  const { action, user: targetUser } = confirmData;
-  try {
-    if (action === "Delete") {
-     const data = await axios.delete(`${API}/auth/users/${targetUser._id}`, {
-        headers: { 
-          Authorization: `Bearer ${user.token}`
-        }
-      });
-      fetchUsers();
-      setConfirmData(null);
-      setOpenMenuId(null);
-      setMsg({ type: 'success', text: data?.data?.message });
+    const { action, user: targetUser } = confirmData;
+    try {
+      if (action === "Delete") {
+        const data = await API.delete(`/auth/users/${targetUser._id}`);
+        fetchUsers();
+        setConfirmData(null);
+        setOpenMenuId(null);
+        setMsg({ type: 'success', text: data?.data?.message });
+      }
+
+    } catch (err) {
+      console.error(err);
+      setMsg({ type: 'error', text: 'Failed to delete user' });
     }
+  };
 
-  } catch (err) {
-    console.error(err);
-    setMsg({ type: 'error', text: 'Failed to delete user' });
-  }
-};
+  const handleRoleUpdate = async (id) => {
+    try {
+      await API.put(`/auth/users/${id}`, {
+        role: editRole
+      });
 
-const handleRoleUpdate = async (id) => {
-  try {
-    await axios.put(`${API}/auth/users/${id}`, {
-      role: editRole
-    }, {
-      headers: { Authorization: `Bearer ${user.token}` }
-    });
-
-    setEditUserId(null);
-    fetchUsers();
-  } catch (err) {
-    console.error(err);
-  }
-};
+      setEditUserId(null);
+      fetchUsers();
+    } catch (err) {
+      console.error(err);
+    }
+  };
 
   const activeVisits = logs.filter(log => log.status === 'Approved' && log.checkStatus === 'Checked In');
   const NoVisit = logs.filter(log => log.status === 'Approved' && log.checkStatus === 'Not Checked In');
@@ -124,13 +142,12 @@ const handleRoleUpdate = async (id) => {
               <td>{log?.visitorId?.name}</td>
               <td>{log?.hostId?.name}</td>
               <td>
-                <span className={`badge ${
-                  (log.status === 'Approved') 
-                  ? "badge-approved"
-                  : (log.status === 'Pending')
-                  ? "badge-pending"
-                  : ""
-                }`}>
+                <span className={`badge ${(log.status === 'Approved')
+                    ? "badge-approved"
+                    : (log.status === 'Pending')
+                      ? "badge-pending"
+                      : ""
+                  }`}>
                   {log.checkStatus !== 'Not Checked In' ? log.checkStatus : log.status}
                 </span>
               </td>
@@ -146,7 +163,7 @@ const handleRoleUpdate = async (id) => {
   );
 
 
-return (
+  return (
     <div style={{ display: 'flex', flexDirection: 'column', gap: '24px' }}>
 
       <div className="glass-panel">
@@ -277,69 +294,70 @@ return (
         </div>
       </div>
 
-              {confirmData && (
-        <ConfirmModal confirmData={confirmData} setConfirmData={setConfirmData} confirmAction={confirmAction} />
-      )}
-
-       <div style={{ display: 'flex', flexDirection: 'column', gap: '24px' }}>
-      <div className="glass-panel animate-fade-in">
-        <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '20px' }}>
-          <h3 style={{ fontSize: '1.25rem', margin: 0 }}>System Logs & Activity</h3>
-          <CSVLink 
-            data={logs.map(log => ({
-              Visitor: log?.visitorId?.name,
-              Host: log?.hostId?.name,
-              Status: log.status,
-              CheckStatus: log.checkStatus,
-              CheckIn: log.checkInTime ? new Date(log.checkInTime).toLocaleString() : '',
-              CheckOut: log.checkOutTime ? new Date(log.checkOutTime).toLocaleString() : ''
-            }))}
-            filename={"all-visitor-logs.csv"}
-            className="btn btn-success"
-            style={{ textDecoration: 'none', padding: '6px 12px', fontSize: '0.8rem' }}
-          >
-            Export All to CSV
-          </CSVLink>
-        </div>
-
-        <div className="tab-container" style={{ marginBottom: '20px' }}>
-          <button 
-            className={`tab-btn ${activeLogTab === 'active' ? 'active green' : ''}`} 
-            onClick={() => setActiveLogTab('active')}
-          >
-            Active Visits ({activeVisits.length})
-          </button>
-          <button 
-            className={`tab-btn ${activeLogTab === 'NoVisit' ? 'active orange' : ''}`} 
-            onClick={() => setActiveLogTab('NoVisit')}
-          >
-            Approved (but not visit) ({NoVisit.length})
-          </button>
-          <button 
-            className={`tab-btn ${activeLogTab === 'pending' ? 'active orange' : ''}`} 
-            onClick={() => setActiveLogTab('pending')}
-          >
-            Not Approved ({pendingRequests.length})
-          </button>
-          <button 
-            className={`tab-btn ${activeLogTab === 'history' ? 'active gray' : ''}`} 
-            onClick={() => setActiveLogTab('history')}
-          >
-            History (already visits) ({completedHistory.length})
-          </button>
-        </div>
-
-        {activeLogTab === 'active' && renderLogTable(activeVisits)}
-        {activeLogTab === 'NoVisit' && renderLogTable(NoVisit)}
-        {activeLogTab === 'pending' && renderLogTable(pendingRequests)}
-        {activeLogTab === 'history' && renderLogTable(completedHistory)}
-      </div>
-
       {confirmData && (
         <ConfirmModal confirmData={confirmData} setConfirmData={setConfirmData} confirmAction={confirmAction} />
       )}
-    </div>
 
+      <div style={{ display: 'flex', flexDirection: 'column', gap: '24px' }}>
+        <div className="glass-panel animate-fade-in">
+          <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '20px' }}>
+            <h3 style={{ fontSize: '1.25rem', margin: 0 }}>System Logs & Activity</h3>
+            <CSVLink
+              data={logs.map(log => ({
+                Visitor: log?.visitorId?.name,
+                Host: log?.hostId?.name,
+                Status: log.status,
+                CheckStatus: log.checkStatus,
+                CheckIn: log.checkInTime ? new Date(log.checkInTime).toLocaleString() : '',
+                CheckOut: log.checkOutTime ? new Date(log.checkOutTime).toLocaleString() : ''
+              }))}
+              filename={"all-visitor-logs.csv"}
+              className="btn btn-success"
+              style={{ textDecoration: 'none', padding: '6px 12px', fontSize: '0.8rem' }}
+            >
+              Export All to CSV
+            </CSVLink>
+          </div>
+
+          <div className="tab-container" style={{ marginBottom: '20px' }}>
+            <button
+              className={`tab-btn ${activeLogTab === 'active' ? 'active green' : ''}`}
+              onClick={() => setActiveLogTab('active')}
+            >
+              Active Visits ({activeVisits.length})
+            </button>
+            <button
+              className={`tab-btn ${activeLogTab === 'NoVisit' ? 'active orange' : ''}`}
+              onClick={() => setActiveLogTab('NoVisit')}
+            >
+              Approved (but not visit) ({NoVisit.length})
+            </button>
+            <button
+              className={`tab-btn ${activeLogTab === 'pending' ? 'active orange' : ''}`}
+              onClick={() => setActiveLogTab('pending')}
+            >
+              Not Approved ({pendingRequests.length})
+            </button>
+            <button
+              className={`tab-btn ${activeLogTab === 'history' ? 'active gray' : ''}`}
+              onClick={() => setActiveLogTab('history')}
+            >
+              History (already visits) ({completedHistory.length})
+            </button>
+          </div>
+
+          {activeLogTab === 'active' && renderLogTable(activeVisits)}
+          {activeLogTab === 'NoVisit' && renderLogTable(NoVisit)}
+          {activeLogTab === 'pending' && renderLogTable(pendingRequests)}
+          {activeLogTab === 'history' && renderLogTable(completedHistory)}
+        </div>
+
+        {confirmData && (
+          <ConfirmModal confirmData={confirmData} setConfirmData={setConfirmData} confirmAction={confirmAction} />
+        )}
+      </div>
+
+      {loading && <Loading />}
     </div>
   );
 };

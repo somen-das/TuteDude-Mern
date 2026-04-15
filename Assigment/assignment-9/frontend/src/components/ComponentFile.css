@@ -1,0 +1,84 @@
+.comp-aside{
+    width: 260px;
+    padding: 24px; 
+    background: var(--surface); 
+    border-right: 1px solid var(--surface-border); 
+    display: flex; 
+    flex-direction: column; 
+    height: 100vh; 
+    position: fixed
+}
+
+.comp-aside-h2{
+    font-size: 1.5rem;
+    font-weight: bold;
+    color: var(--text-color);
+    margin-bottom: 40px 
+}
+
+.cap-aside-nav{
+     flex: 1; 
+     display: flex; 
+     flex-direction: column; 
+     gap: 16px 
+}
+
+.cap-aside-nav-container{
+     display: flex; 
+     align-items: center; 
+     gap: 12px; 
+     padding: 12px; 
+     border-radius: 6px; 
+     cursor: pointer; 
+     font-weight: 500; 
+     transition: all 0.2s ease; 
+     
+}
+
+.cap-aside-nav-admin{
+     display: flex; 
+     align-items: center; 
+     gap: 12px; 
+     padding: 12px; 
+     border-radius: 6px; 
+     cursor: pointer; 
+     font-weight: 500; 
+     transition: all 0.2s ease;
+     
+}
+
+.dashboard-side-section{
+    padding: 16px;
+    background: #f8fafc;
+    border: 1px solid var(--surface-border);
+    border-radius: 6px;
+    margin-bottom: 16px 
+}
+
+.dashboard-side-para{
+     margin: 0;
+     font-weight: 600;
+     font-size: 0.9rem;
+     color: #0f172a 
+}
+
+.dashboard-side-pararole{
+    margin: 0; 
+    color: #64748b; 
+    font-size: 0.8rem
+}
+.dashboard-sidebtn{
+    width: 100% 
+}
+
+.layout-container{
+display: flex; 
+min-height: 100vh
+}
+
+.layout-container-main{
+margin-left: 260px; 
+flex: 1; 
+padding: 40px; 
+overflow-y: auto
+}

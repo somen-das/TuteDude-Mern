@@ -1,5 +1,4 @@
 import React, { useState, useContext, useEffect } from 'react';
-import axios from 'axios';
 import { AuthContext } from '../context/AuthContext';
 import { Html5QrcodeScanner } from 'html5-qrcode';
 import Modal from '../components/Modal'; 
@@ -8,7 +7,7 @@ const SecurityDashboard = ({ setLoading }) => {
   const [passId, setPassId] = useState('');
   const [scanResult, setScanResult] = useState(null);
   const [errorMsg, setErrorMsg] = useState('');
-  const { user } = useContext(AuthContext);
+  const { API } = useContext(AuthContext);
   const [appointments, setAppointments] = useState(null);
   const [openVisitorModal, setOpenVisitorModal] = useState(false);
 
@@ -25,7 +24,9 @@ const SecurityDashboard = ({ setLoading }) => {
       setTimeout(() => scanner.resume(), 5000);
     };
 
-    scanner.render(onScanSuccess, (err) => {});
+    scanner.render(onScanSuccess, (err) => {
+      console.error(err)
+    });
 
     return () => {
       scanner.clear().catch(err => console.error(err));
@@ -35,10 +36,8 @@ const SecurityDashboard = ({ setLoading }) => {
   const handleScanSubmit = async (scannedId) => {
     try {
       setLoading(true);
-      const { data } = await axios.post(
-        import.meta.env.VITE_API_URL + '/appointments/scan',
-        { passId: scannedId },
-        { headers: { Authorization: `Bearer ${user.token}` } }
+      const { data } = await API.post('/appointments/scan',
+        { passId: scannedId }
       );
       setScanResult(data);
       setErrorMsg('');
@@ -54,10 +53,7 @@ const SecurityDashboard = ({ setLoading }) => {
   const handleManualCheck = async (scannedId) => {
     try {
       setLoading(true);
-      const { data } = await axios.get(
-        import.meta.env.VITE_API_URL + '/appointments',
-        { headers: { Authorization: `Bearer ${user.token}` } }
-      );
+      const { data } = await API.get('/appointments');
       
       const found = data.find(res => res.passId === scannedId);
       if (!found) {

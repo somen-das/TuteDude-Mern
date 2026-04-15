@@ -1,5 +1,4 @@
 import React, { useEffect, useState, useContext } from 'react';
-import axios from 'axios';
 import { AuthContext } from '../context/AuthContext';
 import ConfirmModal from '../components/ConfirmModal';
 import Toast from '../components/Toast';
@@ -7,7 +6,7 @@ import Modal from '../components/Modal';
 
 const EmployeeDashboard = ({ setLoading }) => {
   const [appointments, setAppointments] = useState([]);
-  const { user } = useContext(AuthContext);
+  const { user, API } = useContext(AuthContext);
 
   const [openMenuId, setOpenMenuId] = useState(null);
   const [confirmData, setConfirmData] = useState(null);
@@ -17,14 +16,10 @@ const EmployeeDashboard = ({ setLoading }) => {
  
   const [activeTab, setActiveTab] = useState('pending');
   
-  const API = import.meta.env.VITE_API_URL;
-
   const fetchAppointments = async () => {
     try {
-      const { data } = await axios.get(`${API}/appointments`, {
-        headers: { Authorization: `Bearer ${user.token}` }
-      });
-    
+      const { data } = await API.get(`/appointments`);
+      console.log('data1234', data)
       const sorted = data.sort((a, b) => new Date(b.date) - new Date(a.date));
       setAppointments(sorted);
     } catch (err) {
@@ -45,15 +40,11 @@ const EmployeeDashboard = ({ setLoading }) => {
     try {
       setLoading(true);
       if (action === "Delete") {
-        await axios.delete(`${API}/appointments/${appt._id}`, {
-          headers: { Authorization: `Bearer ${user.token}` }
-        });
+        await API.delete(`/appointments/${appt._id}`);
         setToast({ message: "Appointment deleted successfully", type: "error" });
       } else {
-        await axios.put(`${API}/appointments/${appt._id}`, {
+        await API.put(`/appointments/${appt._id}`, {
           status: action,
-        }, {
-          headers: { Authorization: `Bearer ${user.token}` }
         });
         setToast({ message: `Appointment ${action} successfully`, type: "success" });
       }

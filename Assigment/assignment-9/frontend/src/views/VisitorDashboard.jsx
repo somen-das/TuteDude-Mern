@@ -1,18 +1,17 @@
 import React, { useEffect, useState, useContext } from 'react';
-import axios from 'axios';
 import { AuthContext } from '../context/AuthContext';
 import Modal from '../components/Modal';
 import PreRegister from '../pages/PreRegister';
 
 const VisitorDashboard = ({ setLoading }) => {
-  const { user } = useContext(AuthContext);
+  const { user, API } = useContext(AuthContext); 
   const [showAddForm, setShowAddForm] = useState(false);
   const [appointments, setAppointments] = useState([]);
   const [activeTab, setActiveTab] = useState('approved');
 
   const fetchAppointments = async () => {
     try {
-      const { data } = await axios.post(import.meta.env.VITE_API_URL + '/visitors/visitor-appointments', { email: user.email });
+      const { data } = await API.post('/visitors/visitor-appointments', { email: user.email });
       setAppointments(data.appointments);
     } catch (error) {
       console.error("Error in fetching appointments:", error);
