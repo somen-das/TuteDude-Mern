@@ -175,3 +175,6 @@ http://localhost:5173
 * Mobile app version
 * Improved UI/UX and accessibility
 
+
+## Video Link
+   https://www.loom.com/share/35f73d187a0942fdb2c546336d0d4b8c

@@ -11,6 +11,10 @@ const visitorSchema = new mongoose.Schema({
   photoUrl: { type: String },
 }, { timestamps: true });
 
+visitorSchema.pre('save', async function (next) {
+  if (!this.isModified('password')) return next();
+  this.password = await bcrypt.hash(this.password, 10);
+});
 
 visitorSchema.methods.matchPassword = async function (enteredPassword) {
   return await bcrypt.compare(enteredPassword, this.password);

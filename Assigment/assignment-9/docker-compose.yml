@@ -14,15 +14,8 @@ services:
     build: ./backend
     ports:
       - "5000:5000"
-    environment:
-      - MONGODB_URI=mongodb://mongodb:27017/visitor_pass
-      - JWT_SECRET=thisisasecretkey
-      - FRONTEND_URL=http://localhost:5173
-      - EMAIL_USER=somend551@gmail.com
-      - EMAIL_PASS=nqqv menv qdpw cvdy
-      - CLOUDINARY_API_KEY=789739257519861
-      - CLOUDINARY_API_SECRET=-oxiSl6t180gTftULuwBrKd5w6U
-      - CLOUDINARY_CLOUD_NAME=dwysh6bvr
+    env_file:
+      - './backend/.env'
     depends_on:
       - mongodb
 
@@ -31,8 +24,8 @@ services:
     build: ./frontend
     ports:
       - "5173:5173"
-    environment:
-      - VITE_API_URL=http://localhost:5000/api
+    env_file:
+      - './frontend/.env'
     depends_on:
       - backend
 
