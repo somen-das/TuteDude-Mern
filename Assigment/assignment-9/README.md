@@ -88,22 +88,35 @@ The system is based on three core entities:
 
 ### 1. Clone the repository
 
-```bash
-git clone (my project repo)
-
-```
+git clone (https://github.com/somen-das/TuteDude-Mern.git)
 
 ---
 
 ### 2. Install dependencies
 
-```bash
-cd backend
-npm install
+# For Backend: 
+   1. Go to the mail file: 
+    cd .\TuteDude-Mern\Assigment\assignment-9\backend\
 
-cd ../frontend
-npm install
-```
+   2. Install dependencies
+    npm install
+
+   3. Create .env file (see the .env.example)
+
+   4. Run server
+    npm run dev
+
+# For Frontend:
+   1. Go to the mail file: 
+    cd .\TuteDude-Mern\Assigment\assignment-9\frontend\
+
+   2. Install dependencies
+    npm install
+
+   3. Create .env file (see the .env.example)
+
+   4. Run server
+    npm run dev
 
 ---
 
@@ -112,22 +125,22 @@ npm install
 #### Backend (`/backend/.env`)
 
 ```env
-MONGODB_URI=mongodb://127.0.0.1:27017/visitor_pass
-PORT=5000
-JWT_SECRET= thisisasecretkey
-FRONTEND_URL=http://localhost:5173
-EMAIL_USER=your email address
-EMAIL_PASS= your email password
-CLOUDINARY_API_KEY= your cloudinary api key
-CLOUDINARY_API_SECRET= your cloudinary api secret
-CLOUDINARY_CLOUD_NAME= your cloudinary cloud name
+MONGODB_URI=mongodb:
+PORT=0
+JWT_SECRET=
+FRONTEND_URL=
+EMAIL_USER=
+EMAIL_PASS=
+CLOUDINARY_API_KEY=
+CLOUDINARY_API_SECRET=
+CLOUDINARY_CLOUD_NAME=
 
 ```
 
 #### Frontend (`/frontend/.env`)
 
 ```env
-VITE_API_URL=http://localhost:5000/api
+VITE_API_URL=
 ```
 
 ---
@@ -175,6 +188,12 @@ http://localhost:5173
 * Mobile app version
 * Improved UI/UX and accessibility
 
+## Git repo Link
+   https://github.com/somen-das/TuteDude-Mern.git
 
 ## Video Link
    https://www.loom.com/share/35f73d187a0942fdb2c546336d0d4b8c
+
+## Author
+
+Developed by:  Somen Das (software engineer)

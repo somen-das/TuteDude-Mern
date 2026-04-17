@@ -1,16 +1,16 @@
-Visitor Management System (Backend)
+# Visitor Management System (Backend)
 
 Overview:
 This backend a Visitor Management System (VMS) that handles visitor registration, appointment scheduling, staff management, and security tracking.
 
-Built with:
+# Built with:
     Node.js
     Express.js
     MongoDB (Mongoose)
     JWT Authentication
     Cloudinary (file upload)
 
-Features:
+# Features:
     Visitor registration & login
     Staff (Admin, Security, Employee) management
     Appointment booking system
@@ -19,13 +19,13 @@ Features:
     CSV export
     Secure API with rate limiting & helmet
 
- Role-Based Access Control:
+# Role-Based Access Control:
         Admin           --- Full access (users, logs, analytics)
         Employee        -- Manage appointments
         Security        --- Scan QR, view logs
         Visitor         --- Register & request appointments
 
-API Endpoints: 
+# API Endpoints: 
     Auth Routes     ==>(/api/auth)
 
     Register User ==>    
@@ -172,18 +172,16 @@ Appointment Collection (conceptual)
   checkStatus: 'Not Checked In' | 'Checked In' | 'Checked Out'
 }
 
- Environment Variables
-
-Create .env in backend:
-
-PORT=5000
-MONGODB_URI=my_bongodb_url
-JWT_SECRET=jwtsyscretkey
-CLOUDINARY_CLOUD_NAME=xxxxx
-CLOUDINARY_API_KEY=xxxxx
-CLOUDINARY_API_SECRET=xxxxx
-EMAIL_USER=xxxxx
-EMAIL_PASS=xxxxx
+# Environment Variables
+ Create .env in backend:
+    PORT=
+    MONGODB_URI=
+    JWT_SECRET=
+    CLOUDINARY_CLOUD_NAME=
+    CLOUDINARY_API_KEY=
+    CLOUDINARY_API_SECRET=
+    EMAIL_USER=
+    EMAIL_PASS=
 
 
 
@@ -193,17 +191,26 @@ Password hashing (bcrypt)
 # Run Project(Setup Instructions):
   1. Clone the repo
     git clone <https://github.com/somen-das/TuteDude-Mern.git>
-  2. Go to the AssignMent
-  2. Go to backend
-    cd backend
+
+  2. Go to the mail file: 
+    cd .\TuteDude-Mern\Assigment\assignment-9\backend\
 
   3. Install dependencies
     npm install
 
-  4. Create .env file (see below)
+  4. Create .env file (see the .env.example)
 
   5. Run server
     npm run dev
 
+# Run Seeder ( using first time for demo data add on project)
+  Run before server ==> npm run seed
+    This script creates demo users, visitors, and appointments covering all workflows (pending, approved, checked-in, checked-out).
+## Future Improvements
+* Add WebSockets for realtime notification
+* OTP based login
+* Gogle loogin
 
- Author: ==> Somen Das
+
+
+ Author: ==> Somen Das (Software Engineer)
