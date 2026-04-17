@@ -187,13 +187,23 @@ EMAIL_PASS=xxxxx
 
 
 
-JWT Authentication:
+# JWT Authentication:
 Password hashing (bcrypt)
 
- Run Project: 
-        npm install
-        npm run dev
+# Run Project(Setup Instructions):
+  1. Clone the repo
+    git clone <https://github.com/somen-das/TuteDude-Mern.git>
+  2. Go to the AssignMent
+  2. Go to backend
+    cd backend
 
+  3. Install dependencies
+    npm install
+
+  4. Create .env file (see below)
+
+  5. Run server
+    npm run dev
 
 
  Author: ==> Somen Das

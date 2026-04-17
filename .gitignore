@@ -1,0 +1,31 @@
+# Node modules
+node_modules/
+
+# Environment files
+.env
+.env.*
+!.env.example
+backend/.env
+frontend/.env
+
+# Build files
+dist/
+build/
+
+# Vite
+.vite/
+
+# Docker
+docker-compose.yml
+
+# Uploads (my local image files)
+uploads/
+
+# Zip files
+*.zip
+*.tar
+*.gz
+
+# Temporary files
+*.tmp
+*.temp
