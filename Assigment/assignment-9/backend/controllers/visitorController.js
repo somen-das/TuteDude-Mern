@@ -4,15 +4,14 @@ const User = require('../models/User');
 const bcrypt = require('bcryptjs');
 const { sendEmail } = require('../utils/emailService');
 const jwt = require('jsonwebtoken');
+
 const generateToken = (id, role) => {
   return jwt.sign({ id, role }, process.env.JWT_SECRET, { expiresIn: '30d' });
 };
 
 
 const registerVisitor = async (req, res) => {
-  console.log("Register API HIT");
   const { name, email, phone, password, confirmPassword, company, hostId, date, purpose, photoUrl } = req.body;
-  console.log('Registering visitor with data:', req.body);
   try {
     if (password !== confirmPassword) {
       return res.status(400).json({ message: "Passwords do not match!" });
@@ -32,9 +31,9 @@ const registerVisitor = async (req, res) => {
       html: `Hi ${visitor.name},<BR><BR>Your registration request has been received successfully. Please log in to your dashboard to book an appointment with your host.`
     });
 
-    res.status(201).json({ message: 'Visitor registered', visitor });
+    res.status(201).json({ message: 'Visitor registered succesfully', visitor });
   } catch (error) {
-    console.error("Error in registration:", error);
+    console.error("Reg Error", error);
     res.status(500).send("Internal server error during registration");
   }
 };
@@ -62,20 +61,17 @@ const loginUser = async (req, res) => {
 };
 
 const appointmentVisitor = async (req, res) => {
-  const { email, phone, password, confirmPassword, company, hostId, date, purpose, token } = req.body;
+  const { email, company, hostId, date, purpose } = req.body;
   
   try {
     const host = await User.findById(hostId);
-    console.log('Host found:', host);
     if (!host || host.role !== 'Employee') {
-      console.log('Host validation failed');
       return res.status(400).send('Invalid host selected');
     }
 
     let visitor = await Visitor.findOne({ email });
     
     if (visitor) {
-      console.log('Visitor found:', visitor);
       const appointment = await Appointment.create({
       visitorId: visitor._id,
       hostId: host._id,
@@ -98,7 +94,9 @@ const appointmentVisitor = async (req, res) => {
     res.status(201).json({ message: 'Visitor appointment created', appointment });
 
   } else {
-      return res.status(400).send('Visitor with this email already exists. Please log in to book an appointment.');
+      return res.status(404).json({
+        message: 'Visitor not found. Please register before booking an appointment.'
+      });
     }
     
   } catch (error) {
@@ -126,6 +124,10 @@ const getVisitors = async (req, res) => {
   try {
     const query = req.user || {};
     const visitors = await Visitor.find(query);
+    if(!visitors){
+      res.status(400).json({message:"visitor not found"})
+      return;
+    }
     res.json(visitors);
   } catch (error) {
     res.status(500).json({ message: error.message });
@@ -136,6 +138,9 @@ const getHosts = async (req, res) => {
   try {
     const query = { role: 'Employee' };
     const hosts = await User.find(query).select('name department _id');
+    if(!hosts){
+      res.status(400).json({message: 'host not found'})
+    }
     res.json(hosts);
   } catch (error) {
     res.status(500).json({ message: error.message });
