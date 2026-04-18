@@ -241,24 +241,27 @@ const getAppointmentsFilter = async (req, res) => {
     const { status } = req.query;
 
     let appointments = await Appointment.find()
+      .populate('visitorId')
+      .populate('hostId', 'name department');
 
     let filteredData = appointments;
 
     if (status) {
-      const statusData = status.toLowerCase();
-      filteredData = appointments.filter(res =>
-        res.status?.toLowerCase().includes(statusData)
-      )
-
-      res.status(200).json({
-        data: filteredData,
-        length: filteredData.length
-      })
+      const statusValue = status.toLowerCase();
+      filteredData = appointments.filter((appointment) => {
+        return appointment.status?.toLowerCase().includes(statusValue);
+      });
     }
-
+    res.status(200).json({
+      data: filteredData,
+      length: filteredData.length
+    });
 
   } catch (error) {
-    res.status(500).json({ message: error.message });
+    res.status(500).json({
+      message: 'Error filtering appointments',
+      error: error.message
+    });
   }
 };
 

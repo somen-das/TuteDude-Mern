@@ -18,11 +18,9 @@ const sendEmail = async ({ to, subject, html, attachments = [] }) => {
       attachments: attachments
     });
 
-    console.log("Email successfully sent to:", to);
     return true;
   } catch (error) {
-    console.log("Failed to send email. Check your EMAIL_USER and EMAIL_PASS environment variables.");
-    console.log("Error details:", error.message);
+    console.error("Error details:", error.message);
     return false; 
   }
 };

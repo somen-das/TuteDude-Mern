@@ -19,9 +19,9 @@ dotenv.config();
 // if any env url is missing then showing error
 const envVariables = ['MONGODB_URI','JWT_SECRET','FRONTEND_URL', 'EMAIL_USER', 'EMAIL_PASS', 'CLOUDINARY_API_KEY', 'CLOUDINARY_API_SECRET', 'CLOUDINARY_CLOUD_NAME']
 
-envVariables.forEach((res)=>{
-  if(!process.env[res]){
-    console.error(`FATAL ERROR: Missing environment variable: ${res}`);
+envVariables.forEach((key)=>{
+  if(!process.env[key]){
+    console.error(`FATAL ERROR: Missing environment variable: ${key}`);
     process.exit(1);
   }
 })

@@ -19,7 +19,6 @@ const EmployeeDashboard = ({ setLoading }) => {
   const fetchAppointments = async () => {
     try {
       const { data } = await API.get(`/appointments`);
-      console.log('data1234', data)
       const sorted = data.sort((a, b) => new Date(b.date) - new Date(a.date));
       setAppointments(sorted);
     } catch (err) {

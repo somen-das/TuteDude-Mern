@@ -25,7 +25,7 @@ const generatePassPDF = (appointment, qrBase64) => {
         
         doc.lineWidth(1).strokeColor('#2c3e50').rect(25, photoY, 60, 60).stroke();
       } catch (err) {
-        console.log("Photo load error, skipping...");
+        console.error("Photo load error, skipping...");
       }
     }
 

@@ -2,9 +2,9 @@ const jwt = require('jsonwebtoken');
 const User = require('../models/User');
 const Visitor = require('../models/Visitor');
 const { sendEmail } = require('../utils/emailService');
-
+const ROLE = reuquire('../constants/roles.js');
 const generateToken = (id, role) => {
-  return jwt.sign({ id, role }, process.env.JWT_SECRET, { expiresIn: '30d' });
+  return jwt.sign({ id, role }, process.env.JWT_SECRET, { expiresIn: '7d' });
 };
 
 exports.registerUser = async (req, res) => {
@@ -16,7 +16,6 @@ exports.registerUser = async (req, res) => {
 
     const userExists = await User.findOne({ email });
     if (userExists) {
-      console.log("Registration failed: User already exists");
       return res.status(400).json({ message: 'User already exists' });
     }
     
@@ -29,7 +28,6 @@ exports.registerUser = async (req, res) => {
     });
     
     if (user) {
-      console.log("User successfully created in database");
       
       await sendEmail({
         to: user.email,
@@ -49,11 +47,9 @@ exports.registerUser = async (req, res) => {
         token: generateToken(user._id, user.role)
       });
     } else {
-      console.log("Failed to create user object");
       res.status(400).json({ message: 'Invalid user data' });
     }
   } catch (error) {
-    console.log("Error in registerUser:", error);
     res.status(500).json({ message: error.message });
   }
 };
@@ -114,7 +110,6 @@ exports.deleteUser = async (req, res) => {
     await userToDelete.deleteOne();
     res.json({ message: 'User deleted successfully' });
   } catch (error) {
-    console.log("Delete user Error:", error);
     res.status(500).json({ message: error.message });
   }
 };
@@ -124,7 +119,7 @@ exports.editSingleUser = async (req, res) => {
   const { name, role } = req.body;
 
   try {
-    if (role === "Visitor") {
+    if (role === ROLE.VISITOR) {
       const visitor = await Visitor.findById(id);
       if (!visitor) return res.status(404).json({ message: "Visitor Not Found" });
 

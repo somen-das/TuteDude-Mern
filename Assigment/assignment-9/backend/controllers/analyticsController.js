@@ -24,20 +24,20 @@ const getDashboardStats = async (req, res) => {
     });
 
     const today = new Date();
-    const sevenDaysAgo = new Date();
-    sevenDaysAgo.setDate(today.getDate() - 7);
+    const beforeSevenDays = new Date();
+    beforeSevenDays.setDate(today.getDate() - 7);
 
     const checkLogs = await Appointment.find({
-      checkInTime: { $gte: sevenDaysAgo }
+      checkInTime: { $gte: beforeSevenDays }
     });
 
     const checkInByDay = {
       Mon: 0, Tue: 0, Wed: 0, Thu: 0, Fri: 0, Sat: 0, Sun: 0
     };
 
-    checkLogs.forEach((res) => {
-      if (res.checkInTime) {
-        const day = new Date(res.checkInTime).toLocaleDateString('en-US', {
+    checkLogs.forEach((key) => {
+      if (key.checkInTime) {
+        const day = new Date(key.checkInTime).toLocaleDateString('en-US', {
           weekday: 'short'
         });
 

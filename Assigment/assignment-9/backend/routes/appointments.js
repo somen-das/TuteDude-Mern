@@ -2,7 +2,7 @@ const express = require('express');
 const router = express.Router();
 const { getAppointments, updateAppointmentStatus, scanQR, getLogs, downloadPass, deleteAppointment, getAppointmentsSearch,getAppointmentsFilter, getAppointmentsExport } = require('../controllers/appointmentController');
 const { protect, authorize } = require('../middleware/authMiddleware');
-const validate = require('../middleware/validate');
+const validate = require('../middleware/validationMiddleware');
 const { updateAppointmentSchema } = require('../validators/schemas');
 
 router.get('/', protect, getAppointments);

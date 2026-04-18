@@ -2,7 +2,7 @@ const express = require('express');
 const router = express.Router();
 const { registerVisitor, loginUser, appointmentVisitor, appointmentVisitorGet, getVisitors, getHosts } = require('../controllers/visitorController');
 const { protect } = require('../middleware/authMiddleware');
-const validate = require('../middleware/validate');
+const validate = require('../middleware/validationMiddleware');
 const { registerVisitorSchema, loginSchema, appointmentVisitorSchema } = require('../validators/schemas');
 
 router.post('/register', validate(registerVisitorSchema), registerVisitor);

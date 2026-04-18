@@ -19,7 +19,6 @@ const Analytics = () => {
       try {
         const token = user?.token;
         const res = await API.get('/analytics/stats');
-        console.log('resana', res)
         setStats(res.data);
       } catch (error) {
         console.error('Error fetching analytics:', error);
