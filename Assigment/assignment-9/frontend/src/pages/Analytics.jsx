@@ -17,7 +17,6 @@ const Analytics = () => {
   useEffect( () => {
     const fetchStats = async () => {
       try {
-        const token = user?.token;
         const res = await API.get('/analytics/stats');
         setStats(res.data);
       } catch (error) {
@@ -74,6 +73,46 @@ const Analytics = () => {
             <TrendingUp className="kpi-icon" style={{ color: '#8b5cf6' }} />
           </div>
           <p className="kpi-value">{stats.appointments.approved}</p>
+        </div>
+      </div>
+    {/* approove and reject pai charte and weekley visit on pie bar */}
+      <div className="charts-grid">
+        <div className="chart-card glass-panel">
+          <h3 className="chart-title">Appointment Statuses</h3>
+          <div className="chart-wrapper">
+            <ResponsiveContainer width="100%" height="100%">
+              <PieChart>
+                <Pie
+                  data={pieData}
+                  innerRadius={60}
+                  outerRadius={100}
+                  paddingAngle={5}
+                  dataKey="value"
+                >
+                  {pieData?.map((entry, index) => (
+                    <Cell key={`cell-${index}`} fill={COLORS[index % COLORS.length]} />
+                  ))}
+                </Pie>
+                <Tooltip />
+                <Legend />
+              </PieChart>
+            </ResponsiveContainer>
+          </div>
+        </div>
+
+        <div className="chart-card glass-panel">
+          <h3 className="chart-title">Check-ins Last 7 Days</h3>
+          <div className="chart-wrapper">
+            <ResponsiveContainer width="100%" height="100%">
+              <BarChart data={stats.checkInsWeekly}>
+                <CartesianGrid strokeDasharray="3 3" vertical={false} stroke="#e2e8f0" />
+                <XAxis dataKey="name" axisLine={false} tickLine={false} />
+                <YAxis axisLine={false} tickLine={false} allowDecimals={false} />
+                <Tooltip cursor={{ fill: 'rgba(59, 130, 246, 0.1)' }} />
+                <Bar dataKey="checkIns" fill="#3b82f6" radius={[4, 4, 0, 0]} />
+              </BarChart>
+            </ResponsiveContainer>
+          </div>
         </div>
       </div>
 

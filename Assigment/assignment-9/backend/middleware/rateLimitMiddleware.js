@@ -10,4 +10,5 @@ const loginLimiter = rateLimit({
   legacyHeaders: false,
 });
 
-module.exports = { loginLimiter };
+
+module.exports = loginLimiter
