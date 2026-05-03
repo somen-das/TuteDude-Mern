@@ -11,34 +11,34 @@
   margin-top: 0.25rem;
 }
 
-.kpi-grid {
+.analitich-grid {
   gap: 1.5rem;
   margin-bottom: 2rem;
   display: flex;
   justify-content: space-between;
 }
 
-.kpi-card {
+.analitich-card {
   padding: 1.5rem;
   display: flex;
   flex-direction: column;
 }
 
-.kpi-header {
+.analitich-header {
   display: flex;
   justify-content: space-between;
   align-items: center;
   margin-bottom: 1rem;
 }
 
-.kpi-title {
+.analitich-title {
   font-size: 0.95rem;
   font-weight: 600;
   color: #475569;
   margin: 0;
 }
 
-.kpi-value {
+.analitich-value {
   font-size: 2.25rem;
   font-weight: 700;
   color: #0f172a;
@@ -149,71 +149,6 @@
   font-size: 0.9rem;
 }
 
-.progress-bg {
-  background: #e2e8f0;
-  height: 10px;
-  border-radius: 10px;
-  overflow: hidden;
-}
-
-.progress-fill {
-  height: 100%;
-  transition: width 0.5s ease-in-out;
-}
-
 .approved { background: #10b981; }
 .pending { background: #f59e0b; }
 .rejected { background: #ef4444; }
-
-/* Custom Vertical Weekly Bar Chart */
-.weekly-bar-chart {
-  display: flex;
-  align-items: flex-end;
-  justify-content: space-between;
-  height: 200px;
-  margin-top: 30px;
-  padding-bottom: 20px;
-  border-bottom: 1px solid #e2e8f0;
-}
-
-.v-bar-wrapper {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  flex: 1;
-  height: 100%;
-  position: relative;
-}
-
-.v-bar-fill {
-  width: 30px;
-  background: #3b82f6;
-  border-radius: 4px 4px 0 0;
-  position: relative;
-  transition: background 0.3s;
-  cursor: pointer;
-}
-
-.v-bar-fill:hover { background: #2563eb; }
-
-.v-bar-fill .tooltip-text {
-  visibility: hidden;
-  position: absolute;
-  top: -30px;
-  left: 50%;
-  transform: translateX(-50%);
-  background: #1e293b;
-  color: #fff;
-  padding: 2px 6px;
-  border-radius: 4px;
-  font-size: 11px;
-}
-
-.v-bar-fill:hover .tooltip-text { visibility: visible; }
-
-.day-label {
-  margin-top: 10px;
-  font-size: 11px;
-  color: #64748b;
-  text-transform: uppercase;
-}
